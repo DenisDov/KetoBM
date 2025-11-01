@@ -1,50 +1,68 @@
 import { ConfigContext, ExpoConfig } from "expo/config";
 import { version } from "./package.json";
 
+const EAS_PROJECT_SLUG = "ketobm";
 const EAS_PROJECT_ID = "6e76c95a-223d-4d04-8356-6889e4d06ddf";
-const PROJECT_SLUG = "ketobm";
-const OWNER = "denisdov";
+const EAS_OWNER = "denisdov";
 
-// App production config
-const APP_NAME = "KetoBM";
-const BUNDLE_IDENTIFIER = "com.denisdov.ketobm";
-const PACKAGE_NAME = "com.denisdov.ketobm";
-const ICON = "./src/assets/images/icon.png";
-const ADAPTIVE_ICON = "./src/assets/images/adaptive-icon.png";
-const SCHEME = "ketobm";
+// EAS will inject APP_ENV and secrets into process.env
+const APP_ENV = process.env.APP_ENV ?? "development";
+
+const ENV_CONFIG = {
+  development: {
+    name: "KetoBM (Dev)",
+    bundleIdentifier: "com.denisdov.ketobm.dev",
+    packageName: "com.denisdov.ketobm.dev",
+    icon: "./src/assets/images/icon.png",
+    adaptiveIcon: "./src/assets/images/adaptive-icon.png",
+    scheme: "ketobm-dev",
+  },
+  preview: {
+    name: "KetoBM (Preview)",
+    bundleIdentifier: "com.denisdov.ketobm.preview",
+    packageName: "com.denisdov.ketobm.preview",
+    icon: "./src/assets/images/icon.png",
+    adaptiveIcon: "./src/assets/images/adaptive-icon.png",
+    scheme: "ketobm-preview",
+  },
+  production: {
+    name: "KetoBM",
+    bundleIdentifier: "com.denisdov.ketobm",
+    packageName: "com.denisdov.ketobm",
+    icon: "./src/assets/images/icon.png",
+    adaptiveIcon: "./src/assets/images/adaptive-icon.png",
+    scheme: "ketobm",
+  },
+};
 
 export default ({ config }: ConfigContext): ExpoConfig => {
-  console.log("⚙️ Building app for environment:", process.env.APP_ENV);
-  const { name, bundleIdentifier, icon, adaptiveIcon, packageName, scheme } =
-    getDynamicAppConfig(
-      (process.env.APP_ENV as "development" | "preview" | "production") ||
-        "development"
-    );
+  console.log("⚙️ Building app for environment:", APP_ENV);
+  const env = APP_ENV as keyof typeof ENV_CONFIG;
+  const envConfig = ENV_CONFIG[env]; //
+
   return {
     ...config,
-    name,
-    slug: PROJECT_SLUG,
+    ...envConfig,
+    slug: EAS_PROJECT_SLUG,
     version,
     orientation: "portrait",
-    icon,
-    scheme,
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
     ios: {
+      bundleIdentifier: envConfig.bundleIdentifier,
       supportsTablet: true,
-      bundleIdentifier,
       infoPlist: {
-        ITSAppUsesNonExemptEncryption: false
-      }
+        ITSAppUsesNonExemptEncryption: false,
+      },
     },
     android: {
+      package: envConfig.packageName,
       adaptiveIcon: {
-        foregroundImage: adaptiveIcon,
+        foregroundImage: envConfig.adaptiveIcon,
         backgroundColor: "#ffffff",
       },
       edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,
-      package: packageName,
     },
     web: {
       bundler: "metro",
@@ -66,53 +84,18 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     experiments: {
       typedRoutes: true,
     },
-    owner: OWNER,
-    extra: {
-      eas: {
-        projectId: EAS_PROJECT_ID,
-      },
-    },
+    owner: EAS_OWNER,
     updates: {
       url: `https://u.expo.dev/${EAS_PROJECT_ID}`,
     },
     runtimeVersion: {
       policy: "appVersion",
     },
-  };
-};
-
-// Dynamically configure the app based on the environment.
-export const getDynamicAppConfig = (
-  environment: "development" | "preview" | "production"
-) => {
-  if (environment === "production") {
-    return {
-      name: APP_NAME,
-      bundleIdentifier: BUNDLE_IDENTIFIER,
-      packageName: PACKAGE_NAME,
-      icon: ICON,
-      adaptiveIcon: ADAPTIVE_ICON,
-      scheme: SCHEME,
-    };
-  }
-
-  if (environment === "preview") {
-    return {
-      name: `${APP_NAME} Preview`,
-      bundleIdentifier: `${BUNDLE_IDENTIFIER}.preview`,
-      packageName: `${PACKAGE_NAME}.preview`,
-      icon: "./src/assets/images/icon.png",
-      adaptiveIcon: "./src/assets/images/adaptive-icon.png",
-      scheme: `${SCHEME}-prev`,
-    };
-  }
-
-  return {
-    name: `${APP_NAME} Development`,
-    bundleIdentifier: `${BUNDLE_IDENTIFIER}.dev`,
-    packageName: `${PACKAGE_NAME}.dev`,
-    icon: "./src/assets/images/icon.png",
-    adaptiveIcon: "./src/assets/images/adaptive-icon.png",
-    scheme: `${SCHEME}-dev`,
+    extra: {
+      eas: {
+        projectId: EAS_PROJECT_ID,
+      },
+      env: APP_ENV,
+    },
   };
 };
