@@ -5,14 +5,18 @@ import { Text, View } from "@/components/Themed";
 
 import Constants from "expo-constants";
 
+
 export default function TabOneScreen() {
   const { env } = Constants.expoConfig?.extra ?? {};
   console.log("Running in:", env);
 
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+  console.log("API URL:", apiUrl);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab One</Text>
       <Text style={styles.title}>{env}</Text>
+      <Text style={styles.title}>{apiUrl}</Text>
       <View
         style={styles.separator}
         lightColor="#eee"
