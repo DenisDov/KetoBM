@@ -50,6 +50,7 @@ export default function RootLayout() {
 }
 
 const isLoggedIn = false;
+const shouldCreateAccount = false;
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
@@ -62,8 +63,10 @@ function RootLayoutNav() {
           <Stack.Screen name="modal" options={{ presentation: "modal" }} />
         </Stack.Protected>
         <Stack.Protected guard={!isLoggedIn}>
-          <Stack.Screen name="create-account" />
           <Stack.Screen name="sign-in" />
+          <Stack.Protected guard={shouldCreateAccount}>
+            <Stack.Screen name="create-account" />
+          </Stack.Protected>
         </Stack.Protected>
       </Stack>
     </ThemeProvider>
