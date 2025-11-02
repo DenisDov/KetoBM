@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/components/useColorScheme";
+import { useAuthStore } from "@/hooks/use-auth-store";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,12 +50,9 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
-const isLoggedIn = false;
-const shouldCreateAccount = false;
-
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-
+  const { isLoggedIn, shouldCreateAccount } = useAuthStore();
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>

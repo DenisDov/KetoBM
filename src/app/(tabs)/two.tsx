@@ -1,14 +1,17 @@
-import { StyleSheet } from 'react-native';
+import { Button, StyleSheet } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+import { useAuthStore } from '@/hooks/use-auth-store';
 
 export default function TabTwoScreen() {
+  const { logOut } = useAuthStore();
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab Two</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <EditScreenInfo path="app/(tabs)/two.tsx" />
+      <Button title="Log Out" onPress={logOut} />
     </View>
   );
 }
