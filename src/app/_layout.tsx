@@ -8,6 +8,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { Platform } from "react-native";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/components/useColorScheme";
@@ -23,8 +24,11 @@ export const unstable_settings = {
   initialRouteName: "(tabs)",
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+const isWeb = Platform.OS === "web";
+
+if (!isWeb) {
+  SplashScreen.preventAutoHideAsync();
+}
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -52,8 +56,25 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-  const { isLoggedIn, shouldCreateAccount, hasCompletedOnboarding } =
-    useAuthStore();
+  const {
+    isLoggedIn,
+    shouldCreateAccount,
+    hasCompletedOnboarding,
+    _hasHydrated,
+  } = useAuthStore();
+
+  // https://zustand.docs.pmnd.rs/integrations/persisting-store-data#how-can-i-check-if-my-store-has-been-hydrated
+  // Hide the splash screen after the store has been hydrated
+  useEffect(() => {
+    if (_hasHydrated) {
+      SplashScreen.hideAsync();
+    }
+  }, [_hasHydrated]);
+
+  if (!_hasHydrated && !isWeb) {
+    return null;
+  }
+
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
