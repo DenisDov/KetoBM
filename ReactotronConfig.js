@@ -1,3 +1,3 @@
 import Reactotron from "reactotron-react-native";
 
-Reactotron.configure().useReactNative().connect();
+Reactotron.configure({ name: "KetoBM" }).useReactNative().connect();
