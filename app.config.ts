@@ -73,6 +73,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       "expo-router",
       "expo-secure-store",
       "expo-sqlite",
+      "expo-build-properties",
       [
         "expo-splash-screen",
         {

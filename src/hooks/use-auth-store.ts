@@ -1,6 +1,8 @@
-import { Session, User } from '@supabase/supabase-js'
-import { create } from 'zustand'
-import { supabase } from '../lib/supabase'
+import { Session, User } from '@supabase/supabase-js';
+import { create } from 'zustand';
+import { supabase } from '../lib/supabase';
+
+import * as Burnt from "burnt";
 
 
 type AuthState = {
@@ -45,14 +47,31 @@ export const useAuthStore = create<AuthState>((set) => ({
   signUpWithEmail: async (email, password) => {
     set({ loading: true })
     const { error } = await supabase.auth.signUp({ email, password })
-    if (error) console.error(error)
+    if (error) {
+      console.log(error)
+      Burnt.toast({
+        title: "Error",
+        preset: "error",
+        message: error.message,
+        from: "bottom",
+      });
+    }
+      
     set({ loading: false })
   },
 
   signInWithEmail: async (email, password) => {
     set({ loading: true })
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) console.error(error)
+    if (error) {
+      console.log(error)
+      Burnt.toast({
+        title: "Error",
+        preset: "error",
+        message: error.message,
+        from: "bottom",
+      });
+    }
     set({ loading: false })
   },
 
