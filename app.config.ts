@@ -13,24 +13,24 @@ const ENV_CONFIG = {
     name: "KetoBM (Dev)",
     bundleIdentifier: "com.denisdov.ketobm.dev",
     packageName: "com.denisdov.ketobm.dev",
-    icon: "./src/assets/images/icon.png",
-    adaptiveIcon: "./src/assets/images/adaptive-icon.png",
+    icon: "./assets/branding/icon.png",
+    adaptiveIcon: "./assets/branding/adaptive-icon.png",
     scheme: "ketobm-dev",
   },
   preview: {
     name: "KetoBM (Preview)",
     bundleIdentifier: "com.denisdov.ketobm.preview",
     packageName: "com.denisdov.ketobm.preview",
-    icon: "./src/assets/images/icon.png",
-    adaptiveIcon: "./src/assets/images/adaptive-icon.png",
+    icon: "./assets/branding/icon.png",
+    adaptiveIcon: "./assets/branding/adaptive-icon.png",
     scheme: "ketobm-preview",
   },
   production: {
     name: "KetoBM",
     bundleIdentifier: "com.denisdov.ketobm",
     packageName: "com.denisdov.ketobm",
-    icon: "./src/assets/images/icon.png",
-    adaptiveIcon: "./src/assets/images/adaptive-icon.png",
+    icon: "./assets/branding/icon.png",
+    adaptiveIcon: "./assets/branding/adaptive-icon.png",
     scheme: "ketobm",
   },
 };
@@ -67,7 +67,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     web: {
       bundler: "metro",
       output: "static",
-      favicon: "./src/assets/images/favicon.png",
+      favicon: "./assets/branding/favicon.png",
     },
     plugins: [
       "expo-router",
@@ -77,7 +77,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       [
         "expo-splash-screen",
         {
-          image: "./src/assets/images/splash-icon.png",
+          image: "./assets/branding/splash-icon.png",
           imageWidth: 200,
           resizeMode: "contain",
           backgroundColor: "#ffffff",

@@ -11,7 +11,7 @@ export default function LandingScreen() {
     <View style={styles.container}>
       <Image
         style={styles.image}
-        source={require("../assets/app/images/landing.jpg")}
+        source={require("../../assets/images/landing.jpg")}
       />
       <View style={[styles.content, { paddingBottom: bottom }]}>
         <Text style={styles.title}>
