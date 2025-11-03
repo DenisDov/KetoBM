@@ -35,26 +35,18 @@ if (__DEV__) {
 }
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
+  const [fontsLoaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
   });
+
+  const colorScheme = useColorScheme();
+  const { restoreSession, initialized, loading, user } = useAuthStore();
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
-
-  if (!loaded) {
-    return null;
-  }
-
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-  const { restoreSession, initialized, loading, user } = useAuthStore();
 
   useEffect(() => {
     restoreSession();
@@ -66,17 +58,13 @@ function RootLayoutNav() {
     }
   }, [initialized, loading]);
 
-  if (!initialized || loading) {
+  if (!fontsLoaded || !initialized || loading) {
     return null;
   }
 
   const isLoggedIn = !!user;
   const hasCompletedOnboarding = false;
   const shouldCreateAccount = false;
-
-  // TODO: add this once we have the onboarding flow
-  // const hasCompletedOnboarding = !!user?.hasCompletedOnboarding
-  // const shouldCreateAccount = !!user?.shouldCreateAccount
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
@@ -92,8 +80,8 @@ function RootLayoutNav() {
           </Stack.Protected>
         </Stack.Protected>
         {/* <Stack.Protected guard={!hasCompletedOnboarding}>
-          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-        </Stack.Protected> */}
+        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+      </Stack.Protected> */}
       </Stack>
     </ThemeProvider>
   );
