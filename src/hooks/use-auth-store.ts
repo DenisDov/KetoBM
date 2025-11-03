@@ -44,6 +44,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     })
   },
 
+  // REGISTER
   signUpWithEmail: async (email, password) => {
     set({ loading: true })
     const { error } = await supabase.auth.signUp({ email, password })
@@ -60,6 +61,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ loading: false })
   },
 
+  // LOGIN
   signInWithEmail: async (email, password) => {
     set({ loading: true })
     const { error } = await supabase.auth.signInWithPassword({ email, password })
