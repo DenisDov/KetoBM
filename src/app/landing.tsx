@@ -52,13 +52,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    color: "#181A1E",
     fontWeight: "bold",
     textAlign: "center",
   },
   description: {
     fontSize: 14,
-    color: "#5F616C",
     textAlign: "center",
     marginTop: 14,
     marginBottom: 40,
