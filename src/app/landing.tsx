@@ -2,18 +2,18 @@ import { Button } from "@/components/button";
 import { Text, View } from "@/components/Themed";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
-import { Dimensions, StyleSheet } from "react-native";
-
-const { height } = Dimensions.get("window");
+import { StyleSheet } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function LandingScreen() {
+  const { bottom } = useSafeAreaInsets();
   return (
     <View style={styles.container}>
       <Image
         style={styles.image}
         source={require("../assets/app/images/landing.jpg")}
       />
-      <View style={styles.content}>
+      <View style={[styles.content, { paddingBottom: bottom }]}>
         <Text style={styles.title}>
           {"Track your ketones and \n glucose. Own your health"}
         </Text>
@@ -39,22 +39,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    justifyContent: "flex-end",
   },
   image: {
     width: "100%",
+    height: "100%",
     backgroundColor: "white",
-    height: height * 0.6,
   },
   content: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 32,
   },
   title: {
     fontSize: 24,
+    color: "#181A1E",
     fontWeight: "bold",
     textAlign: "center",
   },
   description: {
     fontSize: 14,
+    color: "#5F616C",
     textAlign: "center",
     marginTop: 14,
     marginBottom: 40,
