@@ -6,13 +6,14 @@ export default function TabOneScreen() {
   const { env } = Constants.expoConfig?.extra ?? {};
   console.log("Running in:", env);
 
-  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-  console.log("API URL:", apiUrl);
+  const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL
+  console.log("SUPABASE URL:", supabaseUrl);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Home tab</Text>
       <Text style={styles.title}>ENV:{env}</Text>
-      <Text style={styles.title}>API URL:{apiUrl}</Text>
+      <Text style={styles.title}>SUPABASE URL:{supabaseUrl}</Text>
     </View>
   );
 }
