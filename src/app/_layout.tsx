@@ -47,7 +47,7 @@ export default function RootLayout() {
   });
 
   const colorScheme = useColorScheme();
-  const { restoreSession, initialized, loading, user } = useAuthStore();
+  const { restoreSession, initialized, user } = useAuthStore();
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -59,12 +59,12 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    if (initialized && !loading) {
+    if (initialized) {
       SplashScreen.hideAsync();
     }
-  }, [initialized, loading]);
+  }, [initialized]);
 
-  if (!fontsLoaded || !initialized || loading) {
+  if (!fontsLoaded || !initialized) {
     return null;
   }
 
