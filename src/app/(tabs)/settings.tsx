@@ -1,14 +1,10 @@
-import { Button, StyleSheet } from "react-native";
-
 import { Text, View } from "@/components/Themed";
-import { useAuthStore } from "@/hooks/use-auth-store";
+import { StyleSheet } from "react-native";
 
 export default function SettingsScreen() {
-  const { logOut } = useAuthStore();
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Settings</Text>
-      <Button title="Log Out" onPress={logOut} />
     </View>
   );
 }

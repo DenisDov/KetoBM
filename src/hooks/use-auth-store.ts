@@ -1,98 +1,85 @@
-import * as SecureStore from "expo-secure-store";
-import { Platform } from "react-native";
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { Session, User } from '@supabase/supabase-js'
+import { create } from 'zustand'
+import { supabase } from '../lib/supabase'
 
-const isWeb = Platform.OS === "web";
 
-type UserState = {
-  isLoggedIn: boolean;
-  shouldCreateAccount: boolean;
-  hasCompletedOnboarding: boolean;
-  isVip: boolean;
-  _hasHydrated: boolean;
-  logIn: () => void;
-  logOut: () => void;
-  completeOnboarding: () => void;
-  resetOnboarding: () => void;
-  logInAsVip: () => void;
-  setHasHydrated: (value: boolean) => void;
-};
+type AuthState = {
+  user: User | null
+  session: Session | null
+  loading: boolean
+  initialized: boolean
 
-export const useAuthStore = create(
-  persist<UserState>(
-    (set) => ({
-      isLoggedIn: false,
-      shouldCreateAccount: false,
-      hasCompletedOnboarding: false,
-      isVip: false,
-      _hasHydrated: false,
-      logIn: () => {
-        set((state) => {
-          return {
-            ...state,
-            isLoggedIn: true,
-          };
-        });
-      },
-      logInAsVip: () => {
-        set((state) => {
-          return {
-            ...state,
-            isVip: true,
-            isLoggedIn: true,
-          };
-        });
-      },
-      logOut: () => {
-        set((state) => {
-          return {
-            ...state,
-            isVip: false,
-            isLoggedIn: false,
-          };
-        });
-      },
-      completeOnboarding: () => {
-        set((state) => {
-          return {
-            ...state,
-            hasCompletedOnboarding: true,
-          };
-        });
-      },
-      resetOnboarding: () => {
-        set((state) => {
-          return {
-            ...state,
-            hasCompletedOnboarding: false,
-          };
-        });
-      },
-      setHasHydrated: (value: boolean) => {
-        set((state) => {
-          return {
-            ...state,
-            _hasHydrated: value,
-          };
-        });
-      },
-    }),
-    {
-      name: "auth-store",
-      storage: isWeb
-        ? createJSONStorage(() => localStorage)
-        : createJSONStorage(() => ({
-            setItem: (key: string, value: string) =>
-              SecureStore.setItemAsync(key, value),
-            getItem: (key: string) => SecureStore.getItemAsync(key),
-            removeItem: (key: string) => SecureStore.deleteItemAsync(key),
-          })),
-      onRehydrateStorage: () => {
-        return (state) => {
-          state?.setHasHydrated(true);
-        };
-      },
-    }
-  )
-);
+  // Methods
+  signInWithEmail: (email: string, password: string) => Promise<void>
+  signUpWithEmail: (email: string, password: string) => Promise<void>
+  signOut: () => Promise<void>
+  signInWithGoogle: () => Promise<void>
+  signInWithApple: () => Promise<void>
+  restoreSession: () => Promise<void>
+}
+
+export const useAuthStore = create<AuthState>((set) => ({
+  user: null,
+  session: null,
+  loading: true,
+  initialized: false,
+
+  restoreSession: async () => {
+    const { data } = await supabase.auth.getSession()
+    set({
+      session: data.session,
+      user: data.session?.user ?? null,
+      loading: false,
+      initialized: true,
+    })
+
+    // Listen to changes
+    supabase.auth.onAuthStateChange((_event, session) => {
+      set({
+        session,
+        user: session?.user ?? null,
+      })
+    })
+  },
+
+  signUpWithEmail: async (email, password) => {
+    set({ loading: true })
+    const { error } = await supabase.auth.signUp({ email, password })
+    if (error) console.error(error)
+    set({ loading: false })
+  },
+
+  signInWithEmail: async (email, password) => {
+    set({ loading: true })
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) console.error(error)
+    set({ loading: false })
+  },
+
+  signOut: async () => {
+    await supabase.auth.signOut()
+    set({ user: null, session: null })
+  },
+
+  signInWithGoogle: async () => {
+    console.log('signInWithGoogle')
+    // const redirectUrl = AuthSession.makeRedirectUri({ path: '/' })
+    // const { data, error } = await supabase.auth.signInWithOAuth({
+    //   provider: 'google',
+    //   options: { redirectTo: redirectUrl },
+    // })
+    // if (error) console.error(error)
+    // if (data?.url) await WebBrowser.openAuthSessionAsync(data.url)
+  },
+
+  signInWithApple: async () => {
+    console.log('signInWithApple')
+    // const redirectUrl = AuthSession.makeRedirectUri({ path: '/' })
+    // const { data, error } = await supabase.auth.signInWithOAuth({
+    //   provider: 'apple',
+    //   options: { redirectTo: redirectUrl },
+    // })
+    // if (error) console.error(error)
+    // if (data?.url) await WebBrowser.openAuthSessionAsync(data.url)
+  },
+}))

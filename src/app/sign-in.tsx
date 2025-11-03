@@ -3,12 +3,14 @@ import { useAuthStore } from "@/hooks/use-auth-store";
 import { Button, StyleSheet } from "react-native";
 
 export default function SignInScreen() {
-  const { logIn, logInAsVip } = useAuthStore();
+  const { signInWithEmail, signUpWithEmail, signInWithGoogle, signInWithApple } = useAuthStore();
   return (
     <View style={styles.container}>
       <Text>Sign In Screen</Text>
-      <Button title="Sign In" onPress={logIn} />
-      <Button title="Sign In as VIP ⭐" onPress={logInAsVip} />
+      <Button title="create account with Email" onPress={() => signUpWithEmail('test@test.com', 'test123')} />
+      <Button title="login with Email" onPress={() => signInWithEmail('test@test.com', 'test123')} />
+      <Button title="Sign In with Google" onPress={signInWithGoogle} />
+      <Button title="Sign In with Apple" onPress={signInWithApple} />
     </View>
   );
 }

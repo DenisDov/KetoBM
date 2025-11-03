@@ -60,24 +60,29 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-  const {
-    isLoggedIn,
-    shouldCreateAccount,
-    hasCompletedOnboarding,
-    _hasHydrated,
-  } = useAuthStore();
+  const { restoreSession, initialized, loading, user } = useAuthStore();
 
-  // https://zustand.docs.pmnd.rs/integrations/persisting-store-data#how-can-i-check-if-my-store-has-been-hydrated
-  // Hide the splash screen after the store has been hydrated
   useEffect(() => {
-    if (_hasHydrated) {
+    restoreSession();
+  }, []);
+
+  useEffect(() => {
+    if (initialized && !loading) {
       SplashScreen.hideAsync();
     }
-  }, [_hasHydrated]);
+  }, [initialized, loading]);
 
-  if (!_hasHydrated && !isWeb) {
+  if (!initialized && !loading) {
     return null;
   }
+
+  const isLoggedIn = !!user;
+  const hasCompletedOnboarding = false;
+  const shouldCreateAccount = false;
+
+  // TODO: add this once we have the onboarding flow
+  // const hasCompletedOnboarding = !!user?.hasCompletedOnboarding
+  // const shouldCreateAccount = !!user?.shouldCreateAccount
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
@@ -86,15 +91,15 @@ function RootLayoutNav() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: "modal" }} />
         </Stack.Protected>
-        <Stack.Protected guard={!isLoggedIn && hasCompletedOnboarding}>
+        <Stack.Protected guard={!isLoggedIn}>
           <Stack.Screen name="sign-in" />
           <Stack.Protected guard={shouldCreateAccount}>
             <Stack.Screen name="create-account" />
           </Stack.Protected>
         </Stack.Protected>
-        <Stack.Protected guard={!hasCompletedOnboarding}>
+        {/* <Stack.Protected guard={!hasCompletedOnboarding}>
           <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-        </Stack.Protected>
+        </Stack.Protected> */}
       </Stack>
     </ThemeProvider>
   );

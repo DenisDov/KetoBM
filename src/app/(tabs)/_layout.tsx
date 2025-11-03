@@ -6,7 +6,7 @@ import { Pressable } from 'react-native';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { useColorScheme } from '@/components/useColorScheme';
 import Colors from '@/constants/Colors';
-import { useAuthStore } from '@/hooks/use-auth-store';
+// import { useAuthStore } from '@/hooks/use-auth-store';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -18,7 +18,7 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const { isVip } = useAuthStore();
+  // const { isVip } = useAuthStore();
   return (
     <Tabs
       screenOptions={{
@@ -48,7 +48,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Protected guard={isVip}>
+      <Tabs.Protected guard={false}>
         <Tabs.Screen name="vip" options={{
           title: 'VIP tab',
           tabBarIcon: ({ color }) => <TabBarIcon name="star" color={color} />,
