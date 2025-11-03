@@ -1,4 +1,5 @@
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { PressableOpacity } from 'pressto';
+import { StyleSheet, Text } from "react-native";
 
 export const Button = ({
   title,
@@ -8,9 +9,9 @@ export const Button = ({
   onPress?: () => void;
 }) => {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <PressableOpacity style={styles.button} onPress={onPress}>
       <Text style={styles.text}>{title}</Text>
-    </TouchableOpacity>
+    </PressableOpacity>
   );
 };
 
