@@ -13,6 +13,7 @@
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
     "@react-navigation/native": "^7.1.8",
+    "@shopify/react-native-skia": "2.2.12",
     "@supabase/supabase-js": "^2.78.0",
     "burnt": "^0.13.0",
     "expo": "~54.0.20",
@@ -20,6 +21,7 @@
     "expo-constants": "~18.0.10",
     "expo-dev-client": "~6.0.16",
     "expo-font": "~14.0.9",
+    "expo-image": "~3.0.10",
     "expo-linking": "~8.0.8",
     "expo-router": "~6.0.13",
     "expo-secure-store": "~15.0.7",
@@ -45,5 +47,8 @@
     "reactotron-react-native": "^5.1.18",
     "typescript": "~5.9.2"
   },
-  "private": true
+  "private": true,
+  "trustedDependencies": [
+    "@shopify/react-native-skia"
+  ]
 }

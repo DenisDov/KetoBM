@@ -74,6 +74,7 @@ export default function RootLayout() {
           <Stack.Screen name="modal" options={{ presentation: "modal", title: "lorem" }} />
         </Stack.Protected>
         <Stack.Protected guard={!isLoggedIn}>
+          <Stack.Screen name="landing" />
           <Stack.Screen name="sign-in" />
           <Stack.Protected guard={shouldCreateAccount}>
             <Stack.Screen name="create-account" />
