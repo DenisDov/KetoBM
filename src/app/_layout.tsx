@@ -6,7 +6,10 @@ import {
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+// import type { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
+import { ArrowLeft } from "lucide-react-native";
+import { PressableOpacity } from "pressto";
 import { useEffect } from "react";
 import { Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -17,7 +20,7 @@ import { useAuthStore } from "@/hooks/use-auth-store";
 
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary
+  ErrorBoundary,
 } from "expo-router";
 
 export const unstable_settings = {
@@ -39,6 +42,13 @@ if (!isWeb) {
 if (__DEV__) {
   require("../../ReactotronConfig");
 }
+
+const headerOptions = {
+  headerLargeTitle: true,
+  headerBackButtonDisplayMode: "minimal",
+  headerBackImageSource: require("../../assets/icons/arrow-left.png"),
+  headerTintColor: "#181A1E",
+} as any; // FIXME: add proper type
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
@@ -85,7 +95,7 @@ export default function RootLayout() {
           </Stack.Protected>
           <Stack.Protected guard={!isLoggedIn}>
             <Stack.Screen name="landing" options={{ headerShown: false }} />
-            <Stack.Screen name="auth-cta" options={{ headerLargeTitle: true }} />
+            <Stack.Screen name="auth-cta" options={headerOptions} />
             <Stack.Screen name="sign-in" />
             <Stack.Screen name="create-account" />
             {/* <Stack.Protected guard={shouldCreateAccount}>
