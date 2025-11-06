@@ -6,10 +6,7 @@ import {
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-// import type { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
-import { ArrowLeft } from "lucide-react-native";
-import { PressableOpacity } from "pressto";
 import { useEffect } from "react";
 import { Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -48,7 +45,7 @@ const headerOptions = {
   headerBackButtonDisplayMode: "minimal",
   headerBackImageSource: require("../../assets/icons/arrow-left.png"),
   headerTintColor: "#181A1E",
-} as any; // FIXME: add proper type
+} as const;
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
@@ -66,6 +63,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     restoreSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
