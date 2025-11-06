@@ -74,6 +74,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       "expo-secure-store",
       "expo-sqlite",
       "expo-build-properties",
+      "expo-web-browser",
       [
         "expo-splash-screen",
         {
