@@ -47,7 +47,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     version,
     orientation: "portrait",
     userInterfaceStyle: "automatic",
-    newArchEnabled: true,
     ios: {
       bundleIdentifier: envConfig.bundleIdentifier,
       supportsTablet: true,
@@ -61,7 +60,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         foregroundImage: envConfig.adaptiveIcon,
         backgroundColor: "#ffffff",
       },
-      edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,
     },
     web: {
@@ -75,6 +73,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       "expo-sqlite",
       "expo-build-properties",
       "expo-web-browser",
+      "expo-font",
+      "expo-image",
       [
         "expo-splash-screen",
         {
