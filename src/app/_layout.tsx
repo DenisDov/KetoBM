@@ -42,6 +42,7 @@ if (__DEV__) {
 
 const headerOptions = {
   headerLargeTitle: true,
+  headerTransparent: false,
   headerBackButtonDisplayMode: "minimal",
   headerBackImageSource: require("../../assets/icons/arrow-left.png"),
   headerTintColor: "#181A1E",
