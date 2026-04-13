@@ -57,8 +57,5 @@
     "reactotron-react-native": "^5.1.18",
     "typescript": "~5.9.2"
   },
-  "private": true,
-  "trustedDependencies": [
-    "@shopify/react-native-skia"
-  ]
+  "private": true
 }
