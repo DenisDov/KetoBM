@@ -2,7 +2,7 @@ import { Session, User } from "@supabase/supabase-js";
 import { create } from "zustand";
 import { supabase } from "../lib/supabase";
 
-import * as Burnt from "burnt";
+// import * as Burnt from "burnt";
 
 type AuthState = {
   user: User | null;
@@ -11,8 +11,8 @@ type AuthState = {
   initialized: boolean;
 
   // Methods
-  signInWithEmail: (email: string, password: string) => Promise<void>;
-  signUpWithEmail: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
@@ -44,24 +44,25 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   // REGISTER
-  signUpWithEmail: async (email, password) => {
+  register: async (email, password) => {
     set({ loading: true });
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) {
       console.log(error);
-      Burnt.toast({
-        title: "Error",
-        preset: "error",
-        message: error.message,
-        from: "bottom",
-      });
+      alert(error.message);
+      // Burnt.toast({
+      //   title: "Error",
+      //   preset: "error",
+      //   message: error.message,
+      //   from: "bottom",
+      // });
     }
 
     set({ loading: false });
   },
 
   // LOGIN
-  signInWithEmail: async (email, password) => {
+  login: async (email, password) => {
     set({ loading: true });
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -69,12 +70,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     });
     if (error) {
       console.log(error);
-      Burnt.toast({
-        title: "Error",
-        preset: "error",
-        message: error.message,
-        from: "bottom",
-      });
+      // Burnt.toast({
+      //   title: "Error",
+      //   preset: "error",
+      //   message: error.message,
+      //   from: "bottom",
+      // });
+      alert(error.message);
     }
     set({ loading: false });
   },

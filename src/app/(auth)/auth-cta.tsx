@@ -4,10 +4,10 @@ import { PressableOpacity } from "pressto";
 import { StyleSheet } from "react-native";
 
 export default function AuthCTAScreen() {
-  const { type } = useLocalSearchParams();
+  const { mode } = useLocalSearchParams<{ mode?: "login" | "register" }>();
+  const isLoginMode = mode !== "register";
 
-  const title =
-    type === "create" ? "Create your account" : "Login to your account";
+  const title = isLoginMode ? "Login to your account" : "Create your account";
 
   return (
     <>
@@ -20,7 +20,7 @@ export default function AuthCTAScreen() {
           <Text>Continue with Apple</Text>
         </PressableOpacity>
         <Text>or</Text>
-        <Link href="/sign-in" asChild>
+        <Link href={`/auth?mode=${mode}`} asChild>
           <PressableOpacity>
             <Text>Continue with Email</Text>
           </PressableOpacity>

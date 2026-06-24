@@ -23,10 +23,10 @@ export default function LandingScreen() {
           }
         </Text>
         <View style={styles.buttons}>
-          <Link href="/auth-cta?type=create" asChild>
+          <Link href="/auth-cta?mode=register" asChild>
             <Button title="Create account" />
           </Link>
-          <Link href="/auth-cta?type=login" asChild>
+          <Link href="/auth-cta?mode=login" asChild>
             <Button title="Login" />
           </Link>
         </View>
