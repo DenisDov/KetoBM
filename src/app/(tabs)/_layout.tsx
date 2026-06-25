@@ -14,8 +14,8 @@ export default function TabLayout() {
       <NativeTabs.Trigger name="readings">
         <NativeTabs.Trigger.Icon
           sf={{
-            default: "doc",
-            selected: "doc.fill",
+            default: "waveform.path.ecg.text.page",
+            selected: "waveform.path.ecg.text.page.fill",
           }}
           md={{ default: "description", selected: "description" }}
         />
@@ -33,7 +33,13 @@ export default function TabLayout() {
         <NativeTabs.Trigger.Badge />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="settings">
-        <NativeTabs.Trigger.Icon sf="gear" md="settings" />
+        <NativeTabs.Trigger.Icon
+          sf={{
+            default: "gearshape",
+            selected: "gearshape.fill",
+          }}
+          md={{ default: "settings", selected: "settings" }}
+        />
         <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
     </NativeTabs>
