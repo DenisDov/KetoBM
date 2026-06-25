@@ -15,7 +15,7 @@ export default function SignInScreen() {
   const { login, register, signInWithGoogle, signInWithApple } = useAuthStore();
 
   const isLoginMode = mode !== "register";
-  const title = isLoginMode ? "Login to your account" : "Create your account";
+  const title = isLoginMode ? "Welcome back." : "Create your account";
 
   const {
     control,
