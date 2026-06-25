@@ -95,7 +95,7 @@ export default function RootLayout() {
           <Stack.Protected guard={!isLoggedIn}>
             <Stack.Screen name="landing" options={{ headerShown: false }} />
             <Stack.Screen name="(auth)/auth-cta" options={headerOptions} />
-            <Stack.Screen name="(auth)/auth" />
+            <Stack.Screen name="(auth)/auth" options={headerOptions} />
             {/* <Stack.Screen name="register" /> */}
             {/* <Stack.Protected guard={shouldCreateAccount}>
             <Stack.Screen name="create-account" />
