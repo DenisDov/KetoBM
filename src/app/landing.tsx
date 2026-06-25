@@ -2,18 +2,31 @@ import { Button } from "@/components/button";
 import { Text, View } from "@/components/Themed";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Svg, { Path } from "react-native-svg";
 
 export default function LandingScreen() {
   const { bottom } = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
   return (
     <View style={styles.container}>
       <Image
         style={styles.image}
         source={require("../../assets/images/landing.jpg")}
       />
+
       <View style={[styles.content, { paddingBottom: bottom }]}>
+        <Svg
+          height={50}
+          width={width}
+          viewBox={`0 0 ${width} 50`}
+          style={styles.svg}>
+          <Path
+            d={`M 0 50 L 0 0 Q ${width / 2} 50 ${width} 0 L ${width} 50 Z`}
+            fill="white"
+          />
+        </Svg>
         <Text style={styles.title}>
           {"Track your ketones and \n glucose. Own your health"}
         </Text>
@@ -48,7 +61,6 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
-    paddingTop: 32,
   },
   title: {
     fontSize: 24,
@@ -63,5 +75,12 @@ const styles = StyleSheet.create({
   },
   buttons: {
     gap: 16,
+  },
+  svg: {
+    position: "absolute",
+    top: -50,
+    // bottom: 0,
+    left: 0,
+    right: 0,
   },
 });
