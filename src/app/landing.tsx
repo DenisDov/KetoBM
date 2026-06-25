@@ -40,7 +40,7 @@ export default function LandingScreen() {
             <Button title="Create account" />
           </Link>
           <Link href="/auth-cta?mode=login" asChild>
-            <Button title="Login" />
+            <Button title="Login" variant="secondary" />
           </Link>
         </View>
       </View>
