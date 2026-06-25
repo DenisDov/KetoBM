@@ -38,7 +38,7 @@ const ENV_CONFIG = {
 export default ({ config }: ConfigContext): ExpoConfig => {
   console.log("⚙️ Building app for environment:", APP_ENV);
   const env = APP_ENV as keyof typeof ENV_CONFIG;
-  const envConfig = ENV_CONFIG[env]; //
+  const envConfig = ENV_CONFIG[env];
 
   return {
     ...config,

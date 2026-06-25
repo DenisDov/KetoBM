@@ -1,5 +1,6 @@
 import { Button } from "@/components/button";
 import { Text, View } from "@/components/Themed";
+import Constants from "expo-constants";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
 import { StyleSheet, useWindowDimensions } from "react-native";
@@ -9,8 +10,22 @@ import Svg, { Path } from "react-native-svg";
 export default function LandingScreen() {
   const { bottom } = useSafeAreaInsets();
   const { width } = useWindowDimensions();
+
+  const { env } = Constants.expoConfig?.extra ?? {};
+  const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          marginTop: 60,
+          position: "absolute",
+          top: 0,
+          zIndex: 1,
+        }}>
+        <Text>ENV:{env}</Text>
+        <Text>SUPABASE URL:{supabaseUrl}</Text>
+      </View>
       <Image
         style={styles.image}
         source={require("../../assets/images/landing.jpg")}
