@@ -1,50 +1,108 @@
-Build native iOS app
-`bun expo run:ios`
-Build native Android app
-`bun expo run:android`
+# Project Setup
 
-After first build, we can use this if we only modify TypeScript code
-`bun expo start`
+## Prerequisites
 
-if fail, try
+We use bun as the package manager.
 
-`sh reset.sh`
+Install all dependencies:
 
-Install deps:
+```bash
+bun install
+```
 
-`bun expo install zustand expo-secure-store`
+Install Expo-specific dependencies (ensures version compatibility):
 
-Install deps to dev:
+```bash
+bun expo install zustand expo-secure-store
+```
 
-`bun expo install reactotron-react-native -- --development`
+Install dev dependencies:
 
-Manage Expo and Supabase envs:
+```bash
+bun expo install reactotron-react-native -- --development
+```
 
-we have 9 Environment variables in EAS. Each env have 3 variables.
+---
 
-we have development, preview and production in EAS
+## Environment Variables
 
-For Supabase we also have three, but local supabase instance running in Docker for work in development. For remote Supabase we have two separate projects: keto-bm-preview and keto-bm-production. Never manually change tables in Supabse dashboard, use only migration files
+We use **9 EAS environment variables** across 3 environments: `development`, `preview`, and `production`.
 
-BUILD AND RUN LOCALLY (WITHOUT EAS):
+Each environment has 3 variables (API URLs, keys, etc.).
 
-1. PULL ENV
-   `eas env:pull` - then choose desired env
-2. prebuild per env (regenerates ios/ and android/ folders)
-   `APP_ENV=development npx expo prebuild --clean`
-3. RUN
-   `APP_ENV=development npx expo run:ios`
+### Supabase
 
-FOR RELEASE BUILDS USE EAS:
+| Environment   | Instance                             |
+| ------------- | ------------------------------------ |
+| `development` | Local Docker instance                |
+| `preview`     | Remote project: `keto-bm-preview`    |
+| `production`  | Remote project: `keto-bm-production` |
 
-# Dev
+> ⚠️ Never manually change tables in the Supabase dashboard. Use migration files only.
 
-`APP_ENV=development eas build --profile development --platform android --local`
+---
+
+## Running the App
+
+### First run (generates native `ios/` and `android/` folders)
+
+```bash
+bun expo run:ios
+bun expo run:android
+```
+
+### Subsequent runs (TypeScript changes only)
+
+```bash
+bun expo start
+```
+
+### If something breaks
+
+```bash
+sh reset.sh
+```
+
+---
+
+## Local Builds (Without EAS)
+
+Use this when you need a local native build for a specific environment.
+
+**Step 1 — Pull env vars** (writes to `.env.local` by default)
+
+```bash
+eas env:pull development   # or: preview | production
+```
+
+**Step 2 — Prebuild** (regenerates `ios/` and `android/` folders)
+
+```bash
+APP_ENV=development npx expo prebuild --clean
+```
+
+**Step 3 — Build & Run**
+
+```bash
+APP_ENV=development npx expo run:ios
+APP_ENV=development npx expo run:android
+```
+
+> ⚠️ `--clean` wipes and regenerates native folders. Run one environment at a time.
+
+---
+
+## Release Builds (EAS)
+
+Builds run on EAS servers. Use `--local` to run on your machine instead (experimental).
+
+```bash
+# Development
+APP_ENV=development eas build --profile development --platform android --local
 
 # Preview
+APP_ENV=preview eas build --profile preview --platform android --local
 
-`APP_ENV=preview eas build --profile preview --platform android --local`
-
-# Prod
-
-`APP_ENV=production eas build --profile production --platform android --local`
+# Production
+APP_ENV=production eas build --profile production --platform android --local
+```
