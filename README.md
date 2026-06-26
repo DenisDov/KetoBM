@@ -183,6 +183,23 @@ When multiple developers share a Supabase project, a few rules keep migrations f
 
 The golden rule: never change the remote database directly. Once you're using migrations, all schema changes — even small ones — should go through migration files. Using the Dashboard's SQL editor or Table Editor on your remote database bypasses the migration history, and db push will start failing with sync errors.
 
+## Check all migrations from linked projects
+
+`supabase migration list`
+
 ## Scripts
 
 Run specific from `package.json` like `bun run push:preview` to update `preview` project from `development`
+
+## How to push to Supabase prod step by step
+
+1. `bun run link:prod`
+2. Check `supabase migration list`
+3. `supabase db push`
+4. check new appeared tables
+
+## Check which remote project is currently linked
+
+`cat supabase/.temp/project-ref`
+
+or check `API_URL` after run `supabase status`
