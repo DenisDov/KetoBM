@@ -106,3 +106,71 @@ APP_ENV=preview eas build --profile preview --platform android --local
 # Production
 APP_ENV=production eas build --profile production --platform android --local
 ```
+
+# Manual migration
+
+https://supabase.com/docs/guides/deployment/managing-environments#manual-migration
+
+1. Create a new migration script
+   `supabase migration new new_employee`
+2. write SQL statements in this script
+
+```sql
+create table public.employees (
+  id integer primary key generated always as identity,
+  name text
+);
+```
+
+3. Apply the new migration to local db. Never run it against a remote project.
+   `supabase db reset`
+
+4. For remote
+   `supabase db push`
+
+### Seeding local db
+
+1. create file in `supabase/seeds/employees.sql`
+   then paste into it
+
+2. ```sql
+   INSERT INTO public.employees (name) VALUES
+     ('Alice Johnson'),
+     ('Bob Smith'),
+     ('Carol White'),
+     ('David Brown');
+   ```
+
+3. `supabase db reset`
+
+# Or in Declarative way (Not needed to write manually in migration file)
+
+Decribe desired db in `sql` files
+
+1. Create file in `supabase/schemas/todos.sql`
+2. Write
+
+```sql
+create table public.todos (
+    id bigint not null primary key,
+    title text not null
+)
+```
+
+3. Run `supabase db diff -f todos_table`
+4. Apply migration `supabase migration up`
+
+Modify this table
+
+1. Add new `description`column to todos
+
+```sql
+create table public.todos (
+    id bigint not null primary key,
+    title text not null,
+    description text
+)
+```
+
+2. Run `supabase db diff -f add_desription_to_todos`
+3. Apply migration `supabase migration up`
