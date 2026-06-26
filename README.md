@@ -182,3 +182,7 @@ https://supabase.com/docs/guides/deployment/database-migrations#working-with-a-t
 When multiple developers share a Supabase project, a few rules keep migrations from getting out of sync.
 
 The golden rule: never change the remote database directly. Once you're using migrations, all schema changes — even small ones — should go through migration files. Using the Dashboard's SQL editor or Table Editor on your remote database bypasses the migration history, and db push will start failing with sync errors.
+
+## Scripts
+
+Run specific from `package.json` like `bun run push:preview` to update `preview` project from `development`
