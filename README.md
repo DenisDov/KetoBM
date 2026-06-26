@@ -174,3 +174,11 @@ create table public.todos (
 
 2. Run `supabase db diff -f add_desription_to_todos`
 3. Apply migration `supabase migration up`
+
+# Supabase - working with a team
+
+https://supabase.com/docs/guides/deployment/database-migrations#working-with-a-team
+
+When multiple developers share a Supabase project, a few rules keep migrations from getting out of sync.
+
+The golden rule: never change the remote database directly. Once you're using migrations, all schema changes — even small ones — should go through migration files. Using the Dashboard's SQL editor or Table Editor on your remote database bypasses the migration history, and db push will start failing with sync errors.

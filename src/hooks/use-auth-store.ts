@@ -1,6 +1,6 @@
 import { Session, User } from "@supabase/supabase-js";
 import { create } from "zustand";
-import { supabase } from "../lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 // import * as Burnt from "burnt";
 
