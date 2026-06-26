@@ -38,7 +38,7 @@ Each environment has 3 variables (API URLs, keys, etc.).
 | `preview`     | Remote project: `keto-bm-preview`    |
 | `production`  | Remote project: `keto-bm-production` |
 
-> ⚠️ Never manually change tables in the Supabase dashboard. Use migration files only.
+> ⚠️ Avoid manually creating tables/RLS policies in the dashboard. Make migrations the single source of truth. It prevents local, preview, and production from drifting apart over time.
 
 ---
 
