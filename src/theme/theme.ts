@@ -52,10 +52,12 @@ const theme = createTheme({
     s: 8,
     sm: 12,
     m: 16,
+    ml: 20,
     l: 24,
     xl: 40,
   },
   borderRadii: {
+    xs: 4,
     s: 8,
     sm: 12,
     m: 16,
@@ -85,8 +87,8 @@ const theme = createTheme({
     },
     title: {
       fontSize: {
-        phone: 16,
-        tablet: 20,
+        phone: 24,
+        tablet: 32,
       },
     },
   },
