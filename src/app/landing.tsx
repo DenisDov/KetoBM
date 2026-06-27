@@ -1,101 +1,38 @@
-import { Button } from "@/components/button";
-import { Text, View } from "@/components/Themed";
-import Constants from "expo-constants";
-import { Image } from "expo-image";
 import { Link } from "expo-router";
-import { StyleSheet, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Svg, { Path } from "react-native-svg";
+import { Box, Text, ImageBox } from "@/components/primitives";
+import { WaveDivider } from "@/components/wave-divider";
+import { Button } from "@/components/button";
+import { EnvBanner } from "@/components/dev/env-banner";
 
 export default function LandingScreen() {
   const { bottom } = useSafeAreaInsets();
-  const { width } = useWindowDimensions();
-
-  const { env } = Constants.expoConfig?.extra ?? {};
-  const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
 
   return (
-    <View style={styles.container}>
-      <View
-        style={{
-          marginTop: 60,
-          position: "absolute",
-          top: 0,
-          zIndex: 1,
-        }}>
-        <Text>ENV:{env}</Text>
-        <Text>SUPABASE URL:{supabaseUrl}</Text>
-      </View>
-      <Image
-        style={styles.image}
-        source={require("../../assets/images/landing.jpg")}
-      />
+    <Box flex={1} backgroundColor="background" justifyContent="flex-end">
+      {__DEV__ ? <EnvBanner /> : null}
 
-      <View style={[styles.content, { paddingBottom: bottom }]}>
-        <Svg
-          height={50}
-          width={width}
-          viewBox={`0 0 ${width} 50`}
-          style={styles.svg}>
-          <Path
-            d={`M 0 50 L 0 0 Q ${width / 2} 50 ${width} 0 L ${width} 50 Z`}
-            fill="white"
-          />
-        </Svg>
-        <Text style={styles.title}>
+      <ImageBox flex={1} source={require("../../assets/images/landing.jpg")} />
+
+      <Box paddingHorizontal="m" style={{ paddingBottom: bottom }}>
+        <WaveDivider />
+        <Text fontSize={24} textAlign="center">
           {"Track your ketones and \n glucose. Own your health"}
         </Text>
-        <Text style={styles.description}>
+        <Text textAlign="center" marginTop="m" marginBottom="l">
           {
             "Connect your KetoBM meter and see real- \n time readings on your phone."
           }
         </Text>
-        <View style={styles.buttons}>
+        <Box gap="m">
           <Link href="/auth-cta?mode=register" asChild>
             <Button title="Create account" />
           </Link>
           <Link href="/auth-cta?mode=login" asChild>
             <Button title="Login" variant="secondary" />
           </Link>
-        </View>
-      </View>
-    </View>
+        </Box>
+      </Box>
+    </Box>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "flex-end",
-  },
-  image: {
-    flex: 1,
-    width: "100%",
-    backgroundColor: "white",
-  },
-  content: {
-    paddingHorizontal: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  description: {
-    fontSize: 14,
-    textAlign: "center",
-    marginTop: 14,
-    marginBottom: 40,
-  },
-  buttons: {
-    gap: 16,
-  },
-  svg: {
-    position: "absolute",
-    top: -50,
-    // bottom: 0,
-    left: 0,
-    right: 0,
-  },
-});

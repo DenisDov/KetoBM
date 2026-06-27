@@ -1,22 +1,19 @@
-import { Text, View } from "@/components/Themed";
-import { StyleSheet } from "react-native";
+import { Box, Text } from "@/components/primitives";
+import { useAuthStore } from "@/hooks/use-auth-store";
+import { Button } from "react-native";
 
 export default function SettingsScreen() {
+  const { user, signOut } = useAuthStore();
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Settings</Text>
-    </View>
+    <Box
+      flex={1}
+      backgroundColor="background"
+      padding="m"
+      justifyContent="center"
+      alignItems="center">
+      <Text fontSize={24}>User:{user?.email}</Text>
+      <Button title="Log Out" onPress={signOut} />
+    </Box>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-});

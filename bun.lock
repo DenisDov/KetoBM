@@ -6,6 +6,7 @@
       "name": "ketobm",
       "dependencies": {
         "@expo/vector-icons": "^15.0.3",
+        "@shopify/restyle": "^2.4.5",
         "@supabase/supabase-js": "^2.78.0",
         "burnt": "^0.13.0",
         "expo": "^56.0.0",
@@ -400,6 +401,8 @@
     "@react-native/virtualized-lists": ["@react-native/virtualized-lists@0.85.3", "", { "dependencies": { "invariant": "^2.2.4", "nullthrows": "^1.1.1" }, "peerDependencies": { "@types/react": "^19.2.0", "react": "*", "react-native": "0.85.3" }, "optionalPeers": ["@types/react"] }, "sha512-dsCjI//OIPEUJMyNHp4l7zNLVjCx7bcaRUceOCkU+IB17hkbtbGWvi7HjGFSzy7FJGmS/MOlcfpb72xXiy1Oig=="],
 
     "@rtsao/scc": ["@rtsao/scc@1.1.0", "", {}, "sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g=="],
+
+    "@shopify/restyle": ["@shopify/restyle@2.4.5", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-xV970ytoX0oLac9+fMOMxcXcV9nv5BtwdNk50ZoyhqSLyiGamLJMpL/lMZIQHsmfDT8sksbUx94zQnZBztMgww=="],
 
     "@sinclair/typebox": ["@sinclair/typebox@0.27.10", "", {}, "sha512-MTBk/3jGLNB2tVxv6uLlFh1iu64iYOQ2PbdOSK3NW8JZsmlaOh2q6sdtKowBhfw8QFLmYNzTW4/oK4uATIi6ZA=="],
 

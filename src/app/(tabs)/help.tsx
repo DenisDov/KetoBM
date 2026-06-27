@@ -1,23 +1,14 @@
-import { StyleSheet } from "react-native";
-
-import { Text, View } from "@/components/Themed";
+import { Box, Text } from "@/components/primitives";
 
 export default function HelpScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Help tab</Text>
-    </View>
+    <Box
+      flex={1}
+      backgroundColor="background"
+      padding="m"
+      justifyContent="center"
+      alignItems="center">
+      <Text fontSize={24}>Help tab</Text>
+    </Box>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-});

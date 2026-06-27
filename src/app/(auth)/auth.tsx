@@ -1,9 +1,9 @@
 import { Button } from "@/components/button";
-import { Text, View } from "@/components/Themed";
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { Controller, useForm } from "react-hook-form";
-import { StyleSheet, TextInput } from "react-native";
+import { TextInput } from "react-native";
 import { Stack, useLocalSearchParams } from "expo-router";
+import { Box, Text } from "@/components/primitives";
 
 type FormData = {
   email: string;
@@ -43,8 +43,7 @@ export default function SignInScreen() {
   return (
     <>
       <Stack.Screen options={{ title }} />
-      <View style={styles.container}>
-        {/* <Text>{isLoginMode ? "Welcome back." : "Create your account."}</Text> */}
+      <Box flex={1} backgroundColor="background" padding="m">
         <Text>
           {isLoginMode
             ? "Enter your credentials to track your ketone journey."
@@ -97,14 +96,7 @@ export default function SignInScreen() {
           title={isLoginMode ? "Login" : "Create Account"}
           onPress={handleSubmit(onSubmit)}
         />
-      </View>
+      </Box>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-});

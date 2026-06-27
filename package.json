@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
+    "@shopify/restyle": "^2.4.5",
     "@supabase/supabase-js": "^2.78.0",
     "burnt": "^0.13.0",
     "expo": "^56.0.0",

@@ -1,42 +1,46 @@
-import { Text, View } from "@/components/Themed";
-import { useAuthStore } from "@/hooks/use-auth-store";
-import Constants from "expo-constants";
-import { Button, StyleSheet } from "react-native";
+import { Box, Text } from "@/components/primitives";
+import { useTheme } from "@shopify/restyle";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ScrollView } from "react-native";
+import { Theme } from "@/theme/theme";
 
-export default function TabOneScreen() {
-  const { env } = Constants.expoConfig?.extra ?? {};
-  console.log("Running in:", env);
-
-  const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
-  console.log("SUPABASE URL:", supabaseUrl);
-
-  const { user, signOut } = useAuthStore();
-
+export default function HomeScreen() {
+  const insets = useSafeAreaInsets();
+  const theme = useTheme<Theme>();
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>ENV:{env}</Text>
-      <Text style={styles.title}>SUPABASE URL:{supabaseUrl}</Text>
-      <View style={styles.separator} />
-      <Text style={styles.title}>User:{user?.email}</Text>
-      <Button title="Log Out" onPress={signOut} />
-    </View>
+    <ScrollView
+      style={{ backgroundColor: theme.colors.background }}
+      contentContainerStyle={{
+        paddingTop: insets.top,
+        paddingBottom: insets.bottom,
+        flexGrow: 1,
+      }}>
+      <Box gap="m" flex={1} padding="m">
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+        <Text>Welcome to the Home Screen</Text>
+      </Box>
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: StyleSheet.hairlineWidth,
-    width: "80%",
-    backgroundColor: "lightgray",
-  },
-});

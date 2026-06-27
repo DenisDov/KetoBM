@@ -1,7 +1,6 @@
-import { Text, View } from "@/components/Themed";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { PressableOpacity } from "pressto";
-import { StyleSheet } from "react-native";
+import { Box, Text } from "@/components/primitives";
 
 export default function AuthCTAScreen() {
   const { mode } = useLocalSearchParams<{ mode?: "login" | "register" }>();
@@ -12,7 +11,7 @@ export default function AuthCTAScreen() {
   return (
     <>
       <Stack.Screen options={{ title }} />
-      <View style={styles.container}>
+      <Box flex={1} backgroundColor="background" padding="m">
         <PressableOpacity>
           <Text>Continue with Google</Text>
         </PressableOpacity>
@@ -25,14 +24,7 @@ export default function AuthCTAScreen() {
             <Text>Continue with Email</Text>
           </PressableOpacity>
         </Link>
-      </View>
+      </Box>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-});

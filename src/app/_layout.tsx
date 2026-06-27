@@ -1,19 +1,14 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "expo-router/react-navigation";
+import { ThemeProvider } from "@shopify/restyle";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { Platform } from "react-native";
+import { Platform, useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import "react-native-reanimated";
-
-import { useColorScheme } from "@/components/useColorScheme";
 import { useAuthStore } from "@/hooks/use-auth-store";
+import { theme, darkTheme } from "@/theme/theme";
+import "react-native-reanimated";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -37,16 +32,9 @@ if (!isWeb) {
 }
 
 if (__DEV__) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   require("../../ReactotronConfig");
 }
-
-const headerOptions = {
-  headerLargeTitle: true,
-  headerTransparent: false,
-  headerBackButtonDisplayMode: "minimal",
-  headerBackImageSource: require("../../assets/icons/arrow-left.png"),
-  headerTintColor: "#181A1E",
-} as const;
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
@@ -55,6 +43,16 @@ export default function RootLayout() {
   });
 
   const colorScheme = useColorScheme();
+  const darkMode = colorScheme === "dark";
+
+  const headerOptions = {
+    headerLargeTitle: true,
+    headerTransparent: false,
+    headerBackButtonDisplayMode: "minimal",
+    headerBackImageSource: require("../../assets/icons/arrow-left.png"),
+    headerTintColor: darkMode ? "#fff" : "#000",
+  } as const;
+
   const { restoreSession, initialized, user } = useAuthStore();
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
@@ -83,7 +81,7 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <ThemeProvider theme={darkMode ? darkTheme : theme}>
         <Stack>
           <Stack.Protected guard={isLoggedIn}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
