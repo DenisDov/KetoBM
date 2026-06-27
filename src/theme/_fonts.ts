@@ -1,5 +1,6 @@
 export const FONTS = {
-  REGULAR: "SpaceMono-Regular",
+  REGULAR: "GeneralSans-Regular",
+  SEMI_BOLD: "GeneralSans-SemiBold",
 } as const;
 
 export type FontFamily = (typeof FONTS)[keyof typeof FONTS];

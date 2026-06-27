@@ -26,7 +26,7 @@ export const KetoneLevel = ({
         <Text flex={1}>{label}</Text>
         <Text>{range}</Text>
       </Box>
-      <Text>{description}</Text>
+      <Text variant="body">{description}</Text>
     </Box>
   );
 };

@@ -1,5 +1,5 @@
 import { createTheme } from "@shopify/restyle";
-import { FONTS } from "./fonts";
+import { FONTS } from "./_fonts";
 
 export const palette = {
   neutral900: "#181A1E",
@@ -81,14 +81,21 @@ const theme = createTheme({
         phone: 14,
         tablet: 16,
       },
-      fontFamily: FONTS.REGULAR,
+      fontFamily: "GeneralSans-Regular",
       color: "text",
       includeFontPadding: false,
     },
     title: {
+      fontFamily: "GeneralSans-SemiBold",
       fontSize: {
         phone: 24,
         tablet: 32,
+      },
+    },
+    body: {
+      fontSize: {
+        phone: 16,
+        tablet: 18,
       },
     },
   },

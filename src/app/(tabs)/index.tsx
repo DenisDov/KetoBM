@@ -8,13 +8,7 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   return (
-    <ScrollView
-      style={{ backgroundColor: theme.colors.background }}
-      contentContainerStyle={{
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-        flexGrow: 1,
-      }}>
+    <ScrollView style={{ backgroundColor: theme.colors.background }}>
       <Box gap="m" flex={1} padding="m">
         <Text>Welcome to the Home Screen</Text>
         <Text>Welcome to the Home Screen</Text>

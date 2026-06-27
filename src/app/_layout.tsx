@@ -38,7 +38,8 @@ if (__DEV__) {
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
-    SpaceMono: require("../../assets/fonts/SpaceMono-Regular.ttf"),
+    Regular: require("../../assets/fonts/GeneralSans-Regular.otf"),
+    SemiBold: require("../../assets/fonts/GeneralSans-Semibold.otf"),
     ...FontAwesome.font,
   });
 

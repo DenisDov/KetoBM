@@ -8,9 +8,7 @@ export default function HelpContentScreen() {
   return (
     <>
       <Stack.Screen options={{ title: "Ketone Readings" }} />
-      <ScrollView
-        style={{ backgroundColor: theme.colors.background }}
-        contentContainerStyle={{ paddingBottom: theme.spacing.m }}>
+      <ScrollView style={{ backgroundColor: theme.colors.background }}>
         <Box backgroundColor="background" paddingHorizontal="m" gap="ml">
           <Text variant="title">What do my ketone readings mean?</Text>
           {KETONE_LEVELS.map((level) => (
