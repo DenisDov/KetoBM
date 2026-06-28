@@ -1,4 +1,4 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import FontAwesome from "@react-native-vector-icons/fontawesome/static";
 import { ThemeProvider as RestyleThemeProvider } from "@shopify/restyle";
 import { useFonts } from "expo-font";
 import { ThemeProvider as NavProvider, Stack } from "expo-router";
