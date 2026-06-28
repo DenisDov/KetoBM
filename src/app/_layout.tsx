@@ -1,7 +1,7 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ThemeProvider as RestyleThemeProvider } from "@shopify/restyle";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { ThemeProvider as NavProvider, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { Platform, useColorScheme } from "react-native";
@@ -10,6 +10,7 @@ import { useAuthStore } from "@/hooks/use-auth-store";
 import { theme, darkTheme } from "@/theme/theme";
 import "react-native-reanimated";
 import { Fonts } from "@/theme/fonts";
+import { NavDarkAdapter, NavLightAdapter } from "@/theme/nav-theme";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -45,13 +46,15 @@ export default function RootLayout() {
   });
 
   const colorScheme = useColorScheme();
-  const darkMode = colorScheme === "dark";
+  const isDarkMode = colorScheme === "dark";
+  const selectedRestyleTheme = isDarkMode ? darkTheme : theme;
+  const selectedNavTheme = isDarkMode ? NavDarkAdapter : NavLightAdapter;
 
   const headerOptions = {
     headerLargeTitle: true,
     headerTransparent: false,
     headerBackButtonDisplayMode: "minimal",
-    headerBackImageSource: require("../../assets/icons/arrow-left.png"),
+    // headerBackImageSource: require("../../assets/icons/arrow-left.png"),
     // headerTintColor: darkMode ? "#fff" : "#000",
   } as const;
 
@@ -83,28 +86,30 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <RestyleThemeProvider theme={darkMode ? darkTheme : theme}>
-        <Stack>
-          <Stack.Protected guard={isLoggedIn}>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="modal"
-              options={{ presentation: "modal", title: "lorem" }}
-            />
-          </Stack.Protected>
-          <Stack.Protected guard={!isLoggedIn}>
-            <Stack.Screen name="landing" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)/auth-cta" options={headerOptions} />
-            <Stack.Screen name="(auth)/auth" options={headerOptions} />
-            {/* <Stack.Screen name="register" /> */}
-            {/* <Stack.Protected guard={shouldCreateAccount}>
+      <RestyleThemeProvider theme={selectedRestyleTheme}>
+        <NavProvider value={selectedNavTheme}>
+          <Stack>
+            <Stack.Protected guard={isLoggedIn}>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="modal"
+                options={{ presentation: "modal", title: "lorem" }}
+              />
+            </Stack.Protected>
+            <Stack.Protected guard={!isLoggedIn}>
+              <Stack.Screen name="landing" options={{ headerShown: false }} />
+              <Stack.Screen name="(auth)/auth-cta" options={headerOptions} />
+              <Stack.Screen name="(auth)/auth" options={headerOptions} />
+              {/* <Stack.Screen name="register" /> */}
+              {/* <Stack.Protected guard={shouldCreateAccount}>
             <Stack.Screen name="create-account" />
           </Stack.Protected> */}
-          </Stack.Protected>
-          {/* <Stack.Protected guard={!hasCompletedOnboarding}>
+            </Stack.Protected>
+            {/* <Stack.Protected guard={!hasCompletedOnboarding}>
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       </Stack.Protected> */}
-        </Stack>
+          </Stack>
+        </NavProvider>
       </RestyleThemeProvider>
     </GestureHandlerRootView>
   );

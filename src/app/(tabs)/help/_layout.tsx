@@ -1,9 +1,9 @@
 import { Stack } from "expo-router";
-import { useColorScheme } from "react-native";
+// import { useColorScheme } from "react-native";
 
 export default function Layout() {
-  const colorScheme = useColorScheme();
-  const darkMode = colorScheme === "dark";
+  // const colorScheme = useColorScheme();
+  // const darkMode = colorScheme === "dark";
 
   const headerOptions = {
     headerTransparent: true,
@@ -13,12 +13,12 @@ export default function Layout() {
   } as const;
 
   return (
-    <Stack>
+    <Stack screenOptions={{ headerBackButtonDisplayMode: "minimal" }}>
       {/* Hide the header ONLY for the first screen */}
-      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="index" options={{ title: "Help" }} />
 
       {/* Subsequent screens will automatically inherit the default native header */}
-      <Stack.Screen name="content" options={headerOptions} />
+      <Stack.Screen name="content" />
     </Stack>
   );
 }

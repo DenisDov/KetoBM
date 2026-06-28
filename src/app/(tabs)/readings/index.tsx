@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, FlatList } from "react-native";
-import { Text, View } from "@/components/Themed";
 import { supabase } from "@/lib/supabase";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Stack, Link } from "expo-router";
+import { Box, Text } from "@/components/primitives";
 
 export default function ReadingsScreen() {
-  const { top, bottom } = useSafeAreaInsets();
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
@@ -18,19 +17,22 @@ export default function ReadingsScreen() {
     setTodos(data);
   }
   return (
-    <View style={styles.container}>
+    <>
+      <Stack.Screen options={{ title: "Ketone Readings" }} />
       <FlatList
         data={todos}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <Text>{item.title}</Text>}
+        renderItem={({ item }) => (
+          <Box>
+            <Link href="/readings/notes" asChild>
+              <Text fontSize={24}>Go to Notes</Text>
+            </Link>
+          </Box>
+        )}
         style={styles.flatList}
-        contentContainerStyle={[
-          styles.flatListContent,
-          { paddingTop: top },
-          { paddingBottom: Math.max(bottom, 16) },
-        ]}
+        contentContainerStyle={styles.flatListContent}
       />
-    </View>
+    </>
   );
 }
 
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   flatListContent: {
-    paddingHorizontal: 16,
+    padding: 16,
     gap: 8,
   },
 });

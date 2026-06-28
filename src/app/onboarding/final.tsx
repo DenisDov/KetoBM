@@ -1,13 +1,13 @@
-import { Text, View } from "@/components/Themed";
+import { Box, Text } from "@/components/primitives";
 import { StyleSheet } from "react-native";
 
 export default function OnboardingFinalScreen() {
   // const { completeOnboarding } = useAuthStore();
   return (
-    <View style={styles.container}>
+    <Box style={styles.container}>
       <Text>Onboarding Screen 2</Text>
       {/* <Button title="Complete Onboarding" onPress={completeOnboarding} /> */}
-    </View>
+    </Box>
   );
 }
 
