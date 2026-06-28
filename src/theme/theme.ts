@@ -93,6 +93,7 @@ const theme = createTheme({
       },
     },
     body: {
+      fontFamily: Fonts.regular,
       fontSize: {
         phone: 16,
         tablet: 18,
@@ -116,8 +117,12 @@ const darkTheme: Theme = {
   ...theme,
   colors: {
     ...theme.colors,
+    // surface
     background: palette.neutral900,
+    surface: palette.neutral800,
+    // text
     text: palette.white,
+    textSecondary: palette.neutral400,
   },
 };
 

@@ -52,7 +52,7 @@ export default function RootLayout() {
     headerTransparent: false,
     headerBackButtonDisplayMode: "minimal",
     headerBackImageSource: require("../../assets/icons/arrow-left.png"),
-    headerTintColor: darkMode ? "#fff" : "#000",
+    // headerTintColor: darkMode ? "#fff" : "#000",
   } as const;
 
   const { restoreSession, initialized, user } = useAuthStore();
@@ -82,7 +82,7 @@ export default function RootLayout() {
   const shouldCreateAccount = false;
 
   return (
-    <GestureHandlerRootView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider theme={darkMode ? darkTheme : theme}>
         <Stack>
           <Stack.Protected guard={isLoggedIn}>

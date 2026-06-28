@@ -9,7 +9,7 @@ export default function Layout() {
     headerTransparent: true,
     headerBackButtonDisplayMode: "minimal",
     headerBackImageSource: require("../../../../assets/icons/arrow-left.png"),
-    headerTintColor: darkMode ? "#fff" : "#000",
+    // headerTintColor: darkMode ? "#fff" : "#000",
   } as const;
 
   return (

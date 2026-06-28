@@ -10,6 +10,7 @@
     "doctor": "bunx expo-doctor",
     "fix:deps": "bunx expo install --fix",
     "lint": "bunx expo lint",
+    "introspect": "bun expo config --type introspect",
     "push:preview": "supabase link --project-ref ifjmqmckzyvhplsldaug && supabase db push",
     "push:prod": "supabase link --project-ref nekknkpknustfkzrohyn && supabase db push",
     "link:preview": "supabase link --project-ref ifjmqmckzyvhplsldaug",
