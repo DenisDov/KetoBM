@@ -41,6 +41,7 @@ if (__DEV__) {
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
     [Fonts.regular]: require("../../assets/fonts/GeneralSans-Regular.otf"),
+    [Fonts.medium]: require("../../assets/fonts/GeneralSans-Medium.otf"),
     [Fonts.semiBold]: require("../../assets/fonts/GeneralSans-Semibold.otf"),
     ...FontAwesome.font,
   });

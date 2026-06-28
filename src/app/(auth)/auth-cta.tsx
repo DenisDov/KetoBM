@@ -1,6 +1,6 @@
 import { Link, Stack, useLocalSearchParams } from "expo-router";
-import { PressableOpacity } from "pressto";
 import { Box, Text } from "@/components/primitives";
+import { ButtonAuth } from "@/components/button-auth";
 
 export default function AuthCTAScreen() {
   const { mode } = useLocalSearchParams<{ mode?: "login" | "register" }>();
@@ -11,18 +11,24 @@ export default function AuthCTAScreen() {
   return (
     <>
       <Stack.Screen options={{ title }} />
-      <Box flex={1} backgroundColor="background" padding="m">
-        <PressableOpacity>
-          <Text>Continue with Google</Text>
-        </PressableOpacity>
-        <PressableOpacity>
-          <Text>Continue with Apple</Text>
-        </PressableOpacity>
-        <Text>or</Text>
+      <Box flex={1} backgroundColor="background" padding="m" gap="m">
+        <ButtonAuth
+          title="Continue with Google"
+          variant="google"
+          onPress={() => null}
+        />
+        <ButtonAuth
+          title="Continue with Apple"
+          variant="apple"
+          onPress={() => null}
+        />
+        <Box gap="m" flexDirection="row" alignItems="center" marginVertical="m">
+          <Box height={1} backgroundColor="neutral300" flex={1} />
+          <Text variant="body">or</Text>
+          <Box height={1} backgroundColor="neutral300" flex={1} />
+        </Box>
         <Link href={`/auth?mode=${mode}`} asChild>
-          <PressableOpacity>
-            <Text>Continue with Email</Text>
-          </PressableOpacity>
+          <ButtonAuth title="Continue with email" />
         </Link>
       </Box>
     </>
