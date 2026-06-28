@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { theme, darkTheme } from "@/theme/theme";
 import "react-native-reanimated";
+import { Fonts } from "@/theme/fonts";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -38,8 +39,8 @@ if (__DEV__) {
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
-    Regular: require("../../assets/fonts/GeneralSans-Regular.otf"),
-    SemiBold: require("../../assets/fonts/GeneralSans-Semibold.otf"),
+    [Fonts.regular]: require("../../assets/fonts/GeneralSans-Regular.otf"),
+    [Fonts.semiBold]: require("../../assets/fonts/GeneralSans-Semibold.otf"),
     ...FontAwesome.font,
   });
 
