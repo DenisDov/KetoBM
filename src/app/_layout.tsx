@@ -1,5 +1,5 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { ThemeProvider } from "@shopify/restyle";
+import { ThemeProvider as RestyleThemeProvider } from "@shopify/restyle";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -83,7 +83,7 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider theme={darkMode ? darkTheme : theme}>
+      <RestyleThemeProvider theme={darkMode ? darkTheme : theme}>
         <Stack>
           <Stack.Protected guard={isLoggedIn}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -105,7 +105,7 @@ export default function RootLayout() {
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       </Stack.Protected> */}
         </Stack>
-      </ThemeProvider>
+      </RestyleThemeProvider>
     </GestureHandlerRootView>
   );
 }
