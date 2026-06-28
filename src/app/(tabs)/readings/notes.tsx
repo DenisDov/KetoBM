@@ -9,7 +9,7 @@ export default function NotesScreen() {
     <>
       <Stack.Screen options={{ title: "Notes" }} />
       <ScrollView
-        contentContainerStyle={{ backgroundColor: theme.colors.background }}
+        // contentContainerStyle={{ backgroundColor: theme.colors.background }}
         showsVerticalScrollIndicator={false}>
         <Box padding="m" gap="ml" backgroundColor="background">
           <Text variant="title">Notes here</Text>
