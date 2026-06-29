@@ -42,6 +42,7 @@ export default function RootLayout() {
     [Fonts.regular]: require("../../assets/fonts/GeneralSans-Regular.otf"),
     [Fonts.medium]: require("../../assets/fonts/GeneralSans-Medium.otf"),
     [Fonts.semiBold]: require("../../assets/fonts/GeneralSans-Semibold.otf"),
+    [Fonts.bold]: require("../../assets/fonts/GeneralSans-Bold.otf"),
   });
 
   const colorScheme = useColorScheme();

@@ -64,13 +64,6 @@ const theme = createTheme({
     l: 24,
     xl: 40,
   },
-  // iconSizes: {
-  //   s: 16,
-  //   sm: 20,
-  //   m: 24,
-  //   l: 32,
-  //   xl: 40,
-  // },
   breakpoints: {
     phone: 0,
     tablet: 768,
@@ -100,17 +93,33 @@ const theme = createTheme({
       },
     },
   },
-  // cardVariants: {
-  //   defaults: {
-  //     backgroundColor: "surface",
-  //     borderRadius: "s",
-  //     padding: "sm",
-  //   },
-  //   outlined: {
-  //     borderWidth: 1,
-  //     borderColor: "border",
-  //   },
-  // },
+  buttonVariants: {
+    defaults: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "s",
+      padding: "m",
+      borderRadius: "sm",
+      borderWidth: 1,
+      borderColor: "transparent",
+      backgroundColor: "transparent",
+    },
+    primary: {
+      borderColor: "primary",
+      backgroundColor: "primary",
+    },
+    secondary: {
+      borderColor: "neutral700",
+      backgroundColor: "background",
+    },
+    link: {
+      padding: "s",
+      borderWidth: 0,
+      borderColor: "transparent",
+      backgroundColor: "transparent",
+    },
+  },
 });
 
 const darkTheme: Theme = {

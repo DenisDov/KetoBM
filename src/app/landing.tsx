@@ -4,6 +4,7 @@ import { Box, Text, ImageBox } from "@/components/primitives";
 import { WaveDivider } from "@/components/wave-divider";
 import { Button } from "@/components/button";
 import { EnvBanner } from "@/components/dev/env-banner";
+import { Fonts } from "@/theme/fonts";
 
 export default function LandingScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -16,7 +17,7 @@ export default function LandingScreen() {
 
       <Box paddingHorizontal="m" style={{ paddingBottom: bottom }}>
         <WaveDivider />
-        <Text fontSize={24} textAlign="center">
+        <Text fontSize={24} textAlign="center" fontFamily={Fonts.bold}>
           {"Track your ketones and \n glucose. Own your health"}
         </Text>
         <Text textAlign="center" marginTop="m" marginBottom="l">
