@@ -2,17 +2,17 @@ import {
   DarkTheme as NavDarkTheme,
   DefaultTheme as NavLightTheme,
 } from "expo-router";
-import { theme, darkTheme } from "./theme";
+import { lightTheme, darkTheme } from "./theme";
 
 export const NavLightAdapter = {
   ...NavLightTheme,
   colors: {
     ...NavLightTheme.colors,
-    primary: theme.colors.primary,
-    background: theme.colors.background,
-    card: theme.colors.white, // Color for Headers / Tab bars
-    text: theme.colors.text,
-    border: theme.colors.neutral200, // Line separators
+    primary: lightTheme.colors.primary,
+    background: lightTheme.colors.background,
+    card: lightTheme.colors.white, // Color for Headers / Tab bars
+    text: lightTheme.colors.text,
+    border: lightTheme.colors.neutral200, // Line separators
   },
 };
 

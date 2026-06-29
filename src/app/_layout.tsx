@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Platform, useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAuthStore } from "@/hooks/use-auth-store";
-import { theme, darkTheme } from "@/theme/theme";
+import { lightTheme, darkTheme } from "@/theme/theme";
 import "react-native-reanimated";
 import { Fonts } from "@/theme/fonts";
 import { NavDarkAdapter, NavLightAdapter } from "@/theme/nav-theme";
@@ -47,7 +47,7 @@ export default function RootLayout() {
 
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === "dark";
-  const selectedRestyleTheme = isDarkMode ? darkTheme : theme;
+  const selectedRestyleTheme = isDarkMode ? darkTheme : lightTheme;
   const selectedNavTheme = isDarkMode ? NavDarkAdapter : NavLightAdapter;
 
   const { restoreSession, initialized, user } = useAuthStore();

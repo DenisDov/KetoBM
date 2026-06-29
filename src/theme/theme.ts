@@ -43,7 +43,7 @@ export const colors = {
   info: palette.blue500,
 } as const;
 
-const theme = createTheme({
+const lightTheme = createTheme({
   colors: {
     ...palette,
     ...colors,
@@ -123,9 +123,9 @@ const theme = createTheme({
 });
 
 const darkTheme: Theme = {
-  ...theme,
+  ...lightTheme,
   colors: {
-    ...theme.colors,
+    ...lightTheme.colors,
     // surface
     background: palette.neutral900,
     surface: palette.neutral800,
@@ -135,6 +135,6 @@ const darkTheme: Theme = {
   },
 };
 
-export type Theme = typeof theme;
+export type Theme = typeof lightTheme;
 
-export { theme, darkTheme };
+export { lightTheme, darkTheme };
