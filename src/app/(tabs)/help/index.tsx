@@ -4,7 +4,7 @@ import {
   PressableBox,
   ImageBackgroundBox,
 } from "@/components/primitives";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { ScrollView } from "react-native";
 import { FontAwesome } from "@react-native-vector-icons/fontawesome";
 
@@ -19,10 +19,15 @@ const HELP_ITEMS = [
 export type HelpSlug = (typeof HELP_ITEMS)[number]["slug"];
 
 export default function HelpScreen() {
+  const router = useRouter();
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <Box gap="sm" padding="m">
-        <PressableBox backgroundColor="blue500" borderRadius="s" padding="sm">
+        <PressableBox
+          backgroundColor="blue500"
+          borderRadius="s"
+          padding="sm"
+          onPress={() => router.push("./help/support")}>
           <Text>Need help or have a question?</Text>
           <Text>1 unread message.</Text>
         </PressableBox>
