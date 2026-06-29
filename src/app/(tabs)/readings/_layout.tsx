@@ -8,7 +8,7 @@ export default function Layout() {
 
   return (
     <Stack screenOptions={screenOptions}>
-      <Stack.Screen name="index" options={{ headerShown: true }} />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="notes" />
     </Stack>
   );

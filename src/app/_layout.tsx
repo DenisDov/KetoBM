@@ -3,13 +3,17 @@ import { useFonts } from "expo-font";
 import { ThemeProvider as NavProvider, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { Platform, useColorScheme } from "react-native";
+import { Platform, useColorScheme, AppStateStatus } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { lightTheme, darkTheme } from "@/theme/theme";
 import "react-native-reanimated";
 import { Fonts } from "@/theme/fonts";
 import { NavDarkAdapter, NavLightAdapter } from "@/theme/nav-theme";
+import { QueryClientProvider, focusManager } from "@tanstack/react-query";
+import { useAppState } from "@/hooks/tanstack-query/use-app-state";
+import { useOnlineManager } from "@/hooks/tanstack-query/use-online-manager";
+import { queryClient } from "../../queryClient";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -28,13 +32,20 @@ SplashScreen.setOptions({
 
 const isWeb = Platform.OS === "web";
 
+function onAppStateChange(status: AppStateStatus) {
+  // React Query already supports in web browser refetch on window focus by default
+  if (Platform.OS !== "web") {
+    focusManager.setFocused(status === "active");
+  }
+}
+
 if (!isWeb) {
   SplashScreen.preventAutoHideAsync();
 }
 
 if (__DEV__) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  require("../../ReactotronConfig");
+  require("../../reactotron.ts");
 }
 
 export default function RootLayout() {
@@ -68,6 +79,10 @@ export default function RootLayout() {
     }
   }, [initialized]);
 
+  useOnlineManager();
+
+  useAppState(onAppStateChange);
+
   if (!fontsLoaded || !initialized) {
     return null;
   }
@@ -78,28 +93,30 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <RestyleThemeProvider theme={selectedRestyleTheme}>
-        <NavProvider value={selectedNavTheme}>
-          <Stack>
-            <Stack.Protected guard={isLoggedIn}>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="modal"
-                options={{ presentation: "modal", title: "lorem" }}
-              />
-            </Stack.Protected>
-            <Stack.Protected guard={!isLoggedIn}>
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              {/* <Stack.Protected guard={shouldCreateAccount}>
+      <QueryClientProvider client={queryClient}>
+        <RestyleThemeProvider theme={selectedRestyleTheme}>
+          <NavProvider value={selectedNavTheme}>
+            <Stack>
+              <Stack.Protected guard={isLoggedIn}>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="modal"
+                  options={{ presentation: "modal", title: "lorem" }}
+                />
+              </Stack.Protected>
+              <Stack.Protected guard={!isLoggedIn}>
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                {/* <Stack.Protected guard={shouldCreateAccount}>
             <Stack.Screen name="create-account" />
           </Stack.Protected> */}
-            </Stack.Protected>
-            {/* <Stack.Protected guard={!hasCompletedOnboarding}>
+              </Stack.Protected>
+              {/* <Stack.Protected guard={!hasCompletedOnboarding}>
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       </Stack.Protected> */}
-          </Stack>
-        </NavProvider>
-      </RestyleThemeProvider>
+            </Stack>
+          </NavProvider>
+        </RestyleThemeProvider>
+      </QueryClientProvider>
     </GestureHandlerRootView>
   );
 }
