@@ -32,7 +32,7 @@ export default function HelpScreen() {
           <Text>1 unread message.</Text>
         </PressableBox>
 
-        <PressableBox onPress={() => console.log("Background pressed!")}>
+        <PressableBox onPress={() => router.push("./help/video")}>
           <ImageBackgroundBox
             source={{
               uri: "https://legacy.reactjs.org/logo-og.png",
@@ -49,9 +49,7 @@ export default function HelpScreen() {
         </PressableBox>
 
         <Box flexDirection="row" gap="sm">
-          <PressableBox
-            flex={1}
-            onPress={() => console.log("Background pressed!")}>
+          <PressableBox flex={1} onPress={() => router.push("./help/video")}>
             <ImageBackgroundBox
               source={{
                 uri: "https://legacy.reactjs.org/logo-og.png",
@@ -66,9 +64,7 @@ export default function HelpScreen() {
               </Text>
             </ImageBackgroundBox>
           </PressableBox>
-          <PressableBox
-            flex={1}
-            onPress={() => console.log("Background pressed!")}>
+          <PressableBox flex={1} onPress={() => router.push("./help/video")}>
             <ImageBackgroundBox
               source={{
                 uri: "https://legacy.reactjs.org/logo-og.png",
