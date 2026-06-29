@@ -50,14 +50,6 @@ export default function RootLayout() {
   const selectedRestyleTheme = isDarkMode ? darkTheme : theme;
   const selectedNavTheme = isDarkMode ? NavDarkAdapter : NavLightAdapter;
 
-  const headerOptions = {
-    headerLargeTitle: true,
-    headerTransparent: false,
-    headerBackButtonDisplayMode: "minimal",
-    // headerBackImageSource: require("../../assets/icons/arrow-left.png"),
-    // headerTintColor: darkMode ? "#fff" : "#000",
-  } as const;
-
   const { restoreSession, initialized, user } = useAuthStore();
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
@@ -97,10 +89,7 @@ export default function RootLayout() {
               />
             </Stack.Protected>
             <Stack.Protected guard={!isLoggedIn}>
-              <Stack.Screen name="landing" options={{ headerShown: false }} />
-              <Stack.Screen name="(auth)/auth-cta" options={headerOptions} />
-              <Stack.Screen name="(auth)/auth" options={headerOptions} />
-              {/* <Stack.Screen name="register" /> */}
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
               {/* <Stack.Protected guard={shouldCreateAccount}>
             <Stack.Screen name="create-account" />
           </Stack.Protected> */}

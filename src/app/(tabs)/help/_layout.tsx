@@ -1,20 +1,12 @@
 import { Stack } from "expo-router";
-// import { useColorScheme } from "react-native";
 
 export default function Layout() {
-  // const colorScheme = useColorScheme();
-  // const darkMode = colorScheme === "dark";
-
-  const headerOptions = {
-    headerTransparent: true,
+  const screenOptions = {
     headerBackButtonDisplayMode: "minimal",
-    headerBackImageSource: require("../../../../assets/icons/arrow-left.png"),
-    // headerTintColor: darkMode ? "#fff" : "#000",
   } as const;
 
   return (
-    <Stack screenOptions={{ headerBackButtonDisplayMode: "minimal" }}>
-      {/* Hide the header ONLY for the first screen */}
+    <Stack screenOptions={screenOptions}>
       <Stack.Screen name="index" options={{ title: "Help" }} />
 
       {/* Subsequent screens will automatically inherit the default native header */}

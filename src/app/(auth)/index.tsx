@@ -10,10 +10,13 @@ export default function LandingScreen() {
   const { bottom } = useSafeAreaInsets();
 
   return (
-    <Box flex={1} backgroundColor="background" justifyContent="flex-end">
+    <Box flex={1} justifyContent="flex-end">
       {__DEV__ ? <EnvBanner /> : null}
 
-      <ImageBox flex={1} source={require("../../assets/images/landing.jpg")} />
+      <ImageBox
+        flex={1}
+        source={require("../../../assets/images/landing.jpg")}
+      />
 
       <Box paddingHorizontal="m" style={{ paddingBottom: bottom }}>
         <WaveDivider />

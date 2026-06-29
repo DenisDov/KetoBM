@@ -2,7 +2,7 @@ import { Button } from "@/components/button";
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { Controller, useForm } from "react-hook-form";
 import { TextInput } from "react-native";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, Link } from "expo-router";
 import { Box, Text } from "@/components/primitives";
 
 type FormData = {
@@ -43,7 +43,7 @@ export default function SignInScreen() {
   return (
     <>
       <Stack.Screen options={{ title }} />
-      <Box flex={1} backgroundColor="background" padding="m">
+      <Box flex={1} padding="m">
         <Text>
           {isLoginMode
             ? "Enter your credentials to track your ketone journey."
@@ -96,6 +96,8 @@ export default function SignInScreen() {
           title={isLoginMode ? "Login" : "Create Account"}
           onPress={handleSubmit(onSubmit)}
         />
+        <Link href="/terms">Terms</Link>
+        <Link href="/policy">Policy</Link>
       </Box>
     </>
   );

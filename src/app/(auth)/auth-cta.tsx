@@ -11,7 +11,7 @@ export default function AuthCTAScreen() {
   return (
     <>
       <Stack.Screen options={{ title }} />
-      <Box flex={1} backgroundColor="background" padding="m" gap="m">
+      <Box flex={1} padding="m" gap="m">
         <ButtonAuth
           title="Continue with Google"
           variant="google"
