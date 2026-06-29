@@ -5,7 +5,7 @@ import {
   ImageBackgroundBox,
 } from "@/components/primitives";
 import { Link } from "expo-router";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView } from "react-native";
 import { FontAwesome } from "@react-native-vector-icons/fontawesome";
 
 const HELP_ITEMS = [
@@ -43,42 +43,41 @@ export default function HelpScreen() {
           </ImageBackgroundBox>
         </PressableBox>
 
-        <Box style={styles.grid}>
-          {/* <PressableBox> */}
-          <Box style={styles.gridItem}>
-            <PressableBox onPress={() => console.log("Background pressed!")}>
-              <ImageBackgroundBox
-                source={{
-                  uri: "https://legacy.reactjs.org/logo-og.png",
-                }}
-                borderRadius="sm"
-                padding="sm"
-                overflow="hidden"
-                height={172}
-                justifyContent="flex-end">
-                <Text color="white" fontSize={16}>
-                  How to add new meter
-                </Text>
-              </ImageBackgroundBox>
-            </PressableBox>
-          </Box>
-          <Box style={styles.gridItem}>
-            <PressableBox onPress={() => console.log("Background pressed!")}>
-              <ImageBackgroundBox
-                source={{
-                  uri: "https://legacy.reactjs.org/logo-og.png",
-                }}
-                borderRadius="sm"
-                padding="sm"
-                overflow="hidden"
-                height={172}
-                justifyContent="flex-end">
-                <Text color="white" fontSize={16}>
-                  How to add new meter
-                </Text>
-              </ImageBackgroundBox>
-            </PressableBox>
-          </Box>
+        <Box flexDirection="row" gap="sm">
+          <PressableBox
+            flex={1}
+            onPress={() => console.log("Background pressed!")}>
+            <ImageBackgroundBox
+              source={{
+                uri: "https://legacy.reactjs.org/logo-og.png",
+              }}
+              borderRadius="sm"
+              padding="sm"
+              overflow="hidden"
+              height={172}
+              justifyContent="flex-end">
+              <Text color="white" fontSize={16}>
+                How to add new meter
+              </Text>
+            </ImageBackgroundBox>
+          </PressableBox>
+          <PressableBox
+            flex={1}
+            onPress={() => console.log("Background pressed!")}>
+            <ImageBackgroundBox
+              source={{
+                uri: "https://legacy.reactjs.org/logo-og.png",
+              }}
+              borderRadius="sm"
+              padding="sm"
+              overflow="hidden"
+              height={172}
+              justifyContent="flex-end">
+              <Text color="white" fontSize={16}>
+                How to add new meter
+              </Text>
+            </ImageBackgroundBox>
+          </PressableBox>
         </Box>
         <PressableBox
           backgroundColor="blue500"
@@ -116,15 +115,3 @@ export default function HelpScreen() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    margin: -6,
-  },
-  gridItem: {
-    width: `${100 / 2}%`,
-    padding: 6,
-  },
-});
