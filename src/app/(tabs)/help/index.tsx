@@ -41,7 +41,8 @@ export default function HelpScreen() {
             padding="sm"
             overflow="hidden"
             height={172}
-            justifyContent="flex-end">
+            justifyContent="space-between">
+            <FontAwesome name="play" color="white" size={24} />
             <Text color="white" fontSize={16}>
               How to add new meter
             </Text>
@@ -58,7 +59,8 @@ export default function HelpScreen() {
               padding="sm"
               overflow="hidden"
               height={172}
-              justifyContent="flex-end">
+              justifyContent="space-between">
+              <FontAwesome name="play" color="white" size={24} />
               <Text color="white" fontSize={16}>
                 How to add new meter
               </Text>
@@ -73,7 +75,8 @@ export default function HelpScreen() {
               padding="sm"
               overflow="hidden"
               height={172}
-              justifyContent="flex-end">
+              justifyContent="space-between">
+              <FontAwesome name="play" color="white" size={24} />
               <Text color="white" fontSize={16}>
                 How to add new meter
               </Text>
