@@ -1,6 +1,6 @@
 import { Box, Text } from "@/components/primitives";
 import { ScrollView } from "react-native";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { KETONE_LEVELS, KetoneLevel } from "@/components/ketone-levels";
 import { HelpSlug } from "./index";
 
@@ -10,7 +10,13 @@ type HelpContent = {
 };
 
 const BestTimeToTest = () => (
-  <Text>Morning fasting readings are most consistent...</Text>
+  <Text variant="body">
+    The best time to test ketones depends on individual health goals and whether
+    you&apos;re using blood or urine tests.For monitoring ketosis for weight
+    loss, testing a few hours after meals, particularly after dinner, can be
+    helpful.If you have diabetes and are monitoring ketones due to high blood
+    sugar or illness, testing every 4-6 hours is recommended.
+  </Text>
 );
 
 const KetoneReadings = () =>
@@ -18,7 +24,7 @@ const KetoneReadings = () =>
 
 const CONTENT_MAP: Record<HelpSlug, HelpContent> = {
   "best-time-to-test": {
-    title: "Best Time to Test",
+    title: "When is best time to test?",
     Component: BestTimeToTest,
   },
   "ketone-readings": {
@@ -48,14 +54,11 @@ export default function HelpContentScreen() {
   const { title, Component } = content;
 
   return (
-    <>
-      <Stack.Screen options={{ title }} />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Box padding="m" gap="ml">
-          <Text variant="title">{title}</Text>
-          <Component />
-        </Box>
-      </ScrollView>
-    </>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <Box padding="m" gap="m">
+        <Text variant="title">{title}</Text>
+        <Component />
+      </Box>
+    </ScrollView>
   );
 }

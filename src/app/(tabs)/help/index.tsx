@@ -1,7 +1,12 @@
-import { Box, Text } from "@/components/primitives";
+import {
+  Box,
+  Text,
+  PressableBox,
+  ImageBackgroundBox,
+} from "@/components/primitives";
 import { Link } from "expo-router";
-import { ScrollView } from "react-native";
-import { PressableOpacity } from "pressto";
+import { ScrollView, StyleSheet } from "react-native";
+import { FontAwesome } from "@react-native-vector-icons/fontawesome";
 
 const HELP_ITEMS = [
   { slug: "best-time-to-test", label: "When is best time to test?" },
@@ -15,25 +20,111 @@ export type HelpSlug = (typeof HELP_ITEMS)[number]["slug"];
 
 export default function HelpScreen() {
   return (
-    <ScrollView>
-      <Box gap="m" padding="m">
-        {HELP_ITEMS.map(({ slug, label }) => (
-          <Link
-            href={{ pathname: "/help/content", params: { slug } }}
-            asChild
-            key={slug}>
-            <PressableOpacity
-              style={{
-                flex: 1,
-                padding: 16,
-                backgroundColor: "gray",
-                borderRadius: 8,
-              }}>
-              <Text fontSize={16}>{label}</Text>
-            </PressableOpacity>
-          </Link>
-        ))}
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <Box gap="sm" padding="m">
+        <PressableBox backgroundColor="blue500" borderRadius="s" padding="sm">
+          <Text>Need help or have a question?</Text>
+          <Text>1 unread message.</Text>
+        </PressableBox>
+
+        <PressableBox onPress={() => console.log("Background pressed!")}>
+          <ImageBackgroundBox
+            source={{
+              uri: "https://legacy.reactjs.org/logo-og.png",
+            }}
+            borderRadius="sm"
+            padding="sm"
+            overflow="hidden"
+            height={172}
+            justifyContent="flex-end">
+            <Text color="white" fontSize={16}>
+              How to add new meter
+            </Text>
+          </ImageBackgroundBox>
+        </PressableBox>
+
+        <Box style={styles.grid}>
+          {/* <PressableBox> */}
+          <Box style={styles.gridItem}>
+            <PressableBox onPress={() => console.log("Background pressed!")}>
+              <ImageBackgroundBox
+                source={{
+                  uri: "https://legacy.reactjs.org/logo-og.png",
+                }}
+                borderRadius="sm"
+                padding="sm"
+                overflow="hidden"
+                height={172}
+                justifyContent="flex-end">
+                <Text color="white" fontSize={16}>
+                  How to add new meter
+                </Text>
+              </ImageBackgroundBox>
+            </PressableBox>
+          </Box>
+          <Box style={styles.gridItem}>
+            <PressableBox onPress={() => console.log("Background pressed!")}>
+              <ImageBackgroundBox
+                source={{
+                  uri: "https://legacy.reactjs.org/logo-og.png",
+                }}
+                borderRadius="sm"
+                padding="sm"
+                overflow="hidden"
+                height={172}
+                justifyContent="flex-end">
+                <Text color="white" fontSize={16}>
+                  How to add new meter
+                </Text>
+              </ImageBackgroundBox>
+            </PressableBox>
+          </Box>
+        </Box>
+        <PressableBox
+          backgroundColor="blue500"
+          flexDirection="row"
+          alignItems="center"
+          gap="m"
+          borderRadius="s"
+          padding="sm">
+          <FontAwesome name="flag" size={48} />
+          <Text>Need help getting started? Take the app tour.</Text>
+        </PressableBox>
+        <Text textTransform="uppercase">Commonly asked questions</Text>
+        <Box gap="sm">
+          {HELP_ITEMS.map(({ slug, label }) => (
+            <Link
+              href={{ pathname: "/help/content", params: { slug } }}
+              asChild
+              key={slug}>
+              <PressableBox
+                flex={1}
+                padding="m"
+                backgroundColor="neutral50"
+                borderRadius="s"
+                flexDirection="row"
+                alignItems="center">
+                <Text fontSize={16} flex={1}>
+                  {label}
+                </Text>
+                <FontAwesome name="chevron-right" size={20} />
+              </PressableBox>
+            </Link>
+          ))}
+        </Box>
       </Box>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    margin: -6,
+  },
+  gridItem: {
+    width: `${100 / 2}%`,
+    padding: 6,
+  },
+});

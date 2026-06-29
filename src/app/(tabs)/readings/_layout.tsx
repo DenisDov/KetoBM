@@ -8,10 +8,7 @@ export default function Layout() {
 
   return (
     <Stack screenOptions={screenOptions}>
-      {/* Hide the header ONLY for the first screen */}
       <Stack.Screen name="index" options={{ headerShown: true }} />
-
-      {/* Subsequent screens will automatically inherit the default native header */}
       <Stack.Screen name="notes" />
     </Stack>
   );
