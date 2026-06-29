@@ -28,19 +28,19 @@ const CONTENT_MAP: Record<HelpSlug, HelpContent> = {
     Component: BestTimeToTest,
   },
   "ketone-readings": {
-    title: "What Do My Ketone Readings Mean?",
+    title: "What do my ketone readings mean?",
     Component: KetoneReadings,
   },
   "glucose-readings": {
-    title: "What Do My Glucose Readings Mean?",
+    title: "What do my glucose readings mean?",
     Component: () => <Text>...</Text>,
   },
   "readings-vary": {
-    title: "Why Do My Readings Vary?",
+    title: "Why do my readings vary?",
     Component: () => <Text>...</Text>,
   },
   "how-to-use-meter": {
-    title: "How to Use a Meter?",
+    title: "How to use a meter?",
     Component: () => <Text>...</Text>,
   },
 };
