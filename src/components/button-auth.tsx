@@ -2,7 +2,7 @@ import { PressableOpacity } from "pressto";
 import { StyleSheet } from "react-native";
 import { Text } from "@/components/primitives";
 import { Fonts } from "@/theme/fonts";
-import FontAwesome from "@react-native-vector-icons/fontawesome/static";
+import { FontAwesome } from "@react-native-vector-icons/fontawesome";
 
 type ButtonVariant = "apple" | "google" | "email";
 

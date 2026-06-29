@@ -17,6 +17,7 @@
     "link:prod": "supabase link --project-ref nekknkpknustfkzrohyn"
   },
   "dependencies": {
+    "@react-native-vector-icons/fontawesome": "^13.1.2",
     "@shopify/restyle": "^2.4.5",
     "@supabase/supabase-js": "^2.78.0",
     "burnt": "^0.13.0",
@@ -48,8 +49,7 @@
     "react-native-svg": "15.15.4",
     "react-native-web": "~0.21.0",
     "react-native-worklets": "0.8.3",
-    "zustand": "^5.0.8",
-    "@react-native-vector-icons/fontawesome": "^13.1.2"
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@types/react": "~19.2.10",

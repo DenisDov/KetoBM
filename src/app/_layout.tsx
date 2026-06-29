@@ -1,4 +1,3 @@
-import FontAwesome from "@react-native-vector-icons/fontawesome/static";
 import { ThemeProvider as RestyleThemeProvider } from "@shopify/restyle";
 import { useFonts } from "expo-font";
 import { ThemeProvider as NavProvider, Stack } from "expo-router";
@@ -43,7 +42,6 @@ export default function RootLayout() {
     [Fonts.regular]: require("../../assets/fonts/GeneralSans-Regular.otf"),
     [Fonts.medium]: require("../../assets/fonts/GeneralSans-Medium.otf"),
     [Fonts.semiBold]: require("../../assets/fonts/GeneralSans-Semibold.otf"),
-    ...FontAwesome.font,
   });
 
   const colorScheme = useColorScheme();
