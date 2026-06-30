@@ -1,11 +1,13 @@
 import { StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { supabase } from "@/lib/supabase";
 import { Link } from "expo-router";
-import { Text } from "@/components/primitives";
+import { Box, Text } from "@/components/primitives";
 
 import { useQuery } from "@tanstack/react-query";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ReadingsScreen() {
+  const insets = useSafeAreaInsets();
   const {
     isPending,
     error,
@@ -22,12 +24,23 @@ export default function ReadingsScreen() {
     },
   });
 
-  if (isPending) return <ActivityIndicator />;
+  if (isPending)
+    return (
+      <Box flex={1} alignItems="center" justifyContent="center" padding="m">
+        <ActivityIndicator size="large" />
+      </Box>
+    );
 
-  if (error) return <Text>Error: {error.message}</Text>;
+  if (error)
+    return (
+      <Box flex={1} alignItems="center" justifyContent="center" padding="m">
+        <Text>Error: {error.message}</Text>
+      </Box>
+    );
 
   return (
     <FlatList
+      contentInset={insets}
       data={todos}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
