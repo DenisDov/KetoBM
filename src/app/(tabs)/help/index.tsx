@@ -91,9 +91,7 @@ export default function HelpScreen() {
           borderRadius="s"
           padding="sm">
           <Ionicons name="flag" size={48} />
-          <Text>
-            Need help getting started? Take the app tour d df df dfd dg.
-          </Text>
+          <Text flex={1}>Need help getting started? Take the app tour.</Text>
         </PressableBox>
         <Text textTransform="uppercase">Commonly asked questions</Text>
         <Box gap="sm">

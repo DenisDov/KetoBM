@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ReadingsScreen() {
+  // TODO: check if needed
   const insets = useSafeAreaInsets();
   const {
     isPending,
