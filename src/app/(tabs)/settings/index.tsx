@@ -121,19 +121,17 @@ export default function SettingsScreen() {
               onPress={() => handlePress(item)}
               flexDirection="row"
               alignItems="center"
-              gap="m"
+              gap="s"
               paddingVertical="m">
               <Ionicons name={item.icon} size={20} color={tint} />
-              <Text variant="body" style={{ flex: 1, color: tint }}>
+              <Text
+                variant="body"
+                flex={1}
+                style={{ color: tint }}
+                fontFamily={Fonts.medium}>
                 {item.name}
               </Text>
-              {"href" in item && (
-                <Ionicons
-                  name="chevron-forward"
-                  size={14}
-                  color={colors.neutral300}
-                />
-              )}
+              {"href" in item && <Ionicons name="chevron-forward" size={20} />}
             </PressableBox>
           );
         })}
