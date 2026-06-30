@@ -13,7 +13,7 @@ import { NavDarkAdapter, NavLightAdapter } from "@/theme/nav-theme";
 import { QueryClientProvider, focusManager } from "@tanstack/react-query";
 import { useAppState } from "@/hooks/tanstack-query/use-app-state";
 import { useOnlineManager } from "@/hooks/tanstack-query/use-online-manager";
-import { queryClient } from "../../query-client";
+import { queryClient } from "@/lib/query-client";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -45,7 +45,7 @@ if (!isWeb) {
 
 if (__DEV__) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  require("../../reactotron.ts");
+  require("@/lib/reactotron");
 }
 
 export default function RootLayout() {
