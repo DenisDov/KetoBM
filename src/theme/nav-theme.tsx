@@ -13,6 +13,7 @@ export const NavLightAdapter = {
     card: lightTheme.colors.white, // Color for Headers / Tab bars
     text: lightTheme.colors.text,
     border: lightTheme.colors.neutral200, // Line separators
+    notification: lightTheme.colors.error, // Badge color
   },
 };
 
@@ -25,5 +26,6 @@ export const NavDarkAdapter = {
     card: darkTheme.colors.neutral800, // Color for Headers / Tab bars
     text: darkTheme.colors.text,
     border: darkTheme.colors.neutral700,
+    notification: darkTheme.colors.error, // Badge color
   },
 };
