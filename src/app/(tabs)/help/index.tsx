@@ -6,7 +6,7 @@ import {
 } from "@/components/primitives";
 import { Link, useRouter } from "expo-router";
 import { ScrollView } from "react-native";
-import { FontAwesome } from "@react-native-vector-icons/fontawesome";
+import { Ionicons } from "@react-native-vector-icons/ionicons";
 
 const HELP_ITEMS = [
   { slug: "best-time-to-test", label: "When is best time to test?" },
@@ -42,7 +42,7 @@ export default function HelpScreen() {
             overflow="hidden"
             height={172}
             justifyContent="space-between">
-            <FontAwesome name="play" color="white" size={24} />
+            <Ionicons name="play" color="white" size={24} />
             <Text color="white" fontSize={16}>
               How to add new meter
             </Text>
@@ -60,7 +60,7 @@ export default function HelpScreen() {
               overflow="hidden"
               height={172}
               justifyContent="space-between">
-              <FontAwesome name="play" color="white" size={24} />
+              <Ionicons name="play" color="white" size={24} />
               <Text color="white" fontSize={16}>
                 How to add new meter
               </Text>
@@ -76,7 +76,7 @@ export default function HelpScreen() {
               overflow="hidden"
               height={172}
               justifyContent="space-between">
-              <FontAwesome name="play" color="white" size={24} />
+              <Ionicons name="play" color="white" size={24} />
               <Text color="white" fontSize={16}>
                 How to add new meter
               </Text>
@@ -90,8 +90,10 @@ export default function HelpScreen() {
           gap="m"
           borderRadius="s"
           padding="sm">
-          <FontAwesome name="flag" size={48} />
-          <Text>Need help getting started? Take the app tour.</Text>
+          <Ionicons name="flag" size={48} />
+          <Text>
+            Need help getting started? Take the app tour d df df dfd dg.
+          </Text>
         </PressableBox>
         <Text textTransform="uppercase">Commonly asked questions</Text>
         <Box gap="sm">
@@ -110,7 +112,7 @@ export default function HelpScreen() {
                 <Text fontSize={16} flex={1}>
                   {label}
                 </Text>
-                <FontAwesome name="chevron-right" size={20} />
+                <Ionicons name="chevron-forward" size={20} />
               </PressableBox>
             </Link>
           ))}

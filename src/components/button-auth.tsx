@@ -2,7 +2,7 @@ import { PressableOpacity } from "pressto";
 import { StyleSheet } from "react-native";
 import { Text } from "@/components/primitives";
 import { Fonts } from "@/theme/fonts";
-import { FontAwesome } from "@react-native-vector-icons/fontawesome";
+import { Ionicons } from "@react-native-vector-icons/ionicons";
 
 type ButtonVariant = "apple" | "google" | "email";
 
@@ -24,7 +24,11 @@ export const ButtonAuth = ({
       ]}
       onPress={onPress}>
       {variant !== "email" && (
-        <FontAwesome name={variant} size={24} color="#fff" />
+        <Ionicons
+          name={variant === "apple" ? "logo-apple" : "logo-google"}
+          size={24}
+          color="#fff"
+        />
       )}
       <Text style={[styles.text, variant === "email" && styles.textEmail]}>
         {title}

@@ -2,25 +2,37 @@ import { Box, Text, PressableBox } from "@/components/primitives";
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { Theme } from "@/theme";
 import { Fonts } from "@/theme/fonts";
-import { FontAwesome } from "@react-native-vector-icons/fontawesome";
+import { Ionicons } from "@react-native-vector-icons/ionicons";
 import { useTheme } from "@shopify/restyle";
 import { Href, useRouter } from "expo-router";
 import { Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-type IconName = React.ComponentProps<typeof FontAwesome>["name"];
+type IconName = React.ComponentProps<typeof Ionicons>["name"];
 
 type MenuItem =
   | { name: string; icon: IconName; href: Href }
   | { name: string; icon: IconName; action: "delete" | "logout" };
 
 const menu: MenuItem[] = [
-  { name: "Device settings", icon: "tachometer", href: "/settings/device" },
-  { name: "Reminder settings", icon: "bell-o", href: "/settings/reminder" },
-  { name: "Account settings", icon: "user-o", href: "/settings/account" },
-  { name: "Privacy", icon: "shield", href: "/policy" },
-  { name: "Delete my data", icon: "trash-o", action: "delete" },
-  { name: "Logout", icon: "sign-out", action: "logout" },
+  {
+    name: "Device settings",
+    icon: "speedometer-outline",
+    href: "/settings/device",
+  },
+  {
+    name: "Reminder settings",
+    icon: "notifications-outline",
+    href: "/settings/reminder",
+  },
+  {
+    name: "Account settings",
+    icon: "person-outline",
+    href: "/settings/account",
+  },
+  { name: "Privacy", icon: "shield-outline", href: "/policy" },
+  { name: "Delete my data", icon: "trash-outline", action: "delete" },
+  { name: "Logout", icon: "log-out-outline", action: "logout" },
 ];
 
 export default function SettingsScreen() {
@@ -111,13 +123,13 @@ export default function SettingsScreen() {
               alignItems="center"
               gap="m"
               paddingVertical="m">
-              <FontAwesome name={item.icon} size={20} color={tint} />
+              <Ionicons name={item.icon} size={20} color={tint} />
               <Text variant="body" style={{ flex: 1, color: tint }}>
                 {item.name}
               </Text>
               {"href" in item && (
-                <FontAwesome
-                  name="chevron-right"
+                <Ionicons
+                  name="chevron-forward"
                   size={14}
                   color={colors.neutral300}
                 />

@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useVideoPlayer, VideoView } from "expo-video";
 import { Platform, StyleSheet } from "react-native";
-import { FontAwesome } from "@react-native-vector-icons/fontawesome";
+import { Ionicons } from "@react-native-vector-icons/ionicons";
 import { PressableBox } from "@/components/primitives";
 
 const VIDEO_URI = "https://www.w3schools.com/tags/mov_bbb.mp4";
@@ -34,7 +34,7 @@ export default function HelpVideoScreen() {
         backgroundColor="neutral900"
         opacity={0.8}
         onPress={() => router.back()}>
-        <FontAwesome name="close" size={24} color="white" />
+        <Ionicons name="close" size={24} color="white" />
       </PressableBox>
     </>
   );

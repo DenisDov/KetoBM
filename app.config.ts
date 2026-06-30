@@ -77,7 +77,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       "expo-image",
       "expo-status-bar",
       "expo-video",
-      "@react-native-vector-icons/fontawesome",
+      "@react-native-vector-icons/ionicons",
       [
         "expo-splash-screen",
         {
