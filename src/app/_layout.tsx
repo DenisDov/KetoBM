@@ -13,7 +13,7 @@ import { NavDarkAdapter, NavLightAdapter } from "@/theme/nav-theme";
 import { QueryClientProvider, focusManager } from "@tanstack/react-query";
 import { useAppState } from "@/hooks/tanstack-query/use-app-state";
 import { useOnlineManager } from "@/hooks/tanstack-query/use-online-manager";
-import { queryClient } from "../../queryClient";
+import { queryClient } from "../../query-client";
 
 export {
   // Catch any errors thrown by the Layout component.
