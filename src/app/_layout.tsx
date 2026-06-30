@@ -113,6 +113,10 @@ export default function RootLayout() {
               {/* <Stack.Protected guard={!hasCompletedOnboarding}>
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       </Stack.Protected> */}
+              <Stack.Screen
+                name="policy"
+                options={{ headerBackButtonDisplayMode: "minimal", title: "" }}
+              />
             </Stack>
           </NavProvider>
         </RestyleThemeProvider>
