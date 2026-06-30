@@ -24,6 +24,16 @@ bun expo install reactotron-react-native -- --development
 
 ---
 
+## Naming Conventions
+
+| Scope                     | Convention   | Example                              |
+| ------------------------- | ------------ | ------------------------------------ |
+| Directories and files     | `kebab-case` | `use-auth-store.ts`, `auth-cta.tsx`  |
+| Variables and functions   | `camelCase`  | `isLoggedIn`, `startAutoRefresh()`   |
+| React Native components    | `PascalCase` | `KetoneLevels`, `Box`, `Text`        |
+
+---
+
 ## Environment Variables
 
 We use **9 EAS environment variables** across 3 environments: `development`, `preview`, and `production`.
