@@ -10,7 +10,7 @@ create table public.profiles (
   privacy_accepted_at timestamptz,
 
   -- 4-step onboarding. step 0 = not started, set on completion.
-  onboarding_step smallint not null default 0,
+  onboarding_step smallint not null default 0 check (onboarding_step between 0 and 4),
   onboarding_completed_at timestamptz,
 
   -- Soft delete: set when the user requests deletion.
@@ -26,7 +26,8 @@ create table public.profiles (
 alter table public.profiles enable row level security;
 
 -- Grant the privileges the roles need. anon gets nothing (profiles are private).
-grant select, insert, update, delete on public.profiles to authenticated;
+-- No delete grant for authenticated: deletion is handled server-side (soft delete + audit).
+grant select, insert, update on public.profiles to authenticated;
 grant select, insert, update, delete on public.profiles to service_role;
 
 -- A user can only see and change their own row. No delete policy: deletion is
@@ -51,6 +52,7 @@ create policy "Profiles are updatable by owner"
 create function public.set_updated_at()
 returns trigger
 language plpgsql
+set search_path = ''
 as $$
 begin
   new.updated_at = now();
