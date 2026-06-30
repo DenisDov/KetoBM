@@ -2,44 +2,54 @@ import { NativeTabs } from "expo-router/unstable-native-tabs";
 
 export default function TabLayout() {
   return (
-    <NativeTabs>
+    <NativeTabs
+    // backgroundColor={colors.background}
+    // indicatorColor={colors.backgroundElement}
+    // labelStyle={{ selected: { color: colors.text } }}
+    >
       <NativeTabs.Trigger name="index">
         <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          sf={{ default: "house", selected: "house.fill" }}
-          md={{ default: "home", selected: "home_filled" }}
+          src={{
+            default: require("@/assets/icons/tab-icons/home.png"),
+            selected: require("@/assets/icons/tab-icons/home-filled.png"),
+          }}
+          renderingMode="template"
         />
       </NativeTabs.Trigger>
+
       <NativeTabs.Trigger name="readings">
-        <NativeTabs.Trigger.Icon
-          sf={{
-            default: "waveform.path.ecg.text.page",
-            selected: "waveform.path.ecg.text.page.fill",
-          }}
-          md={{ default: "description", selected: "description" }}
-        />
         <NativeTabs.Trigger.Label>Readings</NativeTabs.Trigger.Label>
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="help">
         <NativeTabs.Trigger.Icon
-          sf={{
-            default: "questionmark.circle",
-            selected: "questionmark.circle.fill",
+          src={{
+            default: require("@/assets/icons/tab-icons/document-analyze.png"),
+            selected: require("@/assets/icons/tab-icons/document-analyze-filled.png"),
           }}
-          md={{ default: "help", selected: "help_outline" }}
+          renderingMode="template"
         />
+      </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="help">
         <NativeTabs.Trigger.Label>Help</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          src={{
+            default: require("@/assets/icons/tab-icons/question.png"),
+            selected: require("@/assets/icons/tab-icons/question-filled.png"),
+          }}
+          renderingMode="template"
+        />
         <NativeTabs.Trigger.Badge />
       </NativeTabs.Trigger>
+
       <NativeTabs.Trigger name="settings">
-        <NativeTabs.Trigger.Icon
-          sf={{
-            default: "gearshape",
-            selected: "gearshape.fill",
-          }}
-          md={{ default: "settings", selected: "settings" }}
-        />
         <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          src={{
+            default: require("@/assets/icons/tab-icons/settings.png"),
+            selected: require("@/assets/icons/tab-icons/settings-filled.png"),
+          }}
+          renderingMode="template"
+        />
       </NativeTabs.Trigger>
     </NativeTabs>
   );
