@@ -11,7 +11,6 @@ export default function Layout() {
   return (
     <Stack screenOptions={screenOptions}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="content" />
       <Stack.Screen
         name="video"
         options={{ headerShown: false, presentation: "fullScreenModal" }}
