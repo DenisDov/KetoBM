@@ -2,8 +2,10 @@ import { Stack } from "expo-router";
 
 export default function Layout() {
   const screenOptions = {
-    headerBackButtonDisplayMode: "minimal",
     title: "",
+    headerTransparent: true,
+    headerBackImageSource: require("@/assets/icons/arrow-left.png"),
+    headerBackButtonDisplayMode: "minimal",
   } as const;
 
   return (

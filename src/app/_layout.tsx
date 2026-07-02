@@ -123,10 +123,10 @@ export default function RootLayout() {
       </Stack.Protected> */}
                 <Stack.Screen
                   name="policy"
-                  options={{
-                    headerBackButtonDisplayMode: "minimal",
-                    title: "",
-                  }}
+                  // options={{
+                  //   headerBackButtonDisplayMode: "minimal",
+                  //   title: "",
+                  // }}
                 />
               </Stack>
             </BottomSheetModalProvider>
