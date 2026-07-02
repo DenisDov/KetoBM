@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { Platform, useColorScheme, AppStateStatus } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { lightTheme, darkTheme } from "@/theme/theme";
 import "react-native-reanimated";
@@ -50,10 +51,10 @@ if (__DEV__) {
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
-    [Fonts.regular]: require("../../assets/fonts/GeneralSans-Regular.otf"),
-    [Fonts.medium]: require("../../assets/fonts/GeneralSans-Medium.otf"),
-    [Fonts.semiBold]: require("../../assets/fonts/GeneralSans-Semibold.otf"),
-    [Fonts.bold]: require("../../assets/fonts/GeneralSans-Bold.otf"),
+    [Fonts.regular]: require("@/assets/fonts/GeneralSans-Regular.otf"),
+    [Fonts.medium]: require("@/assets/fonts/GeneralSans-Medium.otf"),
+    [Fonts.semiBold]: require("@/assets/fonts/GeneralSans-Semibold.otf"),
+    [Fonts.bold]: require("@/assets/fonts/GeneralSans-Bold.otf"),
   });
 
   const colorScheme = useColorScheme();
@@ -96,28 +97,39 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <RestyleThemeProvider theme={selectedRestyleTheme}>
           <NavProvider value={selectedNavTheme}>
-            <Stack>
-              <Stack.Protected guard={isLoggedIn}>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="modal"
-                  options={{ presentation: "modal", title: "lorem" }}
-                />
-              </Stack.Protected>
-              <Stack.Protected guard={!isLoggedIn}>
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                {/* <Stack.Protected guard={shouldCreateAccount}>
+            <BottomSheetModalProvider>
+              <Stack>
+                <Stack.Protected guard={isLoggedIn}>
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="modal"
+                    options={{ presentation: "modal", title: "lorem" }}
+                  />
+                </Stack.Protected>
+                <Stack.Protected guard={!isLoggedIn}>
+                  <Stack.Screen
+                    name="(auth)"
+                    options={{ headerShown: false }}
+                  />
+                  {/* <Stack.Protected guard={shouldCreateAccount}>
             <Stack.Screen name="create-account" />
           </Stack.Protected> */}
-              </Stack.Protected>
-              {/* <Stack.Protected guard={!hasCompletedOnboarding}>
+                </Stack.Protected>
+                {/* <Stack.Protected guard={!hasCompletedOnboarding}>
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       </Stack.Protected> */}
-              <Stack.Screen
-                name="policy"
-                options={{ headerBackButtonDisplayMode: "minimal", title: "" }}
-              />
-            </Stack>
+                <Stack.Screen
+                  name="policy"
+                  options={{
+                    headerBackButtonDisplayMode: "minimal",
+                    title: "",
+                  }}
+                />
+              </Stack>
+            </BottomSheetModalProvider>
           </NavProvider>
         </RestyleThemeProvider>
       </QueryClientProvider>

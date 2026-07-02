@@ -26,11 +26,11 @@ bun expo install reactotron-react-native -- --development
 
 ## Naming Conventions
 
-| Scope                     | Convention   | Example                              |
-| ------------------------- | ------------ | ------------------------------------ |
-| Directories and files     | `kebab-case` | `use-auth-store.ts`, `auth-cta.tsx`  |
-| Variables and functions   | `camelCase`  | `isLoggedIn`, `startAutoRefresh()`   |
-| React Native components    | `PascalCase` | `KetoneLevels`, `Box`, `Text`        |
+| Scope                   | Convention   | Example                             |
+| ----------------------- | ------------ | ----------------------------------- |
+| Directories and files   | `kebab-case` | `use-auth-store.ts`, `auth-cta.tsx` |
+| Variables and functions | `camelCase`  | `isLoggedIn`, `startAutoRefresh()`  |
+| React Native components | `PascalCase` | `KetoneLevels`, `Box`, `Text`       |
 
 ---
 
@@ -213,3 +213,11 @@ Run specific from `package.json` like `bun run push:preview` to update `preview`
 `cat supabase/.temp/project-ref`
 
 or check `API_URL` after run `supabase status`
+
+## Deep links
+
+Testing opening `forgot-password` screen on `ketobm-dev` scheme:
+
+```bash
+bunx uri-scheme open ketobm-dev://reset-password --ios
+```

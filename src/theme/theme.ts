@@ -35,6 +35,10 @@ export const colors = {
   surface: palette.neutral800,
   text: palette.neutral900,
   textSecondary: palette.neutral500,
+  placeholder: palette.neutral500,
+
+  border: palette.neutral200,
+  borderFocus: palette.blue900,
 
   primary: palette.blue900,
   success: palette.green600,
@@ -132,6 +136,9 @@ const darkTheme: Theme = {
     // text
     text: palette.white,
     textSecondary: palette.neutral400,
+    placeholder: palette.neutral400,
+    // border
+    border: palette.neutral700,
   },
 };
 

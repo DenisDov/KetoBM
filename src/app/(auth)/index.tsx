@@ -6,6 +6,7 @@ import { Button } from "@/components/button";
 import { EnvBanner } from "@/components/dev/env-banner";
 import { Fonts } from "@/theme/fonts";
 
+// FIRST SCREEN
 export default function LandingScreen() {
   const { bottom } = useSafeAreaInsets();
 
@@ -13,10 +14,7 @@ export default function LandingScreen() {
     <Box flex={1} justifyContent="flex-end">
       {__DEV__ ? <EnvBanner /> : null}
 
-      <ImageBox
-        flex={1}
-        source={require("../../../assets/images/landing.jpg")}
-      />
+      <ImageBox flex={1} source={require("@/assets/images/landing.jpg")} />
 
       <Box paddingHorizontal="m" style={{ paddingBottom: bottom }}>
         <WaveDivider />
@@ -29,7 +27,7 @@ export default function LandingScreen() {
           }
         </Text>
         <Box gap="m">
-          <Link href="/auth-cta?mode=register" asChild>
+          <Link href="/auth-cta?mode=create" asChild>
             <Button title="Create account" />
           </Link>
           <Link href="/auth-cta?mode=login" asChild>

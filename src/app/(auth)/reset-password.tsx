@@ -2,20 +2,21 @@ import { Button } from "@/components/button";
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { Controller, useForm } from "react-hook-form";
 import { TextInput } from "react-native";
-import { Stack, useLocalSearchParams, Link } from "expo-router";
+import { Stack, useLocalSearchParams, Link, useRouter } from "expo-router";
 import { Box, Text } from "@/components/primitives";
 
 type FormData = {
-  email: string;
-  password: string;
+  password1: string;
+  password2: string;
 };
 
-export default function SignInScreen() {
-  const { mode } = useLocalSearchParams<{ mode?: "login" | "register" }>();
+// WILL BE PENED THROUGH DEEPLINK
+export default function ResetPasswordScreen() {
   const { login, register, signInWithGoogle, signInWithApple } = useAuthStore();
+  const router = useRouter();
 
-  const isLoginMode = mode !== "register";
-  const title = isLoginMode ? "Welcome back." : "Create your account";
+  //   const isLoginMode = mode !== "register";
+  const title = "Reset password";
 
   const {
     control,
@@ -23,36 +24,22 @@ export default function SignInScreen() {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      email: "",
-      password: "",
+      password1: "",
+      password2: "",
     },
   });
 
   const onSubmit = async (data: FormData) => {
-    try {
-      if (isLoginMode) {
-        await login(data.email, data.password);
-      } else {
-        await register(data.email, data.password);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    console.log("RESET CTA");
   };
 
   return (
     <>
       <Stack.Screen options={{ title }} />
       <Box flex={1} padding="m">
-        <Text>
-          {isLoginMode
-            ? "Enter your credentials to track your ketone journey."
-            : "Create an account to start tracking your ketone journey."}
-        </Text>
-        {/* <Button title="Sign In with Google" onPress={signInWithGoogle} />
-      <Button title="Sign In with Apple" onPress={signInWithApple} /> */}
+        <Text>Create a new strong password.</Text>
 
-        <Text>Email address</Text>
+        <Text>New password</Text>
         <Controller
           control={control}
           rules={{
@@ -60,26 +47,7 @@ export default function SignInScreen() {
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              placeholder="email@example.com"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-          )}
-          name="email"
-        />
-        {errors.email && <Text>Email is required.</Text>}
-        <Text>Password</Text>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              secureTextEntry
+              //   secureTextEntry
               placeholder="**********"
               onBlur={onBlur}
               onChangeText={onChange}
@@ -88,16 +56,33 @@ export default function SignInScreen() {
               autoCorrect={false}
             />
           )}
-          name="password"
+          name="password1"
         />
-        {errors.password && <Text>Password is required.</Text>}
-        {isLoginMode && <Text>Forgot password?</Text>}
-        <Button
-          title={isLoginMode ? "Login" : "Create Account"}
-          onPress={handleSubmit(onSubmit)}
+        {errors.password1 && <Text>Password is required.</Text>}
+        <Text>Password</Text>
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              //   secureTextEntry
+              placeholder="**********"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+          )}
+          name="password2"
         />
-        <Link href="/terms">Terms</Link>
+        {errors.password2 && <Text>Password is required.</Text>}
+        <Button title="Save" onPress={handleSubmit(onSubmit)} />
+        {/* <Link href="/terms">Terms</Link>
         <Link href="/policy">Policy</Link>
+        <Link href="/modal">Policy</Link> */}
       </Box>
     </>
   );

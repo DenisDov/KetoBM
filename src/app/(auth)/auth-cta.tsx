@@ -1,13 +1,24 @@
-import { Link, Stack, useLocalSearchParams } from "expo-router";
+import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Platform } from "react-native";
 import { Box, Text } from "@/components/primitives";
 import { ButtonAuth } from "@/components/button-auth";
 
+// SECOND SCREEN
 export default function AuthCTAScreen() {
-  const { mode } = useLocalSearchParams<{ mode?: "login" | "register" }>();
-  const isLoginMode = mode !== "register";
+  const { mode } = useLocalSearchParams<{ mode?: "login" | "create" }>();
+  console.log("mode", mode);
+  const isLoginMode = mode !== "create";
+  const router = useRouter();
 
   const title = isLoginMode ? "Login to your account" : "Create your account";
+
+  const handleSubmit = () => {
+    if (isLoginMode) {
+      router.push("/(auth)/login");
+    } else {
+      router.push("/(auth)/create-account");
+    }
+  };
 
   return (
     <>
@@ -32,9 +43,7 @@ export default function AuthCTAScreen() {
           <Text variant="body">or</Text>
           <Box height={1} backgroundColor="neutral300" flex={1} />
         </Box>
-        <Link href={`/auth?mode=${mode}`} asChild>
-          <ButtonAuth title="Continue with email" />
-        </Link>
+        <ButtonAuth title="Continue with email" onPress={handleSubmit} />
       </Box>
     </>
   );

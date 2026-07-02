@@ -2,8 +2,6 @@ import { Session, User } from "@supabase/supabase-js";
 import { create } from "zustand";
 import { supabase } from "@/lib/supabase";
 
-// import * as Burnt from "burnt";
-
 type AuthState = {
   user: User | null;
   session: Session | null;
@@ -13,6 +11,7 @@ type AuthState = {
   // Methods
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
+  verifyEmailOtp: (email: string, token: string) => Promise<void>;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
@@ -47,18 +46,28 @@ export const useAuthStore = create<AuthState>((set) => ({
   register: async (email, password) => {
     set({ loading: true });
     const { error } = await supabase.auth.signUp({ email, password });
+    set({ loading: false });
     if (error) {
       console.log(error);
       alert(error.message);
-      // Burnt.toast({
-      //   title: "Error",
-      //   preset: "error",
-      //   message: error.message,
-      //   from: "bottom",
-      // });
+      throw error;
     }
+  },
 
+  // VERIFY EMAIL OTP (6-digit code sent after signup)
+  verifyEmailOtp: async (email, token) => {
+    set({ loading: true });
+    const { error } = await supabase.auth.verifyOtp({
+      email,
+      token,
+      type: "signup",
+    });
     set({ loading: false });
+    if (error) {
+      console.log(error);
+      alert(error.message);
+      throw error;
+    }
   },
 
   // LOGIN
@@ -70,12 +79,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     });
     if (error) {
       console.log(error);
-      // Burnt.toast({
-      //   title: "Error",
-      //   preset: "error",
-      //   message: error.message,
-      //   from: "bottom",
-      // });
       alert(error.message);
     }
     set({ loading: false });
