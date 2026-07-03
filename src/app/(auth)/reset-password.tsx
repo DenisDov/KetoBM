@@ -34,56 +34,53 @@ export default function ResetPasswordScreen() {
   };
 
   return (
-    <>
-      <Stack.Screen options={{ title }} />
-      <Box flex={1} padding="m">
-        <Text>Create a new strong password.</Text>
+    <Box flex={1} padding="m" gap="m">
+      <Text variant="title">Create a new strong password.</Text>
 
-        <Text>New password</Text>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              //   secureTextEntry
-              placeholder="**********"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-          )}
-          name="password1"
-        />
-        {errors.password1 && <Text>Password is required.</Text>}
-        <Text>Password</Text>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              //   secureTextEntry
-              placeholder="**********"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-          )}
-          name="password2"
-        />
-        {errors.password2 && <Text>Password is required.</Text>}
-        <Button title="Save" onPress={handleSubmit(onSubmit)} />
-        {/* <Link href="/terms">Terms</Link>
+      <Text>New password</Text>
+      <Controller
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            //   secureTextEntry
+            placeholder="**********"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+        )}
+        name="password1"
+      />
+      {errors.password1 && <Text>Password is required.</Text>}
+      <Text>Password</Text>
+      <Controller
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            //   secureTextEntry
+            placeholder="**********"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+        )}
+        name="password2"
+      />
+      {errors.password2 && <Text>Password is required.</Text>}
+      <Button title="Save" onPress={handleSubmit(onSubmit)} />
+      {/* <Link href="/terms">Terms</Link>
         <Link href="/policy">Policy</Link>
         <Link href="/modal">Policy</Link> */}
-      </Box>
-    </>
+    </Box>
   );
 }

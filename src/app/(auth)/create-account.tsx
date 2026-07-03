@@ -2,7 +2,7 @@ import { Button } from "@/components/button";
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { Controller, useForm } from "react-hook-form";
 import { TextInput } from "react-native";
-import { Stack, useLocalSearchParams, Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Box, Text } from "@/components/primitives";
 
 type FormData = {
@@ -11,7 +11,7 @@ type FormData = {
 };
 
 export default function CreateAccountcreen() {
-  const { register, signInWithGoogle, signInWithApple } = useAuthStore();
+  const { register } = useAuthStore();
   const router = useRouter();
 
   const title = "Create your account";
@@ -39,56 +39,52 @@ export default function CreateAccountcreen() {
   };
 
   return (
-    <>
-      <Stack.Screen options={{ title }} />
-      <Box flex={1} padding="m">
-        <Text>Create an account to start tracking your ketone journey.</Text>
-        {/* <Button title="Sign In with Google" onPress={signInWithGoogle} />
-      <Button title="Sign In with Apple" onPress={signInWithApple} /> */}
+    <Box flex={1} padding="m" gap="m">
+      <Text variant="title">{title}</Text>
+      <Text>Create an account to start tracking your ketone journey.</Text>
 
-        <Text>Email address</Text>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              placeholder="email@example.com"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-          )}
-          name="email"
-        />
-        {errors.email && <Text>Email is required.</Text>}
-        <Text>Password</Text>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              secureTextEntry
-              placeholder="**********"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-          )}
-          name="password"
-        />
-        {errors.password && <Text>Password is required.</Text>}
-        <Button title="Continue" onPress={handleSubmit(onSubmit)} />
-        {/* <Link href="/terms">Terms</Link>
+      <Text>Email address</Text>
+      <Controller
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            placeholder="email@example.com"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+        )}
+        name="email"
+      />
+      {errors.email && <Text>Email is required.</Text>}
+      <Text>Password</Text>
+      <Controller
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            secureTextEntry
+            placeholder="**********"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+        )}
+        name="password"
+      />
+      {errors.password && <Text>Password is required.</Text>}
+      <Button title="Continue" onPress={handleSubmit(onSubmit)} />
+      {/* <Link href="/terms">Terms</Link>
         <Link href="/policy">Policy</Link> */}
-      </Box>
-    </>
+    </Box>
   );
 }

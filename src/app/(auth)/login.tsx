@@ -2,7 +2,7 @@ import { Button } from "@/components/button";
 import { TextField } from "@/components/form";
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { Controller, useForm } from "react-hook-form";
-import { Stack, useLocalSearchParams, Link, useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Box, Text } from "@/components/primitives";
 
 type FormData = {
@@ -40,60 +40,58 @@ export default function Logincreen() {
   };
 
   return (
-    <>
-      <Stack.Screen options={{ title }} />
-      <Box flex={1} padding="m" gap="m">
-        <Text>Enter your credentials to track your ketone journey.</Text>
-        {/* <Button title="Sign In with Google" onPress={signInWithGoogle} />
+    <Box flex={1} padding="m" gap="m">
+      <Text variant="title">{title}</Text>
+      <Text>Enter your credentials to track your ketone journey.</Text>
+      {/* <Button title="Sign In with Google" onPress={signInWithGoogle} />
       <Button title="Sign In with Apple" onPress={signInWithApple} /> */}
 
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextField
-              label="Email address"
-              placeholder="email@example.com"
-              error={errors.email ? "Email is required." : undefined}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="email-address"
-            />
-          )}
-          name="email"
-        />
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextField
-              label="Password"
-              secureTextEntry
-              placeholder="**********"
-              error={errors.password ? "Password is required." : undefined}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-          )}
-          name="password"
-        />
+      <Controller
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextField
+            label="Email address"
+            placeholder="email@example.com"
+            error={errors.email ? "Email is required." : undefined}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="email-address"
+          />
+        )}
+        name="email"
+      />
+      <Controller
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextField
+            label="Password"
+            secureTextEntry
+            placeholder="**********"
+            error={errors.password ? "Password is required." : undefined}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+        )}
+        name="password"
+      />
 
-        <Link href="/request-new-password">Forgot password?</Link>
+      <Link href="/request-new-password">Forgot password?</Link>
 
-        <Button title="Login" onPress={handleSubmit(onSubmit)} />
-        {/* <Link href="/terms">Terms</Link>
+      <Button title="Login" onPress={handleSubmit(onSubmit)} />
+      {/* <Link href="/terms">Terms</Link>
         <Link href="/policy">Policy</Link> */}
-      </Box>
-    </>
+    </Box>
   );
 }

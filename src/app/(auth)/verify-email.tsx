@@ -4,9 +4,9 @@ import { useRef, useState } from "react";
 import {
   NativeSyntheticEvent,
   TextInput,
-  TextInputKeyPressEventData,
+  TextInputKeyPressEvent,
 } from "react-native";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { Box, Text } from "@/components/primitives";
 
 const OTP_LENGTH = 6;
@@ -50,7 +50,7 @@ export default function VerifyEmailScreen() {
   };
 
   const handleKeyPress = (
-    e: NativeSyntheticEvent<TextInputKeyPressEventData>,
+    e: NativeSyntheticEvent<TextInputKeyPressEvent>,
     index: number,
   ) => {
     if (e.nativeEvent.key === "Backspace" && !digits[index] && index > 0) {
@@ -59,45 +59,43 @@ export default function VerifyEmailScreen() {
   };
 
   return (
-    <>
-      <Stack.Screen options={{ title: "Verify your email" }} />
-      <Box flex={1} padding="m">
-        <Text>We have sent you a 6-digit code to {email}, enter it below:</Text>
+    <Box flex={1} padding="m" gap="m">
+      <Text variant="title">Verify your email</Text>
+      <Text>We have sent you a 6-digit code to {email}, enter it below:</Text>
 
-        <Box flexDirection="row" gap="s" marginVertical="m">
-          {digits.map((digit, index) => (
-            <TextInput
-              key={index}
-              ref={(ref) => {
-                inputs.current[index] = ref;
-              }}
-              value={digit}
-              onChangeText={(text) => handleChange(text, index)}
-              onKeyPress={(e) => handleKeyPress(e, index)}
-              keyboardType="number-pad"
-              maxLength={1}
-              editable={!submitting}
-              style={{
-                width: 44,
-                height: 52,
-                borderWidth: 1,
-                borderColor: "#999",
-                borderRadius: 8,
-                textAlign: "center",
-                fontSize: 20,
-              }}
-            />
-          ))}
-        </Box>
-
-        {error && <Text color="error">{error}</Text>}
-
-        <Button
-          title="Continue"
-          disabled={submitting || digits.some((digit) => !digit)}
-          onPress={() => submit(digits.join(""))}
-        />
+      <Box flexDirection="row" gap="s" marginVertical="m">
+        {digits.map((digit, index) => (
+          <TextInput
+            key={index}
+            ref={(ref) => {
+              inputs.current[index] = ref;
+            }}
+            value={digit}
+            onChangeText={(text) => handleChange(text, index)}
+            onKeyPress={(e) => handleKeyPress(e, index)}
+            keyboardType="number-pad"
+            maxLength={1}
+            editable={!submitting}
+            style={{
+              width: 44,
+              height: 52,
+              borderWidth: 1,
+              borderColor: "#999",
+              borderRadius: 8,
+              textAlign: "center",
+              fontSize: 20,
+            }}
+          />
+        ))}
       </Box>
-    </>
+
+      {error && <Text color="error">{error}</Text>}
+
+      <Button
+        title="Continue"
+        disabled={submitting || digits.some((digit) => !digit)}
+        onPress={() => submit(digits.join(""))}
+      />
+    </Box>
   );
 }

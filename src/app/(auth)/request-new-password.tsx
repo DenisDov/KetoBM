@@ -1,8 +1,5 @@
-import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { Platform, TextInput } from "react-native";
-import * as Linking from "expo-linking";
+import { TextInput } from "react-native";
 import { Box, Text } from "@/components/primitives";
-import { ButtonAuth } from "@/components/button-auth";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/button";
 import { supabase } from "@/lib/supabase";
@@ -35,35 +32,32 @@ export default function RequestNewPasswordScreen() {
   };
 
   return (
-    <>
-      {/* <Stack.Screen options={{ title }} /> */}
-      <Box flex={1} padding="m" gap="m">
-        <Text>RequestNewPasswordScreen</Text>
+    <Box flex={1} padding="m" gap="m">
+      <Text variant="title">Request New Password</Text>
 
-        <Text>Email address</Text>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              placeholder="email@example.com"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-          )}
-          name="email"
-        />
-        {errors.email && <Text>Email is required.</Text>}
+      <Text>Email address</Text>
+      <Controller
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            placeholder="email@example.com"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+        )}
+        name="email"
+      />
+      {errors.email && <Text>Email is required.</Text>}
 
-        <Text>OR USE PHONE NUMBER</Text>
+      <Text>OR USE PHONE NUMBER</Text>
 
-        <Button title="Send" onPress={handleSubmit(onSubmit)} />
-      </Box>
-    </>
+      <Button title="Send" onPress={handleSubmit(onSubmit)} />
+    </Box>
   );
 }
