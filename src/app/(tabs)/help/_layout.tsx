@@ -1,15 +1,9 @@
 import { Stack } from "expo-router";
+import { defaultScreenOptions } from "@/theme/screen-options";
 
 export default function Layout() {
-  const screenOptions = {
-    title: "",
-    headerTransparent: true,
-    headerBackImageSource: require("@/assets/icons/arrow-left.png"),
-    headerBackButtonDisplayMode: "minimal",
-  } as const;
-
   return (
-    <Stack screenOptions={screenOptions}>
+    <Stack screenOptions={defaultScreenOptions}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen
         name="video"

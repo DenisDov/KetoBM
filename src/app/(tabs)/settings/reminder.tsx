@@ -1,11 +1,12 @@
 import { Box, Text } from "@/components/primitives";
-import { Stack } from "expo-router";
+import { ScrollView } from "react-native";
 
 export default function ReminderSettingsScreen() {
   return (
-    <Box flex={1} paddingHorizontal="m">
-      <Stack.Screen options={{ title: "Reminder settings" }} />
-      <Text>Reminder settings</Text>
-    </Box>
+    <ScrollView scrollEnabled={false}>
+      <Box padding="m" gap="m">
+        <Text variant="title">Reminder settings</Text>
+      </Box>
+    </ScrollView>
   );
 }
