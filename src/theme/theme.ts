@@ -28,6 +28,7 @@ export const palette = {
   blue500: "#2CAFF0",
 
   white: "#FFFFFF",
+  transparent: "transparent",
 };
 
 export const colors = {

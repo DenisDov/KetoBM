@@ -62,7 +62,7 @@ export default function RootLayout() {
   const selectedRestyleTheme = isDarkMode ? darkTheme : lightTheme;
   const selectedNavTheme = isDarkMode ? NavDarkAdapter : NavLightAdapter;
 
-  const { restoreSession, initialized, user } = useAuthStore();
+  const { restoreSession, initialized, user, profile } = useAuthStore();
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -89,8 +89,9 @@ export default function RootLayout() {
   }
 
   const isLoggedIn = !!user;
+  const hasAcceptedTerms =
+    !!profile?.terms_accepted_at && !!profile?.privacy_accepted_at;
   const hasCompletedOnboarding = false;
-  const shouldCreateAccount = false;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -99,7 +100,7 @@ export default function RootLayout() {
           <NavProvider value={selectedNavTheme}>
             <BottomSheetModalProvider>
               <Stack>
-                <Stack.Protected guard={isLoggedIn}>
+                <Stack.Protected guard={isLoggedIn && hasAcceptedTerms}>
                   <Stack.Screen
                     name="(tabs)"
                     options={{ headerShown: false }}
@@ -109,14 +110,19 @@ export default function RootLayout() {
                     options={{ presentation: "modal", title: "lorem" }}
                   />
                 </Stack.Protected>
+                <Stack.Protected guard={isLoggedIn && !hasAcceptedTerms}>
+                  <Stack.Screen
+                    name="terms"
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                </Stack.Protected>
                 <Stack.Protected guard={!isLoggedIn}>
                   <Stack.Screen
                     name="(auth)"
                     options={{ headerShown: false }}
                   />
-                  {/* <Stack.Protected guard={shouldCreateAccount}>
-            <Stack.Screen name="create-account" />
-          </Stack.Protected> */}
                 </Stack.Protected>
                 {/* <Stack.Protected guard={!hasCompletedOnboarding}>
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />

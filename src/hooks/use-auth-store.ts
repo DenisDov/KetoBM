@@ -1,9 +1,26 @@
 import { Session, User } from "@supabase/supabase-js";
 import { create } from "zustand";
 import { supabase } from "@/lib/supabase";
+import { Tables } from "@/lib/database.types";
+
+export type Profile = Tables<"profiles">;
+
+const fetchProfile = async (userId: string): Promise<Profile | null> => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", userId)
+    .maybeSingle();
+  if (error) {
+    console.log(error);
+    return null;
+  }
+  return data;
+};
 
 type AuthState = {
   user: User | null;
+  profile: Profile | null;
   session: Session | null;
   loading: boolean;
   initialized: boolean;
@@ -12,33 +29,54 @@ type AuthState = {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   verifyEmailOtp: (email: string, token: string) => Promise<void>;
+  acceptTerms: () => Promise<void>;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
   restoreSession: () => Promise<void>;
 };
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
+  profile: null,
   session: null,
   loading: true,
   initialized: false,
 
   restoreSession: async () => {
     const { data } = await supabase.auth.getSession();
+    const user = data.session?.user ?? null;
+    const profile = user ? await fetchProfile(user.id) : null;
     set({
       session: data.session,
-      user: data.session?.user ?? null,
+      user,
+      profile,
       loading: false,
       initialized: true,
     });
 
     // Listen to changes
     supabase.auth.onAuthStateChange((_event, session) => {
-      set({
-        session,
-        user: session?.user ?? null,
-      });
+      const nextUser = session?.user ?? null;
+
+      if (!nextUser) {
+        set({ session: null, user: null, profile: null });
+        return;
+      }
+
+      if (get().user?.id === nextUser.id) {
+        set({ session, user: nextUser });
+        return;
+      }
+
+      // New sign-in: load the profile before exposing the user so route
+      // guards see both at once. Deferred with setTimeout because supabase-js
+      // holds its auth lock while notifying listeners — queries started
+      // directly inside this callback can deadlock.
+      setTimeout(async () => {
+        const profile = await fetchProfile(nextUser.id);
+        set({ session, user: nextUser, profile });
+      }, 0);
     });
   },
 
@@ -70,6 +108,31 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
+  // ACCEPT TERMS & PRIVACY POLICY (timestamps on the profiles row)
+  acceptTerms: async () => {
+    const userId = get().user?.id;
+    if (!userId) return;
+
+    set({ loading: true });
+    const now = new Date().toISOString();
+    const { data, error } = await supabase
+      .from("profiles")
+      .upsert({
+        id: userId,
+        terms_accepted_at: now,
+        privacy_accepted_at: now,
+      })
+      .select()
+      .single();
+    set({ loading: false });
+    if (error) {
+      console.log(error);
+      alert(error.message);
+      throw error;
+    }
+    set({ profile: data });
+  },
+
   // LOGIN
   login: async (email, password) => {
     set({ loading: true });
@@ -86,7 +149,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   signOut: async () => {
     await supabase.auth.signOut();
-    set({ user: null, session: null });
+    set({ user: null, session: null, profile: null });
   },
 
   signInWithGoogle: async () => {
