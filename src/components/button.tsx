@@ -45,6 +45,14 @@ const textColors: Record<ButtonVariant, keyof Theme["colors"]> = {
   link: "primary",
 };
 
+const disabledStyles: Record<ButtonVariant, RestyleProps> = {
+  primary: { backgroundColor: "border", borderColor: "border" },
+  secondary: { borderColor: "border" },
+  link: {},
+};
+
+const disabledTextColor: keyof Theme["colors"] = "textSecondary";
+
 export const Button = ({
   title,
   onPress,
@@ -64,13 +72,16 @@ export const Button = ({
     <ButtonBase
       variant={variant}
       disabled={disabled}
-      opacity={disabled ? 0.5 : 1}
+      {...(disabled ? disabledStyles[variant] : undefined)}
       style={
         variant === "primary" && !disabled ? styles.primaryShadow : undefined
       }
       onPress={onPress}>
       {iconBefore}
-      <Text fontSize={16} color={textColors[variant]} fontFamily={Fonts.medium}>
+      <Text
+        fontSize={16}
+        color={disabled ? disabledTextColor : textColors[variant]}
+        fontFamily={Fonts.medium}>
         {title}
       </Text>
       {iconAfter}
