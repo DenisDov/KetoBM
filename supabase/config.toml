@@ -71,6 +71,8 @@ schema_paths = [
   "./schemas/readings.sql",
   "./schemas/note-presets.sql",
   "./schemas/notes.sql",
+  "./schemas/reminders.sql",
+  "./schemas/notification-settings.sql",
 ]
 
 [db.seed]
