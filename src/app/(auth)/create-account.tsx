@@ -1,7 +1,7 @@
 import { Button } from "@/components/button";
+import { TextField } from "@/components/form";
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { Controller, useForm } from "react-hook-form";
-import { TextInput } from "react-native";
 import { useRouter } from "expo-router";
 import { Box, Text } from "@/components/primitives";
 
@@ -43,35 +43,37 @@ export default function CreateAccountcreen() {
       <Text variant="title">{title}</Text>
       <Text>Create an account to start tracking your ketone journey.</Text>
 
-      <Text>Email address</Text>
       <Controller
         control={control}
         rules={{
           required: true,
         }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
+          <TextField
+            label="Email address"
             placeholder="email@example.com"
+            error={errors.email ? "Email is required." : undefined}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             autoCapitalize="none"
             autoCorrect={false}
+            keyboardType="email-address"
           />
         )}
         name="email"
       />
-      {errors.email && <Text>Email is required.</Text>}
-      <Text>Password</Text>
       <Controller
         control={control}
         rules={{
           required: true,
         }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
+          <TextField
+            label="Password"
             secureTextEntry
             placeholder="**********"
+            error={errors.password ? "Password is required." : undefined}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -81,7 +83,7 @@ export default function CreateAccountcreen() {
         )}
         name="password"
       />
-      {errors.password && <Text>Password is required.</Text>}
+
       <Button title="Continue" onPress={handleSubmit(onSubmit)} />
       {/* <Link href="/terms">Terms</Link>
         <Link href="/policy">Policy</Link> */}
