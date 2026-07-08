@@ -61,7 +61,17 @@ max_client_conn = 100
 enabled = true
 # Specifies an ordered list of schema files that describe your database.
 # Supports glob patterns relative to supabase directory: "./schemas/*.sql"
-schema_paths = ["./schemas/*.sql"]
+# Ordered so tables load after the tables they reference (FKs). notes references
+# both readings and note_presets, so it must come last.
+schema_paths = [
+  "./schemas/account-deletions.sql",
+  "./schemas/profiles.sql",
+  "./schemas/devices.sql",
+  "./schemas/ketosis-stages.sql",
+  "./schemas/readings.sql",
+  "./schemas/note-presets.sql",
+  "./schemas/notes.sql",
+]
 
 [db.seed]
 # If enabled, seeds the database after migrations during a db reset.
