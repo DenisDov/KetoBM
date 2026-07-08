@@ -61,6 +61,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
               fontSize: 16,
               color: theme.colors.text,
               padding: 0,
+              height: "100%",
             },
             style,
           ]}
