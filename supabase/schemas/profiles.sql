@@ -16,6 +16,8 @@ create table public.profiles (
   -- Soft delete: set when the user requests deletion.
   deleted_at timestamptz,
 
+  guided_tour_completed boolean not null default false,
+
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
 
