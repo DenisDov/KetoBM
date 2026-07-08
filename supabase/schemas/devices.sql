@@ -3,9 +3,24 @@ create table public.devices (
   id uuid not null default gen_random_uuid(),
   user_id uuid not null references auth.users on delete cascade,
   name text,
-  identifier text,
-  created_at timestamptz not null default now(),
+  model text,
+  serial_number text,
+  bluetooth_id text,
+
+  -- Drives which ketone reference ranges apply to readings from this device.
+  operating_mode text not null default 'non_diabetic'
+    check (operating_mode in ('diabetic', 'non_diabetic')),
+
+  connection_status text not null default 'disconnected'
+    check (connection_status in ('connected', 'disconnected')),
+  bluetooth_enabled boolean not null default false,
+
+  firmware_version text,
+  paired_at timestamptz,
   last_connected_at timestamptz,
+  is_active boolean not null default true,
+
+  created_at timestamptz not null default now(),
 
   primary key (id)
 );

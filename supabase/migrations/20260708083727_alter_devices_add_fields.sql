@@ -1,0 +1,12 @@
+ALTER TABLE public.devices DROP COLUMN identifier;
+ALTER TABLE public.devices ADD COLUMN model text;
+ALTER TABLE public.devices ADD COLUMN serial_number text;
+ALTER TABLE public.devices ADD COLUMN bluetooth_id text;
+ALTER TABLE public.devices ADD COLUMN operating_mode text DEFAULT 'non_diabetic'::text NOT NULL;
+ALTER TABLE public.devices ADD CONSTRAINT devices_operating_mode_check CHECK (operating_mode = ANY (ARRAY['diabetic'::text, 'non_diabetic'::text]));
+ALTER TABLE public.devices ADD COLUMN connection_status text DEFAULT 'disconnected'::text NOT NULL;
+ALTER TABLE public.devices ADD CONSTRAINT devices_connection_status_check CHECK (connection_status = ANY (ARRAY['connected'::text, 'disconnected'::text]));
+ALTER TABLE public.devices ADD COLUMN bluetooth_enabled boolean DEFAULT false NOT NULL;
+ALTER TABLE public.devices ADD COLUMN firmware_version text;
+ALTER TABLE public.devices ADD COLUMN paired_at timestamp with time zone;
+ALTER TABLE public.devices ADD COLUMN is_active boolean DEFAULT true NOT NULL;

@@ -35,27 +35,51 @@ export type Database = {
       }
       devices: {
         Row: {
+          bluetooth_enabled: boolean
+          bluetooth_id: string | null
+          connection_status: string
           created_at: string
+          firmware_version: string | null
           id: string
-          identifier: string | null
+          is_active: boolean
           last_connected_at: string | null
+          model: string | null
           name: string | null
+          operating_mode: string
+          paired_at: string | null
+          serial_number: string | null
           user_id: string
         }
         Insert: {
+          bluetooth_enabled?: boolean
+          bluetooth_id?: string | null
+          connection_status?: string
           created_at?: string
+          firmware_version?: string | null
           id?: string
-          identifier?: string | null
+          is_active?: boolean
           last_connected_at?: string | null
+          model?: string | null
           name?: string | null
+          operating_mode?: string
+          paired_at?: string | null
+          serial_number?: string | null
           user_id: string
         }
         Update: {
+          bluetooth_enabled?: boolean
+          bluetooth_id?: string | null
+          connection_status?: string
           created_at?: string
+          firmware_version?: string | null
           id?: string
-          identifier?: string | null
+          is_active?: boolean
           last_connected_at?: string | null
+          model?: string | null
           name?: string | null
+          operating_mode?: string
+          paired_at?: string | null
+          serial_number?: string | null
           user_id?: string
         }
         Relationships: []
@@ -67,6 +91,7 @@ export type Database = {
           deleted_at: string | null
           email: string | null
           first_name: string | null
+          guided_tour_completed: boolean
           id: string
           onboarding_completed_at: string | null
           onboarding_step: number
@@ -80,6 +105,7 @@ export type Database = {
           deleted_at?: string | null
           email?: string | null
           first_name?: string | null
+          guided_tour_completed?: boolean
           id: string
           onboarding_completed_at?: string | null
           onboarding_step?: number
@@ -93,6 +119,7 @@ export type Database = {
           deleted_at?: string | null
           email?: string | null
           first_name?: string | null
+          guided_tour_completed?: boolean
           id?: string
           onboarding_completed_at?: string | null
           onboarding_step?: number
