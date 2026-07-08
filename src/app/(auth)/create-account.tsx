@@ -3,7 +3,7 @@ import { useTheme } from "@shopify/restyle";
 import { Button } from "@/components/button";
 import { PasswordRules, TextField } from "@/components/form";
 import { useAuthStore } from "@/hooks/use-auth-store";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useRouter } from "expo-router";
 import { Box, Text } from "@/components/primitives";
 import { isValidEmail, isValidPassword } from "@/lib/validation";
@@ -24,7 +24,6 @@ export default function CreateAccountcreen() {
   const {
     control,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<FormData>({
     mode: "onChange",
@@ -34,8 +33,8 @@ export default function CreateAccountcreen() {
     },
   });
 
-  const email = watch("email");
-  const password = watch("password");
+  const email = useWatch({ control, name: "email" });
+  const password = useWatch({ control, name: "password" });
   const emailValid = isValidEmail(email);
 
   const onSubmit = async (data: FormData) => {
