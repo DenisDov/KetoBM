@@ -73,6 +73,11 @@ schema_paths = [
   "./schemas/notes.sql",
   "./schemas/reminders.sql",
   "./schemas/notification-settings.sql",
+  "./schemas/help-articles.sql",
+  "./schemas/help-videos.sql",
+  "./schemas/support-requests.sql",
+  "./schemas/support-messages.sql",
+  "./schemas/app-versions.sql",
 ]
 
 [db.seed]

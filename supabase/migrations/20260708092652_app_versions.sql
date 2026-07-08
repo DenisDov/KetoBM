@@ -1,0 +1,10 @@
+CREATE TABLE public.app_versions (id uuid DEFAULT gen_random_uuid() NOT NULL, platform text NOT NULL, latest_version text NOT NULL, min_supported_version text NOT NULL, created_at timestamp with time zone DEFAULT now() NOT NULL, updated_at timestamp with time zone DEFAULT now() NOT NULL);
+ALTER TABLE public.app_versions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.app_versions ADD CONSTRAINT app_versions_pkey PRIMARY KEY (id);
+ALTER TABLE public.app_versions ADD CONSTRAINT app_versions_platform_check CHECK (platform = ANY (ARRAY['ios'::text, 'android'::text]));
+ALTER TABLE public.app_versions ADD CONSTRAINT app_versions_platform_key UNIQUE (platform);
+GRANT MAINTAIN, REFERENCES, TRIGGER, TRUNCATE ON public.app_versions TO anon;
+GRANT MAINTAIN, REFERENCES, SELECT, TRIGGER, TRUNCATE ON public.app_versions TO authenticated;
+GRANT ALL ON public.app_versions TO service_role;
+CREATE TRIGGER app_versions_set_updated_at BEFORE UPDATE ON public.app_versions FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+CREATE POLICY "App versions are viewable by all authenticated users" ON public.app_versions FOR SELECT TO authenticated USING (true);
