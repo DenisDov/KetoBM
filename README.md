@@ -221,3 +221,7 @@ Testing opening `forgot-password` screen on `ketobm-dev` scheme:
 ```bash
 bunx uri-scheme open ketobm-dev://reset-password --ios
 ```
+
+## Supabase Schema Visualizer
+
+http://localhost:54323/project/default/database/schemas
