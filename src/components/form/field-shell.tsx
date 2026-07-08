@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Box, Text } from "@/components/primitives";
 import { Theme } from "@/theme";
+import { Fonts } from "@/theme/fonts";
 
 type FieldShellProps = {
   label?: string;
@@ -25,11 +26,7 @@ export const FieldShell = ({
 
   return (
     <Box gap="s" opacity={disabled ? 0.5 : 1}>
-      {label && (
-        <Text variant="body" fontSize={14} color="textSecondary">
-          {label}
-        </Text>
-      )}
+      {label && <Text fontFamily={Fonts.medium}>{label}</Text>}
       <Box
         flexDirection="row"
         alignItems="center"
