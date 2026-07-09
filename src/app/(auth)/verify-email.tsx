@@ -1,11 +1,7 @@
 import { Button } from "@/components/button";
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { useRef, useState } from "react";
-import {
-  NativeSyntheticEvent,
-  TextInput,
-  TextInputKeyPressEvent,
-} from "react-native";
+import { TextInput, TextInputKeyPressEvent } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { Box, Text } from "@/components/primitives";
 
@@ -49,10 +45,7 @@ export default function VerifyEmailScreen() {
     }
   };
 
-  const handleKeyPress = (
-    e: NativeSyntheticEvent<TextInputKeyPressEvent>,
-    index: number,
-  ) => {
+  const handleKeyPress = (e: TextInputKeyPressEvent, index: number) => {
     if (e.nativeEvent.key === "Backspace" && !digits[index] && index > 0) {
       inputs.current[index - 1]?.focus();
     }

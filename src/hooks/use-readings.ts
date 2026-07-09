@@ -24,6 +24,24 @@ export const useKetosisMode = (): KetosisMode => {
   return getKetosisMode(profile);
 };
 
+/** Full reading history across both types, newest first (readings list screen). */
+export const useReadings = () => {
+  const userId = useAuthStore((state) => state.user?.id);
+
+  return useQuery({
+    queryKey: ["readings", "all", userId],
+    enabled: !!userId,
+    queryFn: async (): Promise<Reading[]> => {
+      const { data, error } = await supabase
+        .from("readings")
+        .select("*")
+        .order("measured_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+};
+
 /** Most recent readings across both types (drives the gauge + latest list). */
 export const useLatestReadings = (limit = 3) => {
   const userId = useAuthStore((state) => state.user?.id);

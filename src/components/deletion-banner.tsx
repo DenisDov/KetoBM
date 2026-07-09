@@ -1,5 +1,7 @@
 import { Ionicons } from "@react-native-vector-icons/ionicons";
 import { useTheme } from "@shopify/restyle";
+import { addDays } from "date-fns/addDays";
+import { parseISO } from "date-fns/parseISO";
 import { useState } from "react";
 
 import { Box, Text, PressableBox } from "@/components/primitives";
@@ -25,8 +27,9 @@ export function DeletionBanner() {
   const deletedAt = profile?.deleted_at;
   if (!deletedAt) return null;
 
+  // Ceil so a partial day still counts as a day left (differenceInDays truncates).
   const msLeft =
-    new Date(deletedAt).getTime() + GRACE_PERIOD_DAYS * MS_PER_DAY - now;
+    addDays(parseISO(deletedAt), GRACE_PERIOD_DAYS).getTime() - now;
   const daysLeft = Math.max(0, Math.ceil(msLeft / MS_PER_DAY));
   const daysLabel = daysLeft === 1 ? "1 day" : `${daysLeft} days`;
 
