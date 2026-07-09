@@ -40,7 +40,6 @@ export default function ResetPasswordScreen() {
   const { updatePassword, signOut, loading } = useAuthStore();
   const router = useRouter();
 
-  const url = Linking.useURL();
   // Natively tracks the most recent URL that opened the app — immune to the
   // warm-start race where the "url" event fires before this screen mounts.
   const linkingUrl = Linking.useLinkingURL();
@@ -54,13 +53,11 @@ export default function ResetPasswordScreen() {
     if (handled.current) return;
 
     const params = {
-      ...(url ? extractUrlParams(url) : {}),
       ...(linkingUrl ? extractUrlParams(linkingUrl) : {}),
       ...(typeof hash === "string" ? parseParamString(hash) : {}),
     };
 
     console.log("[reset-password] link", {
-      url,
       linkingUrl,
       hash,
       paramKeys: Object.keys(params),
@@ -118,7 +115,7 @@ export default function ResetPasswordScreen() {
       }
     };
     establishSession();
-  }, [url, linkingUrl, hash]);
+  }, [linkingUrl, hash]);
 
   const {
     control,
