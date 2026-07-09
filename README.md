@@ -225,3 +225,10 @@ bunx uri-scheme open ketobm-dev://reset-password --ios
 ## Supabase Schema Visualizer
 
 http://localhost:54323/project/default/database/schemas
+
+## Run on real IOS device
+
+1. Get your IP address: `ipconfig getifaddr en0` -> `192.168.1.42`
+2. Change in `.env.local` - `EXPO_PUBLIC_SUPABASE_URL=http://192.168.1.42:54321`
+3. Run `bun expo run:ios --device`
+<!-- TODO: HOW TO TEST FORGOT PASSWORD ON SIMULATOR (WHERE WE DONT HAVE EMAIL CLIENT) AND ON REAL DEVICE -->

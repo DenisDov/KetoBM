@@ -1,4 +1,5 @@
 import { Session, User } from "@supabase/supabase-js";
+import * as Linking from "expo-linking";
 import { create } from "zustand";
 import { supabase } from "@/lib/supabase";
 import { Tables, TablesUpdate } from "@/lib/database.types";
@@ -30,6 +31,8 @@ type AuthState = {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   verifyEmailOtp: (email: string, token: string) => Promise<void>;
+  requestPasswordReset: (email: string) => Promise<void>;
+  updatePassword: (password: string) => Promise<void>;
   acceptTerms: () => Promise<void>;
   updateProfile: (patch: ProfileUpdate) => Promise<void>;
   requestAccountDeletion: () => Promise<void>;
@@ -104,6 +107,36 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       token,
       type: "signup",
     });
+    set({ loading: false });
+    if (error) {
+      console.log(error);
+      alert(error.message);
+      throw error;
+    }
+  },
+
+  // REQUEST PASSWORD RESET. Sends an email whose link deep-links back into the
+  // app at /reset-password with the recovery tokens. The redirect URL must be
+  // allow-listed in Supabase auth config (additional_redirect_urls locally,
+  // Redirect URLs in the dashboard for remote projects).
+  requestPasswordReset: async (email) => {
+    set({ loading: true });
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: Linking.createURL("reset-password"),
+    });
+    set({ loading: false });
+    if (error) {
+      console.log(error);
+      alert(error.message);
+      throw error;
+    }
+  },
+
+  // UPDATE PASSWORD. Requires an active session — during the reset flow that's
+  // the recovery session established from the email deep link.
+  updatePassword: async (password) => {
+    set({ loading: true });
+    const { error } = await supabase.auth.updateUser({ password });
     set({ loading: false });
     if (error) {
       console.log(error);

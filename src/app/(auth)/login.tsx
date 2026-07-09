@@ -4,6 +4,7 @@ import { useAuthStore } from "@/hooks/use-auth-store";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useRouter } from "expo-router";
 import { Box, Text } from "@/components/primitives";
+import { Fonts } from "@/theme/fonts";
 
 type FormData = {
   email: string;
@@ -87,7 +88,9 @@ export default function Logincreen() {
         name="password"
       />
 
-      <Link href="/request-new-password">Forgot password?</Link>
+      <Link href="/request-new-password" style={{ alignSelf: "flex-end" }}>
+        <Text fontFamily={Fonts.medium}>Forgot password?</Text>
+      </Link>
 
       <Button title="Login" onPress={handleSubmit(onSubmit)} />
       {/* <Link href="/terms">Terms</Link>

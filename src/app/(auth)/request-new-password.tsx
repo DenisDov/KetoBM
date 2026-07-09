@@ -1,14 +1,19 @@
-import { TextInput } from "react-native";
-import { Box, Text } from "@/components/primitives";
-import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/button";
-import { supabase } from "@/lib/supabase";
+import { TextField } from "@/components/form";
+import { useAuthStore } from "@/hooks/use-auth-store";
+import { isValidEmail } from "@/lib/validation";
+import { Controller, useForm } from "react-hook-form";
+import { useRouter } from "expo-router";
+import { Box, Text } from "@/components/primitives";
 
 type FormData = {
   email: string;
 };
 
 export default function RequestNewPasswordScreen() {
+  const { requestPasswordReset, loading } = useAuthStore();
+  const router = useRouter();
+
   const {
     control,
     handleSubmit,
@@ -20,44 +25,51 @@ export default function RequestNewPasswordScreen() {
   });
 
   const onSubmit = async (data: FormData) => {
-    console.log("REQ PASS");
-    const { data: sdata, error } = supabase.auth.resetPasswordForEmail(
-      data.email,
-      {
-        redirectTo: "ketobm-dev://reset-password",
-      },
-    );
-    console.log("sdata", sdata);
-    console.log("error", error);
+    const email = data.email.trim();
+    try {
+      await requestPasswordReset(email);
+      router.push({ pathname: "/check-email", params: { email } });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <Box flex={1} padding="m" gap="m">
-      <Text variant="title">Request New Password</Text>
+      <Text variant="title">Forgot password?</Text>
+      <Text>
+        Enter the email address associated with your account and we’ll send you
+        a link to reset your password.
+      </Text>
 
-      <Text>Email address</Text>
       <Controller
         control={control}
         rules={{
-          required: true,
+          required: "Email is required.",
+          validate: (value) =>
+            isValidEmail(value) || "Enter a valid email address.",
         }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
+          <TextField
+            label="Email address"
             placeholder="email@example.com"
+            error={errors.email?.message}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             autoCapitalize="none"
             autoCorrect={false}
+            keyboardType="email-address"
           />
         )}
         name="email"
       />
-      {errors.email && <Text>Email is required.</Text>}
 
-      <Text>OR USE PHONE NUMBER</Text>
-
-      <Button title="Send" onPress={handleSubmit(onSubmit)} />
+      <Button
+        title="Send reset link"
+        disabled={loading}
+        onPress={handleSubmit(onSubmit)}
+      />
     </Box>
   );
 }

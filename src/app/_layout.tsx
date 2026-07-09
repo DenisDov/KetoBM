@@ -11,6 +11,7 @@ import { lightTheme, darkTheme } from "@/theme/theme";
 import "react-native-reanimated";
 import { Fonts } from "@/theme/fonts";
 import { NavDarkAdapter, NavLightAdapter } from "@/theme/nav-theme";
+import { defaultScreenOptions } from "@/theme/screen-options";
 import { QueryClientProvider, focusManager } from "@tanstack/react-query";
 import { useAppState } from "@/hooks/tanstack-query/use-app-state";
 import { useOnlineManager } from "@/hooks/tanstack-query/use-online-manager";
@@ -134,6 +135,25 @@ export default function RootLayout() {
                 <Stack.Screen
                   name="policy"
                   options={{ presentation: "modal", title: "Privacy Policy" }}
+                />
+                {/* Password-reset deep-link screens. Deliberately unguarded:
+                    the recovery link signs the user in mid-flow, so any
+                    auth-state guard would unmount them. */}
+                <Stack.Screen
+                  name="reset-password"
+                  options={{
+                    ...defaultScreenOptions,
+                    headerTransparent: false,
+                    headerShadowVisible: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="password-updated"
+                  options={{
+                    ...defaultScreenOptions,
+                    headerTransparent: false,
+                    headerShadowVisible: false,
+                  }}
                 />
               </Stack>
             </BottomSheetModalProvider>
