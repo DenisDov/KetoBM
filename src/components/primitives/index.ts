@@ -2,4 +2,3 @@ export { Box } from "./box";
 export { Text } from "./text";
 export { ImageBox } from "./image-box";
 export { PressableBox } from "./pressable";
-export { ImageBackgroundBox } from "./image-background-box";

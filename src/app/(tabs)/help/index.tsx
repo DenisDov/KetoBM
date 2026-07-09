@@ -1,9 +1,4 @@
-import {
-  Box,
-  Text,
-  PressableBox,
-  ImageBackgroundBox,
-} from "@/components/primitives";
+import { Box, Text, PressableBox, ImageBox } from "@/components/primitives";
 import { Link, useRouter } from "expo-router";
 import { ScrollView } from "react-native";
 import { Ionicons } from "@react-native-vector-icons/ionicons";
@@ -32,55 +27,75 @@ export default function HelpScreen() {
           <Text>1 unread message.</Text>
         </PressableBox>
 
-        <PressableBox onPress={() => router.push("./help/video")}>
-          <ImageBackgroundBox
+        <PressableBox
+          onPress={() => router.push("./help/video")}
+          height={172}
+          justifyContent="space-between"
+          padding="sm"
+          borderRadius="sm">
+          <ImageBox
             source={{
               uri: "https://legacy.reactjs.org/logo-og.png",
             }}
+            position="absolute"
+            top={0}
+            left={0}
+            right={0}
+            bottom={0}
             borderRadius="sm"
-            padding="sm"
-            overflow="hidden"
+          />
+          <Ionicons name="play" color="white" size={24} />
+          <Text color="white" fontSize={16}>
+            How to add new meter
+          </Text>
+        </PressableBox>
+
+        <Box flexDirection="row" gap="sm">
+          <PressableBox
+            flex={1}
+            onPress={() => router.push("./help/video")}
             height={172}
-            justifyContent="space-between">
+            justifyContent="space-between"
+            padding="sm"
+            borderRadius="sm">
+            <ImageBox
+              source={{
+                uri: "https://legacy.reactjs.org/logo-og.png",
+              }}
+              position="absolute"
+              top={0}
+              left={0}
+              right={0}
+              bottom={0}
+              borderRadius="sm"
+            />
             <Ionicons name="play" color="white" size={24} />
             <Text color="white" fontSize={16}>
               How to add new meter
             </Text>
-          </ImageBackgroundBox>
-        </PressableBox>
-
-        <Box flexDirection="row" gap="sm">
-          <PressableBox flex={1} onPress={() => router.push("./help/video")}>
-            <ImageBackgroundBox
-              source={{
-                uri: "https://legacy.reactjs.org/logo-og.png",
-              }}
-              borderRadius="sm"
-              padding="sm"
-              overflow="hidden"
-              height={172}
-              justifyContent="space-between">
-              <Ionicons name="play" color="white" size={24} />
-              <Text color="white" fontSize={16}>
-                How to add new meter
-              </Text>
-            </ImageBackgroundBox>
           </PressableBox>
-          <PressableBox flex={1} onPress={() => router.push("./help/video")}>
-            <ImageBackgroundBox
+          <PressableBox
+            flex={1}
+            onPress={() => router.push("./help/video")}
+            height={172}
+            justifyContent="space-between"
+            padding="sm"
+            borderRadius="sm">
+            <ImageBox
               source={{
                 uri: "https://legacy.reactjs.org/logo-og.png",
               }}
+              position="absolute"
+              top={0}
+              left={0}
+              right={0}
+              bottom={0}
               borderRadius="sm"
-              padding="sm"
-              overflow="hidden"
-              height={172}
-              justifyContent="space-between">
-              <Ionicons name="play" color="white" size={24} />
-              <Text color="white" fontSize={16}>
-                How to add new meter
-              </Text>
-            </ImageBackgroundBox>
+            />
+            <Ionicons name="play" color="white" size={24} />
+            <Text color="white" fontSize={16}>
+              How to add new meter
+            </Text>
           </PressableBox>
         </Box>
         <PressableBox
