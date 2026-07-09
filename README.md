@@ -160,12 +160,12 @@ Decribe desired db in `sql` files
 1. Create file in `supabase/schemas/todos.sql`
 2. Write
 
-```sql
-create table public.todos (
-    id bigint not null primary key,
-    title text not null
-)
-```
+   ```sql
+   create table public.todos (
+       id bigint not null primary key,
+       title text not null
+   )
+   ```
 
 3. Run `supabase db diff -f todos_table`
 4. Apply migration `supabase migration up`
@@ -174,13 +174,13 @@ Modify this table
 
 1. Add new `description`column to todos
 
-```sql
-create table public.todos (
-    id bigint not null primary key,
-    title text not null,
-    description text
-)
-```
+   ```sql
+   create table public.todos (
+       id bigint not null primary key,
+       title text not null,
+       description text
+   )
+   ```
 
 2. Run `supabase db diff -f add_desription_to_todos`
 3. Apply migration `supabase migration up`
@@ -277,10 +277,10 @@ The simulator shares the Mac's network, so no LAN IP / `external_url` changes ar
 
 ### Troubleshooting
 
-| Symptom | Cause |
-| --- | --- |
+| Symptom                                                                                                        | Cause                                                                                                                                                |
+| -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Email link host is `127.0.0.1` when testing on a device, or link ends with `redirect_to=http://127.0.0.1:3000` | Supabase wasn't restarted after the `config.toml` change (`redirect_to` silently falls back to `site_url` when the requested URL isn't allow-listed) |
-| "This link has expired" screen | The link was already used (single-use) or is older than `otp_expiry` (1 h). Request a new email and open the **newest** Mailpit message |
-| Deep link doesn't open the app | You're in Expo Go — the `ketobm-dev://` scheme only exists in the dev build (`bun expo run:ios`) |
+| "This link has expired" screen                                                                                 | The link was already used (single-use) or is older than `otp_expiry` (1 h). Request a new email and open the **newest** Mailpit message              |
+| Deep link doesn't open the app                                                                                 | You're in Expo Go — the `ketobm-dev://` scheme only exists in the dev build (`bun expo run:ios`)                                                     |
 
 The reset screen logs `[reset-password] link { url, linkingUrl, hash, ... }` to Metro — check it to see exactly what the app received from the deep link.
