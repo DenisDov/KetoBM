@@ -59,7 +59,7 @@ export default function SettingsScreen() {
           onPress: async () => {
             try {
               await requestAccountDeletion();
-              router.push("/modal");
+              router.push("/(tabs)/settings/deletion-requested");
             } catch {
               // requestAccountDeletion already surfaces the error to the user.
             }

@@ -10,9 +10,8 @@ import { Button } from "@/components/button";
 import { Box, Text } from "@/components/primitives";
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { Theme } from "@/theme";
-import { Fonts } from "@/theme/fonts";
 
-export default function ModalScreen() {
+export default function DeletionRequestedScreen() {
   const router = useRouter();
   const { colors } = useTheme<Theme>();
   const { cancelAccountDeletion } = useAuthStore();
@@ -52,11 +51,7 @@ export default function ModalScreen() {
           <Text variant="title" textAlign="center">
             Deletion requested
           </Text>
-          <Text
-            variant="body"
-            color="textSecondary"
-            textAlign="center"
-            fontFamily={Fonts.regular}>
+          <Text variant="body" color="textSecondary" textAlign="center">
             We&rsquo;ve received your request to delete your data. Your account
             and associated information will be permanently removed from our
             system within 7 days.
