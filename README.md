@@ -117,45 +117,9 @@ APP_ENV=preview eas build --profile preview --platform android --local
 APP_ENV=production eas build --profile production --platform android --local
 ```
 
-# Manual migration
+# Database Migrations (Declarative)
 
-https://supabase.com/docs/guides/deployment/managing-environments#manual-migration
-
-1. Create a new migration script
-   `supabase migration new new_employee`
-2. write SQL statements in this script
-
-```sql
-create table public.employees (
-  id integer primary key generated always as identity,
-  name text
-);
-```
-
-3. Apply the new migration to local db. Never run it against a remote project.
-   `supabase db reset`
-
-4. For remote
-   `supabase db push`
-
-### Seeding local db
-
-1. create file in `supabase/seeds/employees.sql`
-   then paste into it
-
-2. ```sql
-   INSERT INTO public.employees (name) VALUES
-     ('Alice Johnson'),
-     ('Bob Smith'),
-     ('Carol White'),
-     ('David Brown');
-   ```
-
-3. `supabase db reset`
-
-# Or in Declarative way (Not needed to write manually in migration file)
-
-Decribe desired db in `sql` files
+Describe the desired schema in `sql` files under `supabase/schemas/`, then generate a migration from the diff.
 
 1. Create file in `supabase/schemas/todos.sql`
 2. Write
@@ -184,6 +148,21 @@ Modify this table
 
 2. Run `supabase db diff -f add_desription_to_todos`
 3. Apply migration `supabase migration up`
+
+### Seeding local db
+
+1. create file in `supabase/seeds/employees.sql`
+   then paste into it
+
+2. ```sql
+   INSERT INTO public.employees (name) VALUES
+     ('Alice Johnson'),
+     ('Bob Smith'),
+     ('Carol White'),
+     ('David Brown');
+   ```
+
+3. `supabase db reset`
 
 # Supabase - working with a team
 
