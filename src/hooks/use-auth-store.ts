@@ -30,6 +30,8 @@ type AuthState = {
   register: (email: string, password: string) => Promise<void>;
   verifyEmailOtp: (email: string, token: string) => Promise<void>;
   acceptTerms: () => Promise<void>;
+  requestAccountDeletion: () => Promise<void>;
+  cancelAccountDeletion: () => Promise<void>;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
@@ -125,6 +127,48 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       .select()
       .single();
     set({ loading: false });
+    if (error) {
+      console.log(error);
+      alert(error.message);
+      throw error;
+    }
+    set({ profile: data });
+  },
+
+  // REQUEST ACCOUNT DELETION (soft delete). A scheduled server job hard-deletes
+  // the auth user 7 days after deleted_at is set, cascading all data and writing
+  // the account_deletions audit row. The user stays signed in during the grace
+  // period and can undo via cancelAccountDeletion.
+  requestAccountDeletion: async () => {
+    const userId = get().user?.id;
+    if (!userId) return;
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ deleted_at: new Date().toISOString() })
+      .eq("id", userId)
+      .select()
+      .single();
+    if (error) {
+      console.log(error);
+      alert(error.message);
+      throw error;
+    }
+    set({ profile: data });
+  },
+
+  // CANCEL A PENDING DELETION (undo). Clears deleted_at before the grace period
+  // ends so the scheduled job skips the account.
+  cancelAccountDeletion: async () => {
+    const userId = get().user?.id;
+    if (!userId) return;
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ deleted_at: null })
+      .eq("id", userId)
+      .select()
+      .single();
     if (error) {
       console.log(error);
       alert(error.message);

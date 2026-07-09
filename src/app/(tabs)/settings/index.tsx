@@ -1,4 +1,5 @@
 import { Box, Text, PressableBox } from "@/components/primitives";
+import { DeletionBanner } from "@/components/deletion-banner";
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { Theme } from "@/theme";
 import { Fonts } from "@/theme/fonts";
@@ -31,12 +32,12 @@ const menu: MenuItem[] = [
     href: "/settings/account",
   },
   { name: "Privacy", icon: "shield-outline", href: "/policy" },
-  { name: "Delete my data", icon: "trash-outline", action: "delete" },
+  { name: "Delete Account", icon: "trash-outline", action: "delete" },
   { name: "Logout", icon: "log-out-outline", action: "logout" },
 ];
 
 export default function SettingsScreen() {
-  const { user, signOut } = useAuthStore();
+  const { user, signOut, requestAccountDeletion } = useAuthStore();
   const router = useRouter();
   const { colors } = useTheme<Theme>();
 
@@ -48,15 +49,20 @@ export default function SettingsScreen() {
 
   const handleDelete = () => {
     Alert.alert(
-      "Delete my data",
-      "This will permanently delete your account and all of your readings. This cannot be undone.",
+      "Delete Account",
+      "This will schedule your account and all of your readings, notes, and personal information for permanent deletion. You'll have 7 days to undo it.",
       [
         { text: "Cancel", style: "cancel" },
         {
-          text: "Delete",
+          text: "Delete Account",
           style: "destructive",
-          onPress: () => {
-            // TODO: call data/account deletion endpoint, then sign out
+          onPress: async () => {
+            try {
+              await requestAccountDeletion();
+              router.push("/modal");
+            } catch {
+              // requestAccountDeletion already surfaces the error to the user.
+            }
           },
         },
       ],
@@ -109,6 +115,8 @@ export default function SettingsScreen() {
       </Box>
 
       <Box height={1} backgroundColor="neutral100" marginBottom="s" />
+
+      <DeletionBanner />
 
       <Box flex={1} paddingHorizontal="m">
         {menu.map((item) => {
