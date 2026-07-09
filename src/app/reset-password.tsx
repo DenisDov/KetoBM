@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import * as Linking from "expo-linking";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { Button } from "@/components/button";
 import { PasswordRules, TextField } from "@/components/form";
@@ -17,11 +17,7 @@ type FormData = {
 
 type Status = "pending" | "ready" | "invalid";
 
-// Collects params from both the query string and the hash fragment. Supabase
-// recovery links redirect with tokens in the fragment (implicit flow) or a
-// `code` query param (PKCE).
-const extractUrlParams = (url: string): Record<string, string> => {
-  const paramString = url.split(/[?#]/).slice(1).join("&");
+const parseParamString = (paramString: string): Record<string, string> => {
   const params: Record<string, string> = {};
   for (const pair of paramString.split("&")) {
     if (!pair) continue;
@@ -31,6 +27,12 @@ const extractUrlParams = (url: string): Record<string, string> => {
   return params;
 };
 
+// Collects params from both the query string and the hash fragment. Supabase
+// recovery links redirect with tokens in the fragment (implicit flow) or a
+// `code` query param (PKCE).
+const extractUrlParams = (url: string): Record<string, string> =>
+  parseParamString(url.split(/[?#]/).slice(1).join("&"));
+
 // Opened via the deep link in the password-reset email. Lives outside the
 // (auth) group: exchanging the recovery tokens signs the user in, which would
 // unmount any screen behind the !isLoggedIn route guard.
@@ -39,54 +41,84 @@ export default function ResetPasswordScreen() {
   const router = useRouter();
 
   const url = Linking.useURL();
-  const handledUrl = useRef<string | null>(null);
+  // Natively tracks the most recent URL that opened the app — immune to the
+  // warm-start race where the "url" event fires before this screen mounts.
+  const linkingUrl = Linking.useLinkingURL();
+  // Expo Router also received the URL (it navigated here) and exposes the
+  // hash fragment — where Supabase puts the tokens — as a special "#" param.
+  const { "#": hash } = useLocalSearchParams<{ "#": string }>();
+  const handled = useRef(false);
   const [status, setStatus] = useState<Status>("pending");
 
   useEffect(() => {
-    if (!url) {
-      // No deep link (yet) — fall back to an existing session, e.g. when the
-      // link was already exchanged and this screen re-mounted.
-      supabase.auth.getSession().then(({ data }) => {
-        if (data.session) {
-          setStatus((current) => (current === "pending" ? "ready" : current));
-        }
-      });
-      return;
-    }
-    if (handledUrl.current === url) return;
-    handledUrl.current = url;
+    if (handled.current) return;
 
+    const params = {
+      ...(url ? extractUrlParams(url) : {}),
+      ...(linkingUrl ? extractUrlParams(linkingUrl) : {}),
+      ...(typeof hash === "string" ? parseParamString(hash) : {}),
+    };
+
+    console.log("[reset-password] link", {
+      url,
+      linkingUrl,
+      hash,
+      paramKeys: Object.keys(params),
+      error: params.error ?? params.error_code ?? null,
+    });
+
+    const hasError = !!(
+      params.error ||
+      params.error_code ||
+      params.error_description
+    );
+    const hasCredentials =
+      !!(params.access_token && params.refresh_token) || !!params.code;
+
+    if (!hasError && !hasCredentials) {
+      // Nothing usable in the link (yet) — fall back to an existing session
+      // (e.g. the tokens were already exchanged and this screen re-mounted),
+      // then give the URL a moment to be delivered before declaring the link
+      // dead. A late-arriving URL re-runs this effect and recovers.
+      supabase.auth.getSession().then(({ data }) => {
+        if (handled.current || !data.session) return;
+        handled.current = true;
+        setStatus("ready");
+      });
+      const timer = setTimeout(() => {
+        if (!handled.current) setStatus("invalid");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+
+    handled.current = true;
     const establishSession = async () => {
-      const params = extractUrlParams(url);
-      if (params.error_code || params.error_description) {
-        setStatus("invalid");
-        return;
-      }
       try {
+        if (hasError) {
+          throw new Error(
+            params.error_description ?? params.error_code ?? params.error,
+          );
+        }
         if (params.access_token && params.refresh_token) {
           const { error } = await supabase.auth.setSession({
             access_token: params.access_token,
             refresh_token: params.refresh_token,
           });
           if (error) throw error;
-          setStatus("ready");
-        } else if (params.code) {
+        } else {
           const { error } = await supabase.auth.exchangeCodeForSession(
             params.code,
           );
           if (error) throw error;
-          setStatus("ready");
-        } else {
-          const { data } = await supabase.auth.getSession();
-          setStatus(data.session ? "ready" : "invalid");
         }
+        setStatus("ready");
       } catch (error) {
         console.log(error);
         setStatus("invalid");
       }
     };
     establishSession();
-  }, [url]);
+  }, [url, linkingUrl, hash]);
 
   const {
     control,

@@ -216,7 +216,7 @@ or check `API_URL` after run `supabase status`
 
 ## Deep links
 
-Testing opening `forgot-password` screen on `ketobm-dev` scheme:
+Testing opening the `reset-password` screen on the `ketobm-dev` scheme (without tokens — the screen will show "This link has expired"):
 
 ```bash
 bunx uri-scheme open ketobm-dev://reset-password --ios
@@ -230,5 +230,57 @@ http://localhost:54323/project/default/database/schemas
 
 1. Get your IP address: `ipconfig getifaddr en0` -> `192.168.1.42`
 2. Change in `.env.local` - `EXPO_PUBLIC_SUPABASE_URL=http://192.168.1.42:54321`
-3. Run `bun expo run:ios --device`
-<!-- TODO: HOW TO TEST FORGOT PASSWORD ON SIMULATOR (WHERE WE DONT HAVE EMAIL CLIENT) AND ON REAL DEVICE -->
+3. In `supabase/config.toml`, set `[auth] external_url` to the same IP so URLs inside emails (password reset) are reachable from the phone:
+
+   ```toml
+   external_url = "http://192.168.1.42:54321/auth/v1"
+   ```
+
+4. Restart Supabase so the config applies (config changes are only read on start):
+
+   ```bash
+   supabase stop && supabase start
+   ```
+
+5. Run `bun expo run:ios --device` (or restart Metro with `bun expo start -c` if the app is already installed — `-c` is needed to pick up `.env.local` changes)
+
+> ⚠️ Both the phone and the Mac must be on the same Wi-Fi network. If your LAN IP changes (DHCP), update `.env.local` **and** `external_url` and restart Supabase.
+
+## Testing password reset
+
+How the flow works: the app calls `resetPasswordForEmail` with `redirectTo: ketobm-dev://reset-password` → Supabase sends an email (locally it lands in **Mailpit**, not a real inbox) → tapping the link hits `/auth/v1/verify`, which consumes the token and redirects to the deep link with recovery tokens in the URL fragment → the app opens `src/app/reset-password.tsx`, exchanges the tokens for a session, and the user sets a new password.
+
+Prerequisites (already in `supabase/config.toml`, but they only apply after a Supabase restart):
+
+- `ketobm-dev://reset-password` listed in `additional_redirect_urls`
+- `[auth] external_url` set to your LAN IP (real device only, see above)
+
+### On a real device
+
+1. In the app: **Login → Forgot password?** → enter the account email → you land on "Check your email"
+2. On the **phone**, open Safari and go to Mailpit: `http://<your-LAN-IP>:54324`
+3. Open the **newest** message and tap the reset link. It must be tapped **on the device** — a Mac can't open `ketobm-dev://`. Links are single-use.
+4. iOS asks to open the dev app → the app opens on the Reset password screen → set the new password → "Back to login" → log in with the new password
+
+### On the simulator
+
+The simulator shares the Mac's network, so no LAN IP / `external_url` changes are needed:
+
+1. Request the reset email in the app
+2. Open Safari **inside the simulator** → `http://127.0.0.1:54324` → tap the link in the newest message
+
+   Or copy the verify link from Mailpit on the Mac and open it directly:
+
+   ```bash
+   xcrun simctl openurl booted "http://127.0.0.1:54321/auth/v1/verify?token=...&type=recovery&redirect_to=ketobm-dev://reset-password"
+   ```
+
+### Troubleshooting
+
+| Symptom | Cause |
+| --- | --- |
+| Email link host is `127.0.0.1` when testing on a device, or link ends with `redirect_to=http://127.0.0.1:3000` | Supabase wasn't restarted after the `config.toml` change (`redirect_to` silently falls back to `site_url` when the requested URL isn't allow-listed) |
+| "This link has expired" screen | The link was already used (single-use) or is older than `otp_expiry` (1 h). Request a new email and open the **newest** Mailpit message |
+| Deep link doesn't open the app | You're in Expo Go — the `ketobm-dev://` scheme only exists in the dev build (`bun expo run:ios`) |
+
+The reset screen logs `[reset-password] link { url, linkingUrl, hash, ... }` to Metro — check it to see exactly what the app received from the deep link.
