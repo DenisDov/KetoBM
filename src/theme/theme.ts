@@ -26,6 +26,7 @@ export const palette = {
   blue900: "#25336D",
   blue600: "#4385F5",
   blue500: "#2CAFF0",
+  blue50: "#EDF1F9",
 
   white: "#FFFFFF",
   transparent: "transparent",
@@ -33,6 +34,7 @@ export const palette = {
 
 export const colors = {
   background: palette.white,
+  backgroundMuted: palette.blue50,
   surface: palette.neutral800,
   text: palette.neutral900,
   textSecondary: palette.neutral500,
@@ -133,6 +135,7 @@ const darkTheme: Theme = {
     ...lightTheme.colors,
     // surface
     background: palette.neutral900,
+    backgroundMuted: palette.neutral800,
     surface: palette.neutral800,
     // text
     text: palette.white,
