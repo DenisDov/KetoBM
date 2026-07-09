@@ -13,6 +13,13 @@ create table public.profiles (
   onboarding_step smallint not null default 0 check (onboarding_step between 0 and 4),
   onboarding_completed_at timestamptz,
 
+  -- Onboarding answers (null until the user reaches the step that asks).
+  year_of_birth smallint check (year_of_birth between 1900 and 2100),
+  gender text check (gender in ('male', 'female', 'other')),
+  primary_goal text check (primary_goal in ('ketogenic_diet', 'diabetes_management', 'both')),
+  meter_experience text check (meter_experience in ('none', 'glucose', 'ketone', 'both')),
+  supplements text[] not null default '{}',
+
   -- Soft delete: set when the user requests deletion.
   deleted_at timestamptz,
 

@@ -1,0 +1,10 @@
+SET check_function_bodies = false;
+ALTER TABLE public.profiles ADD COLUMN year_of_birth smallint;
+ALTER TABLE public.profiles ADD CONSTRAINT profiles_year_of_birth_check CHECK (year_of_birth >= 1900 AND year_of_birth <= 2100);
+ALTER TABLE public.profiles ADD COLUMN gender text;
+ALTER TABLE public.profiles ADD CONSTRAINT profiles_gender_check CHECK (gender = ANY (ARRAY['male'::text, 'female'::text, 'other'::text]));
+ALTER TABLE public.profiles ADD COLUMN primary_goal text;
+ALTER TABLE public.profiles ADD CONSTRAINT profiles_primary_goal_check CHECK (primary_goal = ANY (ARRAY['ketogenic_diet'::text, 'diabetes_management'::text, 'both'::text]));
+ALTER TABLE public.profiles ADD COLUMN meter_experience text;
+ALTER TABLE public.profiles ADD CONSTRAINT profiles_meter_experience_check CHECK (meter_experience = ANY (ARRAY['none'::text, 'glucose'::text, 'ketone'::text, 'both'::text]));
+ALTER TABLE public.profiles ADD COLUMN supplements text[] DEFAULT '{}'::text[] NOT NULL;

@@ -90,7 +90,7 @@ export default function RootLayout() {
   const isLoggedIn = !!user;
   const hasAcceptedTerms =
     !!profile?.terms_accepted_at && !!profile?.privacy_accepted_at;
-  const hasCompletedOnboarding = false;
+  const hasCompletedOnboarding = !!profile?.onboarding_completed_at;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -99,9 +99,21 @@ export default function RootLayout() {
           <NavProvider value={selectedNavTheme}>
             <BottomSheetModalProvider>
               <Stack>
-                <Stack.Protected guard={isLoggedIn && hasAcceptedTerms}>
+                <Stack.Protected
+                  guard={
+                    isLoggedIn && hasAcceptedTerms && hasCompletedOnboarding
+                  }>
                   <Stack.Screen
                     name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                </Stack.Protected>
+                <Stack.Protected
+                  guard={
+                    isLoggedIn && hasAcceptedTerms && !hasCompletedOnboarding
+                  }>
+                  <Stack.Screen
+                    name="onboarding"
                     options={{ headerShown: false }}
                   />
                 </Stack.Protected>
@@ -119,9 +131,6 @@ export default function RootLayout() {
                     options={{ headerShown: false }}
                   />
                 </Stack.Protected>
-                {/* <Stack.Protected guard={!hasCompletedOnboarding}>
-        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-      </Stack.Protected> */}
                 <Stack.Screen
                   name="policy"
                   options={{ presentation: "modal", title: "Privacy Policy" }}

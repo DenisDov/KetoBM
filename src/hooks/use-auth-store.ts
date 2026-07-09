@@ -1,9 +1,10 @@
 import { Session, User } from "@supabase/supabase-js";
 import { create } from "zustand";
 import { supabase } from "@/lib/supabase";
-import { Tables } from "@/lib/database.types";
+import { Tables, TablesUpdate } from "@/lib/database.types";
 
 export type Profile = Tables<"profiles">;
+export type ProfileUpdate = TablesUpdate<"profiles">;
 
 const fetchProfile = async (userId: string): Promise<Profile | null> => {
   const { data, error } = await supabase
@@ -30,6 +31,7 @@ type AuthState = {
   register: (email: string, password: string) => Promise<void>;
   verifyEmailOtp: (email: string, token: string) => Promise<void>;
   acceptTerms: () => Promise<void>;
+  updateProfile: (patch: ProfileUpdate) => Promise<void>;
   requestAccountDeletion: () => Promise<void>;
   cancelAccountDeletion: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -127,6 +129,26 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       .select()
       .single();
     set({ loading: false });
+    if (error) {
+      console.log(error);
+      alert(error.message);
+      throw error;
+    }
+    set({ profile: data });
+  },
+
+  // UPDATE PROFILE (partial patch on the profiles row). Used by onboarding to
+  // persist each step's answers and bump onboarding_step.
+  updateProfile: async (patch) => {
+    const userId = get().user?.id;
+    if (!userId) return;
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .update(patch)
+      .eq("id", userId)
+      .select()
+      .single();
     if (error) {
       console.log(error);
       alert(error.message);

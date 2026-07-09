@@ -5,3 +5,4 @@ export type { SelectFieldOption } from "./select-field";
 export { Checkbox } from "./checkbox";
 export { RadioGroup, Radio } from "./radio-group";
 export type { RadioOption } from "./radio-group";
+export { OptionCard } from "./option-card";
