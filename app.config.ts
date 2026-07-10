@@ -85,6 +85,18 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           imageWidth: 200,
           resizeMode: "contain",
           backgroundColor: "#ffffff",
+          dark: {
+            backgroundColor: "#000000",
+          },
+        },
+      ],
+      [
+        "react-native-ble-plx",
+        {
+          isBackgroundEnabled: true,
+          modes: ["peripheral", "central"],
+          bluetoothAlwaysPermission:
+            "Allow $(PRODUCT_NAME) to connect to KetoBM meter via Bluetooth.",
         },
       ],
     ],
