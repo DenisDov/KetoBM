@@ -74,7 +74,9 @@ export const Button = ({
       disabled={disabled}
       {...(disabled ? disabledStyles[variant] : undefined)}
       style={
-        variant === "primary" && !disabled ? styles.primaryShadow : undefined
+        variant === "primary" && !disabled
+          ? { boxShadow: boxShadows.button }
+          : undefined
       }
       onPress={onPress}>
       {iconBefore}
@@ -88,9 +90,3 @@ export const Button = ({
     </ButtonBase>
   );
 };
-
-const styles = {
-  primaryShadow: {
-    boxShadow: boxShadows.button,
-  },
-} as const;
