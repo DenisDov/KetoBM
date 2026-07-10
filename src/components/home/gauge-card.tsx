@@ -2,7 +2,7 @@ import { Ionicons } from "@react-native-vector-icons/ionicons";
 import { useTheme } from "@shopify/restyle";
 import { Link } from "expo-router";
 import { Box, PressableBox, Text } from "@/components/primitives";
-import { Theme } from "@/theme";
+import { boxShadows, Theme } from "@/theme";
 import { Fonts } from "@/theme/fonts";
 import { formatReadingTimestamp } from "@/utils/datetime";
 import {
@@ -61,7 +61,7 @@ export const GaugeCard = () => {
       borderRadius="m"
       padding="m"
       gap="s"
-      style={{ boxShadow: "0px 2px 10px 0px rgba(37, 51, 109, 0.08)" }}>
+      style={{ boxShadow: boxShadows.card }}>
       <Box
         flexDirection="row"
         alignItems="center"

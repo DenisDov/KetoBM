@@ -14,7 +14,7 @@ import {
 import { PressableOpacity } from "pressto";
 import { ReactNode } from "react";
 import { Text } from "@/components/primitives";
-import { Theme } from "@/theme";
+import { boxShadows, Theme } from "@/theme";
 import { Fonts } from "@/theme/fonts";
 
 type ButtonVariant = "primary" | "secondary" | "link";
@@ -91,6 +91,6 @@ export const Button = ({
 
 const styles = {
   primaryShadow: {
-    boxShadow: "0px 4px 6px 0px rgba(37, 51, 109, .21)",
+    boxShadow: boxShadows.button,
   },
 } as const;

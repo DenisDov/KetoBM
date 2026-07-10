@@ -1,5 +1,6 @@
 import { Link } from "expo-router";
 import { Box, PressableBox, Text } from "@/components/primitives";
+import { boxShadows } from "@/theme";
 import { Fonts } from "@/theme/fonts";
 import { formatReadingTimestamp } from "@/utils/datetime";
 import { Reading, useLatestReadings } from "@/hooks/use-readings";
@@ -34,7 +35,7 @@ export const LatestReadings = () => {
         backgroundColor="background"
         borderRadius="m"
         paddingHorizontal="m"
-        style={{ boxShadow: "0px 2px 10px 0px rgba(37, 51, 109, 0.08)" }}>
+        style={{ boxShadow: boxShadows.card }}>
         {readings?.length ? (
           readings.map((reading, index) => (
             <Box
