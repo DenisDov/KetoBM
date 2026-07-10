@@ -52,7 +52,8 @@ export const ChartCard = () => {
         flexDirection="row"
         backgroundColor="backgroundMuted"
         borderRadius="xl"
-        padding="s">
+        // padding="s"
+      >
         {METRICS.map((option) => {
           const active = metric === option.value;
           return (
@@ -60,7 +61,7 @@ export const ChartCard = () => {
               key={option.value}
               flex={1}
               alignItems="center"
-              paddingVertical="s"
+              paddingVertical="sm"
               borderRadius="xl"
               backgroundColor={active ? "primary" : "transparent"}
               onPress={() => setMetric(option.value)}>
