@@ -1,6 +1,7 @@
 import { Ionicons } from "@react-native-vector-icons/ionicons";
 import { useTheme } from "@shopify/restyle";
 import { Link } from "expo-router";
+import { useBLEStore } from "@/hooks/use-ble-store";
 import { Box, PressableBox, Text } from "@/components/primitives";
 import { boxShadows, Theme } from "@/theme";
 import { Fonts } from "@/theme/fonts";
@@ -40,6 +41,12 @@ export const GaugeCard = () => {
   const { data: readings, isPending } = useLatestReadings(1);
   const { data: device, isPending: devicePending } = useActiveDevice();
   const { data: stages } = useKetosisStages(mode);
+
+  // Live measurement in progress (physical button-press on the meter).
+  const deviceState = useBLEStore((state) => state.deviceState);
+  const bleProgress = useBLEStore((state) => state.progress);
+  const bleType = useBLEStore((state) => state.measurementType);
+  const measuring = deviceState === "measuring";
 
   const reading = readings?.[0] ?? null;
   const isKetone = reading?.type === "ketone";
@@ -116,39 +123,56 @@ export const GaugeCard = () => {
             letterSpacing={1}
             color="primary"
             fontFamily={Fonts.semiBold}>
-            {isKetone ? "KETONES" : "GLUCOSE"}
+            {(measuring ? bleType === "ketone" : isKetone)
+              ? "KETONES"
+              : "GLUCOSE"}
           </Text>
-          <Text fontSize={48} lineHeight={52} fontFamily={Fonts.bold}>
-            {reading
-              ? isKetone
-                ? reading.value.toFixed(1)
-                : Math.round(reading.value)
-              : "--"}
-          </Text>
-          {stage ? (
-            <Box
-              flexDirection="row"
-              alignItems="center"
-              gap="s"
-              paddingHorizontal="sm"
-              paddingVertical="s"
-              borderRadius="xl"
-              style={{ backgroundColor: stage.color ?? theme.colors.primary }}>
-              <Text
-                fontSize={13}
-                fontFamily={Fonts.medium}
-                style={{
-                  color: isDarkColor(stage.color ?? "#000000")
-                    ? theme.colors.white
-                    : theme.colors.neutral900,
-                }}>
-                {stage.stage_name}
+          {measuring ? (
+            <>
+              <Text fontSize={48} lineHeight={52} fontFamily={Fonts.bold}>
+                {bleProgress}%
               </Text>
-            </Box>
+              <Text fontSize={16} color="textSecondary">
+                Measuring…
+              </Text>
+            </>
           ) : (
-            <Text fontSize={16} color="textSecondary">
-              {reading?.unit ?? (isPending ? " " : "No readings yet")}
-            </Text>
+            <>
+              <Text fontSize={48} lineHeight={52} fontFamily={Fonts.bold}>
+                {reading
+                  ? isKetone
+                    ? reading.value.toFixed(1)
+                    : Math.round(reading.value)
+                  : "--"}
+              </Text>
+              {stage ? (
+                <Box
+                  flexDirection="row"
+                  alignItems="center"
+                  gap="s"
+                  paddingHorizontal="sm"
+                  paddingVertical="s"
+                  borderRadius="xl"
+                  style={{
+                    backgroundColor: stage.color ?? theme.colors.primary,
+                  }}>
+                  <Text
+                    fontSize={13}
+                    fontFamily={Fonts.medium}
+                    style={{
+                      color: isDarkColor(stage.color ?? "#000000")
+                        ? theme.colors.white
+                        : theme.colors.neutral900,
+                    }}>
+                    {stage.stage_name}
+                  </Text>
+                </Box>
+              ) : (
+                <Text fontSize={16} color="textSecondary">
+                  {reading?.unit ?? (isPending ? " " : "No readings yet")}
+                </Text>
+              )}
+            </>
           )}
         </Box>
       </Gauge>

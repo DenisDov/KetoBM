@@ -1,7 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { MeasurementType, useBLEStore } from "@/hooks/use-ble-store";
+import { useAppState } from "@/hooks/tanstack-query/use-app-state";
 import { useActiveDevice } from "@/hooks/use-readings";
 import { supabase } from "@/lib/supabase";
 
@@ -22,7 +23,9 @@ const syncedKey = (userId: string) => `ketobm:lastSyncedReadingId:${userId}`;
  *    the device-provided reading id) and refreshes the reading queries, so the
  *    home gauge/list/chart — which read from Supabase — reflect the meter;
  *  - mirrors the BLE connection state onto the active device row so the
- *    connection pill stays honest after drops and relaunches.
+ *    connection pill stays honest after drops and relaunches;
+ *  - silently reconnects to the paired meter on launch and app-foreground so a
+ *    physical button-press reaches Supabase without re-running the wizard.
  */
 export const BleSync = () => {
   const queryClient = useQueryClient();
@@ -31,8 +34,42 @@ export const BleSync = () => {
 
   const lastReading = useBLEStore((state) => state.lastReading);
   const connected = useBLEStore((state) => state.connected);
+  const reconnect = useBLEStore((state) => state.reconnect);
 
   const syncedReadingId = useRef<number | null>(null);
+  const bluetoothId = activeDevice?.bluetooth_id ?? null;
+
+  // Reconnect to the known meter unless we're already connected/connecting or
+  // an attempt is already in flight. Store state is read live so the callback
+  // stays stable (no re-subscribe churn on the AppState listener).
+  const reconnecting = useRef(false);
+  const tryReconnect = useCallback(async () => {
+    const { connected: isConnected, connecting } = useBLEStore.getState();
+    if (!bluetoothId || isConnected || connecting || reconnecting.current) {
+      return;
+    }
+    reconnecting.current = true;
+    try {
+      await reconnect(bluetoothId);
+    } finally {
+      reconnecting.current = false;
+    }
+  }, [bluetoothId, reconnect]);
+
+  // On launch / once a paired meter is known.
+  useEffect(() => {
+    tryReconnect();
+  }, [tryReconnect]);
+
+  // And whenever the app returns to the foreground.
+  useAppState(
+    useCallback(
+      (status) => {
+        if (status === "active") tryReconnect();
+      },
+      [tryReconnect],
+    ),
+  );
 
   // Seed the dedup guard from persisted state on mount / user change.
   useEffect(() => {
