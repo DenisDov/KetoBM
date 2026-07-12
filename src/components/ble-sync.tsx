@@ -89,7 +89,7 @@ export const BleSync = () => {
         type: lastReading.measurement_type,
         value: lastReading.value,
         unit: UNIT_BY_TYPE[lastReading.measurement_type],
-        source: "meter",
+        source: "device",
         measured_at: lastReading.taken_at,
         meter_id: activeDevice?.id ?? null,
       });
