@@ -13,6 +13,7 @@ import {
   useLatestReadings,
 } from "@/hooks/use-readings";
 import { Gauge, GLUCOSE_GAUGE_SCALE, KETONE_GAUGE_SCALE } from "./gauge";
+import { PairMeterCard } from "./pair-meter-card";
 
 /** Perceived luminance — picks readable text for a stage-colored badge. */
 const isDarkColor = (hex: string): boolean => {
@@ -37,7 +38,7 @@ export const GaugeCard = () => {
   const mode = useKetosisMode();
 
   const { data: readings, isPending } = useLatestReadings(1);
-  const { data: device } = useActiveDevice();
+  const { data: device, isPending: devicePending } = useActiveDevice();
   const { data: stages } = useKetosisStages(mode);
 
   const reading = readings?.[0] ?? null;
@@ -54,6 +55,13 @@ export const GaugeCard = () => {
       : theme.colors.primary;
 
   const connected = device?.connection_status === "connected";
+
+  // No meter paired yet — prompt the user to connect one instead of showing an
+  // empty dial they can't do anything with. Wait for the query to resolve so a
+  // returning user's gauge doesn't flash the CTA on load.
+  if (!device && !devicePending) {
+    return <PairMeterCard />;
+  }
 
   return (
     <Box

@@ -7,6 +7,7 @@ import { Platform, useColorScheme, AppStateStatus } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useAuthStore } from "@/hooks/use-auth-store";
+import { BleSync } from "@/components/ble-sync";
 import { lightTheme, darkTheme } from "@/theme/theme";
 import "react-native-reanimated";
 import { Fonts } from "@/theme/fonts";
@@ -99,6 +100,7 @@ export default function RootLayout() {
         <RestyleThemeProvider theme={selectedRestyleTheme}>
           <NavProvider value={selectedNavTheme}>
             <BottomSheetModalProvider>
+              {isLoggedIn && <BleSync />}
               <Stack>
                 <Stack.Protected
                   guard={
@@ -107,6 +109,10 @@ export default function RootLayout() {
                   <Stack.Screen
                     name="(tabs)"
                     options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="pairing"
+                    options={{ presentation: "modal", headerShown: false }}
                   />
                 </Stack.Protected>
                 <Stack.Protected

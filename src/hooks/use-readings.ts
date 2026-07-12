@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Tables } from "@/lib/database.types";
 import { useAuthStore, Profile } from "@/hooks/use-auth-store";
@@ -136,6 +136,69 @@ export const useActiveDevice = () => {
         .maybeSingle();
       if (error) throw error;
       return data;
+    },
+  });
+};
+
+/** The live BLE peripheral a freshly-paired meter maps to. */
+export type PairedMeter = { id: string; name: string | null };
+
+/**
+ * Persist a meter after a successful BLE connect so `useActiveDevice` reflects
+ * it. Reuses the existing row when re-pairing a meter we've seen before
+ * (matched on `bluetooth_id`), otherwise inserts a new one.
+ */
+export const usePairDevice = () => {
+  const userId = useAuthStore((state) => state.user?.id);
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (meter: PairedMeter): Promise<Device> => {
+      if (!userId) throw new Error("Not authenticated");
+      const now = new Date().toISOString();
+
+      const { data: existing, error: lookupError } = await supabase
+        .from("devices")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("bluetooth_id", meter.id)
+        .maybeSingle();
+      if (lookupError) throw lookupError;
+
+      if (existing) {
+        const { data, error } = await supabase
+          .from("devices")
+          .update({
+            name: meter.name,
+            connection_status: "connected",
+            is_active: true,
+            last_connected_at: now,
+          })
+          .eq("id", existing.id)
+          .select()
+          .single();
+        if (error) throw error;
+        return data;
+      }
+
+      const { data, error } = await supabase
+        .from("devices")
+        .insert({
+          user_id: userId,
+          name: meter.name,
+          bluetooth_id: meter.id,
+          connection_status: "connected",
+          is_active: true,
+          paired_at: now,
+          last_connected_at: now,
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["devices"] });
     },
   });
 };

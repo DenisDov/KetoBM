@@ -1,10 +1,12 @@
 import { Box, Text } from "@/components/primitives";
 import { ScrollView } from "react-native";
-import { Ionicons } from "@react-native-vector-icons/ionicons";
+import { useRouter } from "expo-router";
 
 import { Button } from "@/components/button";
 
 export default function DeviceSettingsScreen() {
+  const router = useRouter();
+
   return (
     <ScrollView scrollEnabled={false}>
       <Box padding="m" gap="m">
@@ -18,7 +20,7 @@ export default function DeviceSettingsScreen() {
         </Text>
         <Button
           title="Connect your new meter"
-          onPress={() => console.log("link back to new user journey")}
+          onPress={() => router.push("/pairing")}
         />
       </Box>
     </ScrollView>
