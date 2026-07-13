@@ -39,15 +39,15 @@ type ReadingChartProps = {
 
 /** Catmull-Rom spline through the points, as cubic beziers. */
 const buildSmoothPath = (points: { x: number; y: number }[]) => {
-  const path = Skia.Path.Make();
-  if (points.length === 0) return path;
-  path.moveTo(points[0].x, points[0].y);
+  const builder = Skia.PathBuilder.Make();
+  if (points.length === 0) return builder;
+  builder.moveTo(points[0].x, points[0].y);
   for (let i = 0; i < points.length - 1; i++) {
     const p0 = points[Math.max(i - 1, 0)];
     const p1 = points[i];
     const p2 = points[i + 1];
     const p3 = points[Math.min(i + 2, points.length - 1)];
-    path.cubicTo(
+    builder.cubicTo(
       p1.x + (p2.x - p0.x) / 6,
       p1.y + (p2.y - p0.y) / 6,
       p2.x - (p3.x - p1.x) / 6,
@@ -56,7 +56,7 @@ const buildSmoothPath = (points: { x: number; y: number }[]) => {
       p2.y,
     );
   }
-  return path;
+  return builder;
 };
 
 /** Round a raw step up to a "nice" 1/2/2.5/5 × 10^n value. */
@@ -127,12 +127,15 @@ export const ReadingChart = ({
     const toY = (value: number) => baseY - (value / yMax) * plotHeight;
 
     const xy = points.map((p) => ({ x: toX(p.timestamp), y: toY(p.value) }));
-    const linePath = buildSmoothPath(xy);
-
-    const areaPath = linePath.copy();
-    areaPath.lineTo(xy[xy.length - 1].x, baseY);
-    areaPath.lineTo(xy[0].x, baseY);
-    areaPath.close();
+    // Snapshot the open spline for the stroke, then keep building: drop to the
+    // baseline and close to get the area fill.
+    const builder = buildSmoothPath(xy);
+    const linePath = builder.build();
+    const areaPath = builder
+      .lineTo(xy[xy.length - 1].x, baseY)
+      .lineTo(xy[0].x, baseY)
+      .close()
+      .detach();
 
     const yTicks: { y: number; label: string }[] = [];
     for (let v = 0; v <= yMax; v += step) {
@@ -241,12 +244,10 @@ export const ReadingChart = ({
             {plot.yTicks.map((tick) => (
               <Path
                 key={`grid-${tick.label}`}
-                path={(() => {
-                  const p = Skia.Path.Make();
-                  p.moveTo(PADDING.left, tick.y);
-                  p.lineTo(width - PADDING.right, tick.y);
-                  return p;
-                })()}
+                path={Skia.PathBuilder.Make()
+                  .moveTo(PADDING.left, tick.y)
+                  .lineTo(width - PADDING.right, tick.y)
+                  .detach()}
                 style="stroke"
                 strokeWidth={1}
                 color={gridColor}
@@ -296,12 +297,10 @@ export const ReadingChart = ({
             {active && tooltipFont && (
               <>
                 <Path
-                  path={(() => {
-                    const p = Skia.Path.Make();
-                    p.moveTo(active.x, active.y);
-                    p.lineTo(active.x, plot.baseY);
-                    return p;
-                  })()}
+                  path={Skia.PathBuilder.Make()
+                    .moveTo(active.x, active.y)
+                    .lineTo(active.x, plot.baseY)
+                    .detach()}
                   style="stroke"
                   strokeWidth={4}
                   color={`${tooltipColor}66`}

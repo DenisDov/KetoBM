@@ -100,32 +100,40 @@ export const Gauge = ({
     progress.value = withTiming(fraction, { duration: 700 });
   }, [fraction, progress]);
 
-  const trackPath = useMemo(() => {
-    const path = Skia.Path.Make();
-    path.addArc(
-      Skia.XYWHRect(center - radius, center - radius, radius * 2, radius * 2),
-      START_ANGLE,
-      SWEEP_ANGLE,
-    );
-    return path;
-  }, [center, radius]);
+  const trackPath = useMemo(
+    () =>
+      Skia.PathBuilder.Make()
+        .addArc(
+          Skia.XYWHRect(
+            center - radius,
+            center - radius,
+            radius * 2,
+            radius * 2,
+          ),
+          START_ANGLE,
+          SWEEP_ANGLE,
+        )
+        .detach(),
+    [center, radius],
+  );
 
   const ticks = useMemo(() => {
     const innerEdge = radius - STROKE_WIDTH / 2;
-    const path = Skia.Path.Make();
+    const builder = Skia.PathBuilder.Make();
     scale.stops.forEach((_, index) => {
       const angle = toRadians(
         START_ANGLE + (SWEEP_ANGLE * index) / (scale.stops.length - 1),
       );
       const from = innerEdge - 4;
       const to = innerEdge - 9;
-      path.moveTo(
-        center + from * Math.cos(angle),
-        center + from * Math.sin(angle),
-      );
-      path.lineTo(center + to * Math.cos(angle), center + to * Math.sin(angle));
+      builder
+        .moveTo(
+          center + from * Math.cos(angle),
+          center + from * Math.sin(angle),
+        )
+        .lineTo(center + to * Math.cos(angle), center + to * Math.sin(angle));
     });
-    return path;
+    return builder.detach();
   }, [center, radius, scale]);
 
   const labels = useMemo(() => {
@@ -153,12 +161,12 @@ export const Gauge = ({
   // tracks the animated arc tip.
   const markerPath = useMemo(() => {
     const tip = center + radius + STROKE_WIDTH / 2 + MARKER_GAP;
-    const path = Skia.Path.Make();
-    path.moveTo(tip, center);
-    path.lineTo(tip + MARKER_SIZE, center - MARKER_SIZE / 2);
-    path.lineTo(tip + MARKER_SIZE, center + MARKER_SIZE / 2);
-    path.close();
-    return path;
+    return Skia.PathBuilder.Make()
+      .moveTo(tip, center)
+      .lineTo(tip + MARKER_SIZE, center - MARKER_SIZE / 2)
+      .lineTo(tip + MARKER_SIZE, center + MARKER_SIZE / 2)
+      .close()
+      .detach();
   }, [center, radius]);
 
   const markerTransform = useDerivedValue(() => [
