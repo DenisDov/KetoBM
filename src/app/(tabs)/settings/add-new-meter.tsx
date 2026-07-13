@@ -9,7 +9,7 @@ export default function DeviceSettingsScreen() {
 
   return (
     <ScrollView scrollEnabled={false}>
-      <Box padding="m" gap="m">
+      <Box padding="m" gap="l">
         <Box>
           <Text variant="title">Add new meter</Text>
         </Box>

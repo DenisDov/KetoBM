@@ -103,8 +103,8 @@ export default function DeviceSettingsScreen() {
         <Row title="Paired device" subtitle={device?.name ?? "KetoBM"}>
           <Box flexDirection="row" alignItems="center" gap="s">
             <Box
-              width={9}
-              height={9}
+              width={8}
+              height={8}
               backgroundColor={connected ? "green300" : "neutral300"}
               borderRadius="xl"
             />
