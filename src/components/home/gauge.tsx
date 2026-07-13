@@ -92,6 +92,11 @@ export const Gauge = ({
 
   const center = size / 2;
   const radius = center - STROKE_WIDTH / 2 - MARKER_GAP - MARKER_SIZE;
+  // The 270° arc starts at 135°, so the bottom wedge of the square canvas is
+  // never drawn on — nothing (arc, caps, marker) reaches below
+  // center + sin(45°)·center. Crop the component there so content stacked
+  // under the gauge isn't pushed away by empty canvas.
+  const height = Math.ceil(center * (1 + Math.SQRT1_2));
   const fraction = value === null ? 0 : valueToFraction(scale, value);
 
   // Sweep the arc (and the marker riding its tip) in on mount / value change.
@@ -174,8 +179,8 @@ export const Gauge = ({
   ]);
 
   return (
-    <Box width={size} height={size} alignSelf="center">
-      <Canvas style={{ width: size, height: size }}>
+    <Box width={size} height={height} alignSelf="center">
+      <Canvas style={{ width: size, height }}>
         <Path
           path={trackPath}
           style="stroke"
@@ -216,7 +221,10 @@ export const Gauge = ({
         right={0}
         bottom={0}
         alignItems="center"
-        justifyContent="center">
+        justifyContent="center"
+        // Cropping the box moved its midpoint above the dial's geometric
+        // center (size / 2); this padding puts the centered content back.
+        style={{ paddingTop: size - height }}>
         {children}
       </Box>
     </Box>
