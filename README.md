@@ -34,6 +34,22 @@ bun expo install reactotron-react-native -- --development
 
 ---
 
+## React 19
+
+We're on React 19 — `ref` is a regular prop, so don't use `forwardRef`. Destructure `ref` directly and type it as `Ref<T>` (from `"react"`):
+
+```tsx
+export const TextField = ({
+  label,
+  ref,
+  ...rest
+}: TextFieldProps & { ref?: Ref<TextInput> }) => {
+  return <TextInput ref={ref} {...rest} />;
+};
+```
+
+---
+
 ## Environment Variables
 
 We use **9 EAS environment variables** across 3 environments: `development`, `preview`, and `production`.

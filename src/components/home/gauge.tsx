@@ -92,6 +92,11 @@ export const Gauge = ({
 
   const center = size / 2;
   const radius = center - STROKE_WIDTH / 2 - MARKER_GAP - MARKER_SIZE;
+  // The 270° arc starts at 135°, so the bottom wedge of the square canvas is
+  // never drawn on — nothing (arc, caps, marker) reaches below
+  // center + sin(45°)·center. Crop the component there so content stacked
+  // under the gauge isn't pushed away by empty canvas.
+  const height = Math.ceil(center * (1 + Math.SQRT1_2));
   const fraction = value === null ? 0 : valueToFraction(scale, value);
 
   // Sweep the arc (and the marker riding its tip) in on mount / value change.
@@ -100,47 +105,59 @@ export const Gauge = ({
     progress.value = withTiming(fraction, { duration: 700 });
   }, [fraction, progress]);
 
-  const trackPath = useMemo(() => {
-    const path = Skia.Path.Make();
-    path.addArc(
-      Skia.XYWHRect(center - radius, center - radius, radius * 2, radius * 2),
-      START_ANGLE,
-      SWEEP_ANGLE,
-    );
-    return path;
-  }, [center, radius]);
+  const trackPath = useMemo(
+    () =>
+      Skia.PathBuilder.Make()
+        .addArc(
+          Skia.XYWHRect(
+            center - radius,
+            center - radius,
+            radius * 2,
+            radius * 2,
+          ),
+          START_ANGLE,
+          SWEEP_ANGLE,
+        )
+        .detach(),
+    [center, radius],
+  );
 
   const ticks = useMemo(() => {
     const innerEdge = radius - STROKE_WIDTH / 2;
-    const path = Skia.Path.Make();
+    const builder = Skia.PathBuilder.Make();
     scale.stops.forEach((_, index) => {
       const angle = toRadians(
         START_ANGLE + (SWEEP_ANGLE * index) / (scale.stops.length - 1),
       );
       const from = innerEdge - 4;
       const to = innerEdge - 9;
-      path.moveTo(
-        center + from * Math.cos(angle),
-        center + from * Math.sin(angle),
-      );
-      path.lineTo(center + to * Math.cos(angle), center + to * Math.sin(angle));
+      builder
+        .moveTo(
+          center + from * Math.cos(angle),
+          center + from * Math.sin(angle),
+        )
+        .lineTo(center + to * Math.cos(angle), center + to * Math.sin(angle));
     });
-    return path;
+    return builder.detach();
   }, [center, radius, scale]);
 
   const labels = useMemo(() => {
     if (!labelFont) return [];
-    const labelRadius = radius - STROKE_WIDTH / 2 - 22;
+    const labelRadius = radius - STROKE_WIDTH / 2 - 16;
     return scale.stops.map((stop, index) => {
       const text = scale.formatStop(stop, index);
       const angle = toRadians(
         START_ANGLE + (SWEEP_ANGLE * index) / (scale.stops.length - 1),
       );
       const width = labelFont.getTextWidth(text);
+      // The first/last labels sit at the arc's bottom corners, level with the
+      // center content's badge; drop them toward the (empty) arc gap so a wide
+      // badge can't reach them.
+      const isCorner = index === 0 || index === scale.stops.length - 1;
       return {
         text,
         x: center + labelRadius * Math.cos(angle) - width / 2,
-        y: center + labelRadius * Math.sin(angle) + 4,
+        y: center + labelRadius * Math.sin(angle) + 4 + (isCorner ? 6 : 0),
       };
     });
   }, [labelFont, center, radius, scale]);
@@ -149,12 +166,12 @@ export const Gauge = ({
   // tracks the animated arc tip.
   const markerPath = useMemo(() => {
     const tip = center + radius + STROKE_WIDTH / 2 + MARKER_GAP;
-    const path = Skia.Path.Make();
-    path.moveTo(tip, center);
-    path.lineTo(tip + MARKER_SIZE, center - MARKER_SIZE / 2);
-    path.lineTo(tip + MARKER_SIZE, center + MARKER_SIZE / 2);
-    path.close();
-    return path;
+    return Skia.PathBuilder.Make()
+      .moveTo(tip, center)
+      .lineTo(tip + MARKER_SIZE, center - MARKER_SIZE / 2)
+      .lineTo(tip + MARKER_SIZE, center + MARKER_SIZE / 2)
+      .close()
+      .detach();
   }, [center, radius]);
 
   const markerTransform = useDerivedValue(() => [
@@ -162,8 +179,8 @@ export const Gauge = ({
   ]);
 
   return (
-    <Box width={size} height={size} alignSelf="center">
-      <Canvas style={{ width: size, height: size }}>
+    <Box width={size} height={height} alignSelf="center">
+      <Canvas style={{ width: size, height }}>
         <Path
           path={trackPath}
           style="stroke"
@@ -204,7 +221,10 @@ export const Gauge = ({
         right={0}
         bottom={0}
         alignItems="center"
-        justifyContent="center">
+        justifyContent="center"
+        // Cropping the box moved its midpoint above the dial's geometric
+        // center (size / 2); this padding puts the centered content back.
+        style={{ paddingTop: size - height }}>
         {children}
       </Box>
     </Box>

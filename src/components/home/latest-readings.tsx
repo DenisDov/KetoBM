@@ -24,7 +24,7 @@ export const LatestReadings = () => {
         </Text>
         <Link href="/readings" asChild>
           <PressableBox hitSlop={8}>
-            <Text fontSize={14} color="info" fontFamily={Fonts.medium}>
+            <Text color="info" fontFamily={Fonts.medium}>
               View all
             </Text>
           </PressableBox>
@@ -45,24 +45,20 @@ export const LatestReadings = () => {
               paddingVertical="sm"
               borderTopWidth={index === 0 ? 0 : 1}
               borderColor="neutral100">
-              <Text flex={1} fontSize={14}>
+              <Text flex={1}>
                 {formatReadingTimestamp(reading.measured_at)}
               </Text>
-              <Text fontSize={14} color="textSecondary">
+              <Text color="textSecondary">
                 {reading.type === "ketone" ? "Ket" : "Glu"}
               </Text>
-              <Text
-                width={100}
-                textAlign="right"
-                fontSize={14}
-                fontFamily={Fonts.medium}>
+              <Text width={100} textAlign="right" fontFamily={Fonts.medium}>
                 {formatValue(reading)}
               </Text>
             </Box>
           ))
         ) : (
           <Box paddingVertical="m" alignItems="center">
-            <Text fontSize={14} color="textSecondary">
+            <Text color="textSecondary">
               No readings yet — take a measurement to see it here.
             </Text>
           </Box>

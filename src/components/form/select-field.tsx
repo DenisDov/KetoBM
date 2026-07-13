@@ -13,6 +13,8 @@ import { Theme } from "@/theme";
 export type SelectFieldOption = {
   label: string;
   value: string;
+  /** Accent-colored action option (e.g. "+ Add custom note"). */
+  tone?: "primary";
 };
 
 type SelectFieldProps = {
@@ -99,7 +101,7 @@ export const SelectField = ({
                   onChange(item.value);
                   sheetRef.current?.dismiss();
                 }}>
-                <Text fontSize={16} color="text">
+                <Text fontSize={16} color={item.tone ?? "text"}>
                   {item.label}
                 </Text>
                 {isSelected && (

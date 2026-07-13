@@ -58,6 +58,7 @@ export const Button = ({
   onPress,
   variant = "primary",
   disabled = false,
+  destructive = false,
   iconBefore,
   iconAfter,
 }: {
@@ -65,16 +66,22 @@ export const Button = ({
   onPress?: () => void;
   variant?: ButtonVariant;
   disabled?: boolean;
+  destructive?: boolean;
   iconBefore?: ReactNode;
   iconAfter?: ReactNode;
 }) => {
+  // Destructive primary buttons (e.g. "Disconnect my meter") use the error
+  // color and drop the primary drop-shadow.
+  const isDestructive = destructive && variant === "primary" && !disabled;
+
   return (
     <ButtonBase
       variant={variant}
       disabled={disabled}
       {...(disabled ? disabledStyles[variant] : undefined)}
+      {...(isDestructive ? { backgroundColor: "error" } : undefined)}
       style={
-        variant === "primary" && !disabled
+        variant === "primary" && !disabled && !isDestructive
           ? { boxShadow: boxShadows.button }
           : undefined
       }

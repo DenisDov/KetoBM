@@ -1,4 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { addDays, parseISO } from "date-fns";
 import { supabase } from "@/lib/supabase";
 import { Tables } from "@/lib/database.types";
 import { useAuthStore, Profile } from "@/hooks/use-auth-store";
@@ -19,23 +20,74 @@ export type KetosisMode = "non_diabetic" | "diabetic";
 export const getKetosisMode = (profile: Profile | null): KetosisMode =>
   profile?.primary_goal === "ketogenic_diet" ? "non_diabetic" : "diabetic";
 
+/**
+ * The active meter's operating mode is the source of truth (schema:
+ * `devices.operating_mode`, which the ketosis stages mirror). Before a meter is
+ * paired we fall back to the onboarding goal so the gauge/chart still pick a
+ * sensible default.
+ */
 export const useKetosisMode = (): KetosisMode => {
   const profile = useAuthStore((state) => state.profile);
+  const { data: device } = useActiveDevice();
+  const mode = device?.operating_mode;
+  if (mode === "diabetic" || mode === "non_diabetic") return mode;
   return getKetosisMode(profile);
 };
 
-/** Full reading history across both types, newest first (readings list screen). */
-export const useReadings = () => {
+/** The reading's note as embedded in list queries (1:1 via `reading_id`). */
+export type ReadingNote = Pick<Tables<"notes">, "id" | "body" | "preset_id"> & {
+  note_presets: Pick<Tables<"note_presets">, "label"> | null;
+};
+
+export type ReadingWithNote = Reading & { notes: ReadingNote | null };
+
+/** Inclusive local-calendar-day range, as `yyyy-MM-dd` strings. */
+export type ReadingDateRange = { start: string; end: string };
+
+/** Reading history of one type with its note, newest first (readings list screen). */
+export const useReadings = (
+  type: ReadingType,
+  range?: ReadingDateRange | null,
+) => {
   const userId = useAuthStore((state) => state.user?.id);
 
   return useQuery({
-    queryKey: ["readings", "all", userId],
+    queryKey: ["readings", "all", userId, type, range ?? null],
     enabled: !!userId,
-    queryFn: async (): Promise<Reading[]> => {
+    queryFn: async (): Promise<ReadingWithNote[]> => {
+      let query = supabase
+        .from("readings")
+        .select("*, notes(id, body, preset_id, note_presets(label))")
+        .eq("type", type);
+      if (range) {
+        // parseISO on a date-only string is local midnight; the exclusive
+        // next-day bound keeps the whole end day regardless of reading time.
+        query = query
+          .gte("measured_at", parseISO(range.start).toISOString())
+          .lt("measured_at", addDays(parseISO(range.end), 1).toISOString());
+      }
+      const { data, error } = await query.order("measured_at", {
+        ascending: false,
+      });
+      if (error) throw error;
+      return data;
+    },
+  });
+};
+
+/** One reading by id (note editor header/context block). */
+export const useReading = (readingId: string | undefined) => {
+  const userId = useAuthStore((state) => state.user?.id);
+
+  return useQuery({
+    queryKey: ["readings", "detail", readingId],
+    enabled: !!userId && !!readingId,
+    queryFn: async (): Promise<Reading | null> => {
       const { data, error } = await supabase
         .from("readings")
         .select("*")
-        .order("measured_at", { ascending: false });
+        .eq("id", readingId!)
+        .maybeSingle();
       if (error) throw error;
       return data;
     },
@@ -136,6 +188,119 @@ export const useActiveDevice = () => {
         .maybeSingle();
       if (error) throw error;
       return data;
+    },
+  });
+};
+
+/** The live BLE peripheral a freshly-paired meter maps to. */
+export type PairedMeter = { id: string; name: string | null };
+
+/**
+ * Persist a meter after a successful BLE connect so `useActiveDevice` reflects
+ * it. Reuses the existing row when re-pairing a meter we've seen before
+ * (matched on `bluetooth_id`), otherwise inserts a new one.
+ */
+export const usePairDevice = () => {
+  const userId = useAuthStore((state) => state.user?.id);
+  const profile = useAuthStore((state) => state.profile);
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (meter: PairedMeter): Promise<Device> => {
+      if (!userId) throw new Error("Not authenticated");
+      const now = new Date().toISOString();
+
+      const { data: existing, error: lookupError } = await supabase
+        .from("devices")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("bluetooth_id", meter.id)
+        .maybeSingle();
+      if (lookupError) throw lookupError;
+
+      if (existing) {
+        const { data, error } = await supabase
+          .from("devices")
+          .update({
+            name: meter.name,
+            connection_status: "connected",
+            is_active: true,
+            last_connected_at: now,
+          })
+          .eq("id", existing.id)
+          .select()
+          .single();
+        if (error) throw error;
+        return data;
+      }
+
+      const { data, error } = await supabase
+        .from("devices")
+        .insert({
+          user_id: userId,
+          name: meter.name,
+          bluetooth_id: meter.id,
+          connection_status: "connected",
+          is_active: true,
+          // Seed the operating mode from the onboarding goal; the user can
+          // change it later in device settings.
+          operating_mode: getKetosisMode(profile),
+          paired_at: now,
+          last_connected_at: now,
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["devices"] });
+    },
+  });
+};
+
+/**
+ * Forget the paired meter: mark its row inactive so `useActiveDevice` returns
+ * null (Home reverts to the CTA and BleSync stops auto-reconnecting). The live
+ * BLE link is torn down separately via the store's `disconnect()`.
+ */
+export const useUnpairDevice = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (deviceId: string): Promise<void> => {
+      const { error } = await supabase
+        .from("devices")
+        .update({ is_active: false, connection_status: "disconnected" })
+        .eq("id", deviceId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["devices"] });
+    },
+  });
+};
+
+/**
+ * Change a meter's operating mode (diabetic vs non-diabetic). Drives which
+ * ketone reference ranges/colors the gauge uses via `useKetosisMode`.
+ */
+export const useSetOperatingMode = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (vars: {
+      deviceId: string;
+      mode: KetosisMode;
+    }): Promise<void> => {
+      const { error } = await supabase
+        .from("devices")
+        .update({ operating_mode: vars.mode })
+        .eq("id", vars.deviceId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["devices"] });
     },
   });
 };

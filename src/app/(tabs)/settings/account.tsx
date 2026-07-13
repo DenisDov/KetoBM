@@ -6,7 +6,7 @@ import { Link } from "expo-router";
 export default function AccountSettingsScreen() {
   return (
     <ScrollView scrollEnabled={false}>
-      <Box padding="m" gap="m">
+      <Box padding="m" gap="l">
         <Text variant="title">Account settings</Text>
         <Box
           flexDirection="row"
