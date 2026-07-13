@@ -5,7 +5,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import { useTheme } from "@shopify/restyle";
 import { eachDayOfInterval, format, parseISO } from "date-fns";
-import { forwardRef, useCallback, useMemo, useState } from "react";
+import { Ref, useCallback, useMemo, useState } from "react";
 import { Calendar } from "react-native-calendars";
 import { Button } from "@/components/button";
 import { Box } from "@/components/primitives";
@@ -142,45 +142,45 @@ const DateRangeSheetContent = ({
  * underlying `BottomSheetModal` and opens it via `ref.current?.present()`.
  * Modeled on the sheet pattern in `confirm-sheet.tsx`.
  */
-export const DateRangeSheet = forwardRef<BottomSheetModal, DateRangeSheetProps>(
-  ({ range, onApply }, ref) => {
-    const theme = useTheme<Theme>();
+export const DateRangeSheet = ({
+  range,
+  onApply,
+  ref,
+}: DateRangeSheetProps & { ref?: Ref<BottomSheetModal> }) => {
+  const theme = useTheme<Theme>();
 
-    const renderBackdrop = useCallback(
-      (props: React.ComponentProps<typeof BottomSheetBackdrop>) => (
-        <BottomSheetBackdrop
-          {...props}
-          appearsOnIndex={0}
-          disappearsOnIndex={-1}
+  const renderBackdrop = useCallback(
+    (props: React.ComponentProps<typeof BottomSheetBackdrop>) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    [],
+  );
+
+  const dismiss = () => {
+    if (ref && typeof ref !== "function") ref?.current?.dismiss();
+  };
+
+  return (
+    <BottomSheetModal
+      ref={ref}
+      enableDynamicSizing
+      // Day-cell taps shouldn't start a sheet drag; the handle, backdrop,
+      // and Cancel remain as close affordances.
+      enableContentPanningGesture={false}
+      backgroundStyle={{ backgroundColor: theme.colors.background }}
+      handleIndicatorStyle={{ backgroundColor: theme.colors.border }}
+      backdropComponent={renderBackdrop}>
+      <BottomSheetView>
+        <DateRangeSheetContent
+          range={range}
+          onApply={onApply}
+          dismiss={dismiss}
         />
-      ),
-      [],
-    );
-
-    const dismiss = () => {
-      if (ref && typeof ref !== "function") ref.current?.dismiss();
-    };
-
-    return (
-      <BottomSheetModal
-        ref={ref}
-        enableDynamicSizing
-        // Day-cell taps shouldn't start a sheet drag; the handle, backdrop,
-        // and Cancel remain as close affordances.
-        enableContentPanningGesture={false}
-        backgroundStyle={{ backgroundColor: theme.colors.background }}
-        handleIndicatorStyle={{ backgroundColor: theme.colors.border }}
-        backdropComponent={renderBackdrop}>
-        <BottomSheetView>
-          <DateRangeSheetContent
-            range={range}
-            onApply={onApply}
-            dismiss={dismiss}
-          />
-        </BottomSheetView>
-      </BottomSheetModal>
-    );
-  },
-);
-
-DateRangeSheet.displayName = "DateRangeSheet";
+      </BottomSheetView>
+    </BottomSheetModal>
+  );
+};

@@ -1,4 +1,4 @@
-import { forwardRef, ReactNode, useState } from "react";
+import { ReactNode, Ref, useState } from "react";
 import { TextInput, TextInputProps } from "react-native";
 import { Ionicons } from "@react-native-vector-icons/ionicons";
 import { useTheme } from "@shopify/restyle";
@@ -14,75 +14,67 @@ type TextFieldProps = TextInputProps & {
   rightElement?: ReactNode;
 };
 
-export const TextField = forwardRef<TextInput, TextFieldProps>(
-  (
-    {
-      label,
-      error,
-      style,
-      onFocus,
-      onBlur,
-      editable = true,
-      secureTextEntry,
-      rightElement,
-      ...rest
-    },
-    ref,
-  ) => {
-    const theme = useTheme<Theme>();
-    const [focused, setFocused] = useState(false);
-    const [passwordVisible, setPasswordVisible] = useState(false);
+export const TextField = ({
+  label,
+  error,
+  style,
+  onFocus,
+  onBlur,
+  editable = true,
+  secureTextEntry,
+  rightElement,
+  ref,
+  ...rest
+}: TextFieldProps & { ref?: Ref<TextInput> }) => {
+  const theme = useTheme<Theme>();
+  const [focused, setFocused] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
-    const isPassword = !!secureTextEntry;
+  const isPassword = !!secureTextEntry;
 
-    return (
-      <FieldShell
-        label={label}
-        error={error}
-        focused={focused}
-        disabled={!editable}>
-        <TextInput
-          ref={ref}
-          editable={editable}
-          secureTextEntry={isPassword && !passwordVisible}
-          placeholderTextColor={theme.colors.placeholder}
-          onFocus={(e) => {
-            setFocused(true);
-            onFocus?.(e);
-          }}
-          onBlur={(e) => {
-            setFocused(false);
-            onBlur?.(e);
-          }}
-          style={[
-            {
-              flex: 1,
-              fontFamily: Fonts.regular,
-              fontSize: 16,
-              color: theme.colors.text,
-              padding: 0,
-              height: "100%",
-            },
-            style,
-          ]}
-          {...rest}
-        />
-        {isPassword ? (
-          <PressableBox
-            hitSlop={8}
-            onPress={() => setPasswordVisible((v) => !v)}>
-            <Ionicons
-              name={passwordVisible ? "eye-off-outline" : "eye-outline"}
-              size={22}
-              color={theme.colors.text}
-            />
-          </PressableBox>
-        ) : (
-          rightElement
-        )}
-      </FieldShell>
-    );
-  },
-);
-
-TextField.displayName = "TextField";
+  return (
+    <FieldShell
+      label={label}
+      error={error}
+      focused={focused}
+      disabled={!editable}>
+      <TextInput
+        ref={ref}
+        editable={editable}
+        secureTextEntry={isPassword && !passwordVisible}
+        placeholderTextColor={theme.colors.placeholder}
+        onFocus={(e) => {
+          setFocused(true);
+          onFocus?.(e);
+        }}
+        onBlur={(e) => {
+          setFocused(false);
+          onBlur?.(e);
+        }}
+        style={[
+          {
+            flex: 1,
+            fontFamily: Fonts.regular,
+            fontSize: 16,
+            color: theme.colors.text,
+            padding: 0,
+            height: "100%",
+          },
+          style,
+        ]}
+        {...rest}
+      />
+      {isPassword ? (
+        <PressableBox hitSlop={8} onPress={() => setPasswordVisible((v) => !v)}>
+          <Ionicons
+            name={passwordVisible ? "eye-off-outline" : "eye-outline"}
+            size={22}
+            color={theme.colors.text}
+          />
+        </PressableBox>
+      ) : (
+        rightElement
+      )}
+    </FieldShell>
+  );
+};
