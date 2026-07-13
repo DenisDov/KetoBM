@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { addDays, parseISO } from "date-fns";
 import { supabase } from "@/lib/supabase";
 import { Tables } from "@/lib/database.types";
 import { useAuthStore, Profile } from "@/hooks/use-auth-store";
@@ -40,19 +41,34 @@ export type ReadingNote = Pick<Tables<"notes">, "id" | "body" | "preset_id"> & {
 
 export type ReadingWithNote = Reading & { notes: ReadingNote | null };
 
+/** Inclusive local-calendar-day range, as `yyyy-MM-dd` strings. */
+export type ReadingDateRange = { start: string; end: string };
+
 /** Reading history of one type with its note, newest first (readings list screen). */
-export const useReadings = (type: ReadingType) => {
+export const useReadings = (
+  type: ReadingType,
+  range?: ReadingDateRange | null,
+) => {
   const userId = useAuthStore((state) => state.user?.id);
 
   return useQuery({
-    queryKey: ["readings", "all", userId, type],
+    queryKey: ["readings", "all", userId, type, range ?? null],
     enabled: !!userId,
     queryFn: async (): Promise<ReadingWithNote[]> => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("readings")
         .select("*, notes(id, body, preset_id, note_presets(label))")
-        .eq("type", type)
-        .order("measured_at", { ascending: false });
+        .eq("type", type);
+      if (range) {
+        // parseISO on a date-only string is local midnight; the exclusive
+        // next-day bound keeps the whole end day regardless of reading time.
+        query = query
+          .gte("measured_at", parseISO(range.start).toISOString())
+          .lt("measured_at", addDays(parseISO(range.end), 1).toISOString());
+      }
+      const { data, error } = await query.order("measured_at", {
+        ascending: false,
+      });
       if (error) throw error;
       return data;
     },
