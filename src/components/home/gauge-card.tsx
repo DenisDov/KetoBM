@@ -1,10 +1,13 @@
 import { Ionicons } from "@react-native-vector-icons/ionicons";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "@shopify/restyle";
 import { Link } from "expo-router";
+import { useRef } from "react";
 import { useBLEStore } from "@/hooks/use-ble-store";
 import { Box, PressableBox, Text } from "@/components/primitives";
 import { boxShadows, Theme } from "@/theme";
 import { Fonts } from "@/theme/fonts";
+import { isDarkColor } from "@/utils/colors";
 import { formatReadingTimestamp } from "@/utils/datetime";
 import {
   findStageForValue,
@@ -15,15 +18,7 @@ import {
 } from "@/hooks/use-readings";
 import { Gauge, GLUCOSE_GAUGE_SCALE, KETONE_GAUGE_SCALE } from "./gauge";
 import { PairMeterCard } from "./pair-meter-card";
-
-/** Perceived luminance — picks readable text for a stage-colored badge. */
-const isDarkColor = (hex: string): boolean => {
-  const rgb = hex.replace("#", "");
-  const r = parseInt(rgb.slice(0, 2), 16);
-  const g = parseInt(rgb.slice(2, 4), 16);
-  const b = parseInt(rgb.slice(4, 6), 16);
-  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.55;
-};
+import { StageInfoSheet } from "./stage-info-sheet";
 
 /**
  * Hero card: connection status, the reading dial for the most recent
@@ -41,6 +36,8 @@ export const GaugeCard = () => {
   const { data: readings, isPending } = useLatestReadings(1);
   const { data: device, isPending: devicePending } = useActiveDevice();
   const { data: stages } = useKetosisStages(mode);
+
+  const stageSheetRef = useRef<BottomSheetModal>(null);
 
   // Live measurement in progress (physical button-press on the meter).
   const deviceState = useBLEStore((state) => state.deviceState);
@@ -150,7 +147,7 @@ export const GaugeCard = () => {
                   : "--"}
               </Text>
               {stage ? (
-                <Box
+                <PressableBox
                   flexDirection="row"
                   alignItems="center"
                   gap="s"
@@ -159,7 +156,8 @@ export const GaugeCard = () => {
                   borderRadius="xl"
                   style={{
                     backgroundColor: stage.color ?? theme.colors.primary,
-                  }}>
+                  }}
+                  onPress={() => stageSheetRef.current?.present()}>
                   <Text
                     fontSize={13}
                     fontFamily={Fonts.medium}
@@ -170,7 +168,16 @@ export const GaugeCard = () => {
                     }}>
                     {stage.stage_name}
                   </Text>
-                </Box>
+                  <Ionicons
+                    name="information-circle"
+                    size={16}
+                    color={
+                      isDarkColor(stage.color ?? "#000000")
+                        ? theme.colors.white
+                        : theme.colors.neutral900
+                    }
+                  />
+                </PressableBox>
               ) : (
                 <Text fontSize={16} color="textSecondary">
                   {reading?.unit ?? (isPending ? " " : "No readings yet")}
@@ -197,6 +204,12 @@ export const GaugeCard = () => {
           </Text>
         </Box>
       )}
+
+      <StageInfoSheet
+        ref={stageSheetRef}
+        stages={stages ?? []}
+        currentStageId={stage?.id}
+      />
     </Box>
   );
 };
