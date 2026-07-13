@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useTheme } from "@shopify/restyle";
-import { Box, PressableBox, Text } from "@/components/primitives";
+import { Box } from "@/components/primitives";
 import { SelectField } from "@/components/form";
+import { SegmentedControl } from "@/components/segmented-control";
 import { boxShadows, Theme } from "@/theme";
-import { Fonts } from "@/theme/fonts";
 import {
   ChartRange,
   ReadingType,
@@ -47,34 +47,7 @@ export const ChartCard = () => {
       padding="m"
       gap="m"
       style={{ boxShadow: boxShadows.card }}>
-      {/* Segmented Ketones / Glucose toggle */}
-      <Box
-        flexDirection="row"
-        backgroundColor="backgroundMuted"
-        borderRadius="xl"
-        // padding="s"
-      >
-        {METRICS.map((option) => {
-          const active = metric === option.value;
-          return (
-            <PressableBox
-              key={option.value}
-              flex={1}
-              alignItems="center"
-              paddingVertical="sm"
-              borderRadius="xl"
-              backgroundColor={active ? "primary" : "transparent"}
-              onPress={() => setMetric(option.value)}>
-              <Text
-                fontSize={14}
-                fontFamily={active ? Fonts.semiBold : Fonts.regular}
-                color={active ? "white" : "text"}>
-                {option.label}
-              </Text>
-            </PressableBox>
-          );
-        })}
-      </Box>
+      <SegmentedControl options={METRICS} value={metric} onChange={setMetric} />
 
       <Box width={180}>
         <SelectField

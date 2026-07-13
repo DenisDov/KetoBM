@@ -33,18 +33,45 @@ export const useKetosisMode = (): KetosisMode => {
   return getKetosisMode(profile);
 };
 
-/** Full reading history across both types, newest first (readings list screen). */
-export const useReadings = () => {
+/** The reading's note as embedded in list queries (1:1 via `reading_id`). */
+export type ReadingNote = Pick<Tables<"notes">, "id" | "body" | "preset_id"> & {
+  note_presets: Pick<Tables<"note_presets">, "label"> | null;
+};
+
+export type ReadingWithNote = Reading & { notes: ReadingNote | null };
+
+/** Reading history of one type with its note, newest first (readings list screen). */
+export const useReadings = (type: ReadingType) => {
   const userId = useAuthStore((state) => state.user?.id);
 
   return useQuery({
-    queryKey: ["readings", "all", userId],
+    queryKey: ["readings", "all", userId, type],
     enabled: !!userId,
-    queryFn: async (): Promise<Reading[]> => {
+    queryFn: async (): Promise<ReadingWithNote[]> => {
+      const { data, error } = await supabase
+        .from("readings")
+        .select("*, notes(id, body, preset_id, note_presets(label))")
+        .eq("type", type)
+        .order("measured_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+};
+
+/** One reading by id (note editor header/context block). */
+export const useReading = (readingId: string | undefined) => {
+  const userId = useAuthStore((state) => state.user?.id);
+
+  return useQuery({
+    queryKey: ["readings", "detail", readingId],
+    enabled: !!userId && !!readingId,
+    queryFn: async (): Promise<Reading | null> => {
       const { data, error } = await supabase
         .from("readings")
         .select("*")
-        .order("measured_at", { ascending: false });
+        .eq("id", readingId!)
+        .maybeSingle();
       if (error) throw error;
       return data;
     },

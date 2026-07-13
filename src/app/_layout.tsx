@@ -114,6 +114,16 @@ export default function RootLayout() {
                     name="pairing"
                     options={{ presentation: "modal", headerShown: false }}
                   />
+                  {/* Note editor for a reading. Root-level so it covers the
+                      tab bar and is reachable from both Home and Readings. */}
+                  <Stack.Screen
+                    name="note/[readingId]"
+                    options={{
+                      ...defaultScreenOptions,
+                      headerTransparent: false,
+                      headerShadowVisible: false,
+                    }}
+                  />
                 </Stack.Protected>
                 <Stack.Protected
                   guard={

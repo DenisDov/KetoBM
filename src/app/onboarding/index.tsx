@@ -205,9 +205,7 @@ export default function OnboardingScreen() {
               onChange={setYearOfBirth}
             />
             <Box gap="s">
-              <Text fontSize={14} color="text">
-                Gender
-              </Text>
+              <Text color="text">Gender</Text>
               <Box flexDirection="row" flexWrap="wrap" gap="sm">
                 {GENDER_OPTIONS.map((option) => (
                   <Box key={option.value} width="47%">

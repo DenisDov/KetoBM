@@ -1,7 +1,7 @@
 import { Ionicons } from "@react-native-vector-icons/ionicons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "@shopify/restyle";
-import { Link } from "expo-router";
+import { router } from "expo-router";
 import { useRef, useState } from "react";
 import { useBLEStore } from "@/hooks/use-ble-store";
 import { Box, PressableBox, Text } from "@/components/primitives";
@@ -92,26 +92,28 @@ export const GaugeCard = () => {
             size={16}
             color={connected ? theme.colors.success : theme.colors.error}
           />
-          <Text fontSize={14}>{connected ? "Connected" : "Disconnected"}</Text>
+          <Text>{connected ? "Connected" : "Disconnected"}</Text>
         </Box>
-        <Link href="/readings/notes" asChild>
-          <PressableBox
-            flexDirection="row"
-            alignItems="center"
-            gap="s"
-            paddingVertical="s"
-            paddingHorizontal="sm"
-            borderRadius="s"
-            borderWidth={1}
-            borderColor="border">
-            <Ionicons
-              name="document-text-outline"
-              size={16}
-              color={theme.colors.text}
-            />
-            <Text fontSize={14}>Add note</Text>
-          </PressableBox>
-        </Link>
+        {/* Annotates the latest reading; inert until one exists. */}
+        <PressableBox
+          flexDirection="row"
+          alignItems="center"
+          gap="s"
+          paddingVertical="s"
+          paddingHorizontal="sm"
+          borderRadius="s"
+          borderWidth={1}
+          borderColor="border"
+          opacity={reading ? 1 : 0.4}
+          disabled={!reading}
+          onPress={() => reading && router.push(`/note/${reading.id}`)}>
+          <Ionicons
+            name="document-text-outline"
+            size={16}
+            color={theme.colors.text}
+          />
+          <Text>Add note</Text>
+        </PressableBox>
       </Box>
 
       <Box
@@ -129,11 +131,7 @@ export const GaugeCard = () => {
           markerColor={theme.colors.text}
           size={gaugeSize}>
           <Box alignItems="center" gap="s" style={{ marginTop: 24 }}>
-            <Text
-              fontSize={14}
-              letterSpacing={1}
-              color="primary"
-              fontFamily={Fonts.semiBold}>
+            <Text letterSpacing={1} color="primary" fontFamily={Fonts.semiBold}>
               {(measuring ? bleType === "ketone" : isKetone)
                 ? "KETONES"
                 : "GLUCOSE"}
@@ -210,12 +208,8 @@ export const GaugeCard = () => {
           alignItems="center"
           justifyContent="center"
           gap="s">
-          <Ionicons
-            name="refresh"
-            size={14}
-            color={theme.colors.textSecondary}
-          />
-          <Text fontSize={13} color="textSecondary">
+          <Ionicons name="refresh" color={theme.colors.textSecondary} />
+          <Text fontSize={13} color="textSecondary" fontFamily={Fonts.medium}>
             {formatReadingTimestamp(reading.measured_at)}
           </Text>
         </Box>
