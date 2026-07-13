@@ -2,7 +2,7 @@ import { Ionicons } from "@react-native-vector-icons/ionicons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "@shopify/restyle";
 import { Link } from "expo-router";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useBLEStore } from "@/hooks/use-ble-store";
 import { Box, PressableBox, Text } from "@/components/primitives";
 import { boxShadows, Theme } from "@/theme";
@@ -38,6 +38,10 @@ export const GaugeCard = () => {
   const { data: stages } = useKetosisStages(mode);
 
   const stageSheetRef = useRef<BottomSheetModal>(null);
+
+  // Dial diameter tracks the card's inner width so the tick labels get the
+  // same breathing room from the center content on every screen size.
+  const [gaugeSize, setGaugeSize] = useState(280);
 
   // Live measurement in progress (physical button-press on the meter).
   const deviceState = useBLEStore((state) => state.deviceState);
@@ -110,83 +114,95 @@ export const GaugeCard = () => {
         </Link>
       </Box>
 
-      <Gauge
-        value={reading?.value ?? null}
-        scale={scale}
-        color={gaugeColor}
-        trackColor={theme.colors.neutral200}
-        tickColor={theme.colors.neutral300}
-        labelColor={theme.colors.textSecondary}
-        markerColor={theme.colors.text}>
-        <Box alignItems="center" gap="s" style={{ marginTop: 24 }}>
-          <Text
-            fontSize={14}
-            letterSpacing={1}
-            color="primary"
-            fontFamily={Fonts.semiBold}>
-            {(measuring ? bleType === "ketone" : isKetone)
-              ? "KETONES"
-              : "GLUCOSE"}
-          </Text>
-          {measuring ? (
-            <>
-              <Text fontSize={48} lineHeight={52} fontFamily={Fonts.bold}>
-                {bleProgress}%
-              </Text>
-              <Text fontSize={16} color="textSecondary">
-                Measuring…
-              </Text>
-            </>
-          ) : (
-            <>
-              <Text fontSize={48} lineHeight={52} fontFamily={Fonts.bold}>
-                {reading
-                  ? isKetone
-                    ? reading.value.toFixed(1)
-                    : Math.round(reading.value)
-                  : "--"}
-              </Text>
-              {stage ? (
-                <PressableBox
-                  flexDirection="row"
-                  alignItems="center"
-                  gap="s"
-                  paddingHorizontal="sm"
-                  paddingVertical="s"
-                  borderRadius="xl"
-                  style={{
-                    backgroundColor: stage.color ?? theme.colors.primary,
-                  }}
-                  onPress={() => stageSheetRef.current?.present()}>
-                  <Text
-                    fontSize={13}
-                    fontFamily={Fonts.medium}
-                    style={{
-                      color: isDarkColor(stage.color ?? "#000000")
-                        ? theme.colors.white
-                        : theme.colors.neutral900,
-                    }}>
-                    {stage.stage_name}
-                  </Text>
-                  <Ionicons
-                    name="information-circle"
-                    size={16}
-                    color={
-                      isDarkColor(stage.color ?? "#000000")
-                        ? theme.colors.white
-                        : theme.colors.neutral900
-                    }
-                  />
-                </PressableBox>
-              ) : (
-                <Text fontSize={16} color="textSecondary">
-                  {reading?.unit ?? (isPending ? " " : "No readings yet")}
+      <Box
+        onLayout={(event) => {
+          const { width } = event.nativeEvent.layout;
+          if (width > 0) setGaugeSize(Math.min(Math.round(width), 360));
+        }}>
+        <Gauge
+          value={reading?.value ?? null}
+          scale={scale}
+          color={gaugeColor}
+          trackColor={theme.colors.neutral200}
+          tickColor={theme.colors.neutral300}
+          labelColor={theme.colors.textSecondary}
+          markerColor={theme.colors.text}
+          size={gaugeSize}>
+          <Box alignItems="center" gap="s" style={{ marginTop: 24 }}>
+            <Text
+              fontSize={14}
+              letterSpacing={1}
+              color="primary"
+              fontFamily={Fonts.semiBold}>
+              {(measuring ? bleType === "ketone" : isKetone)
+                ? "KETONES"
+                : "GLUCOSE"}
+            </Text>
+            {measuring ? (
+              <>
+                <Text fontSize={48} lineHeight={52} fontFamily={Fonts.bold}>
+                  {bleProgress}%
                 </Text>
-              )}
-            </>
-          )}
-        </Box>
-      </Gauge>
+                <Text fontSize={16} color="textSecondary">
+                  Measuring…
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text fontSize={48} lineHeight={52} fontFamily={Fonts.bold}>
+                  {reading
+                    ? isKetone
+                      ? reading.value.toFixed(1)
+                      : Math.round(reading.value)
+                    : "--"}
+                </Text>
+                {stage ? (
+                  <PressableBox
+                    flexDirection="row"
+                    alignItems="center"
+                    gap="s"
+                    paddingHorizontal="sm"
+                    paddingVertical="s"
+                    borderRadius="xl"
+                    // Stage names come from the DB, so cap the pill before it
+                    // reaches the dial's tick labels.
+                    maxWidth={gaugeSize * 0.55}
+                    style={{
+                      backgroundColor: stage.color ?? theme.colors.primary,
+                    }}
+                    onPress={() => stageSheetRef.current?.present()}>
+                    <Text
+                      fontSize={13}
+                      fontFamily={Fonts.medium}
+                      numberOfLines={1}
+                      style={{
+                        flexShrink: 1,
+                        color: isDarkColor(stage.color ?? "#000000")
+                          ? theme.colors.white
+                          : theme.colors.neutral900,
+                      }}>
+                      {stage.stage_name}
+                    </Text>
+                    <Ionicons
+                      name="information-circle"
+                      size={16}
+                      color={
+                        isDarkColor(stage.color ?? "#000000")
+                          ? theme.colors.white
+                          : theme.colors.neutral900
+                      }
+                    />
+                  </PressableBox>
+                ) : (
+                  <Text fontSize={16} color="textSecondary">
+                    {reading?.unit ?? (isPending ? " " : "No readings yet")}
+                  </Text>
+                )}
+              </>
+            )}
+          </Box>
+        </Gauge>
+      </Box>
 
       {reading && (
         <Box

@@ -130,17 +130,21 @@ export const Gauge = ({
 
   const labels = useMemo(() => {
     if (!labelFont) return [];
-    const labelRadius = radius - STROKE_WIDTH / 2 - 22;
+    const labelRadius = radius - STROKE_WIDTH / 2 - 16;
     return scale.stops.map((stop, index) => {
       const text = scale.formatStop(stop, index);
       const angle = toRadians(
         START_ANGLE + (SWEEP_ANGLE * index) / (scale.stops.length - 1),
       );
       const width = labelFont.getTextWidth(text);
+      // The first/last labels sit at the arc's bottom corners, level with the
+      // center content's badge; drop them toward the (empty) arc gap so a wide
+      // badge can't reach them.
+      const isCorner = index === 0 || index === scale.stops.length - 1;
       return {
         text,
         x: center + labelRadius * Math.cos(angle) - width / 2,
-        y: center + labelRadius * Math.sin(angle) + 4,
+        y: center + labelRadius * Math.sin(angle) + 4 + (isCorner ? 6 : 0),
       };
     });
   }, [labelFont, center, radius, scale]);
