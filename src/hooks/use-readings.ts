@@ -19,8 +19,17 @@ export type KetosisMode = "non_diabetic" | "diabetic";
 export const getKetosisMode = (profile: Profile | null): KetosisMode =>
   profile?.primary_goal === "ketogenic_diet" ? "non_diabetic" : "diabetic";
 
+/**
+ * The active meter's operating mode is the source of truth (schema:
+ * `devices.operating_mode`, which the ketosis stages mirror). Before a meter is
+ * paired we fall back to the onboarding goal so the gauge/chart still pick a
+ * sensible default.
+ */
 export const useKetosisMode = (): KetosisMode => {
   const profile = useAuthStore((state) => state.profile);
+  const { data: device } = useActiveDevice();
+  const mode = device?.operating_mode;
+  if (mode === "diabetic" || mode === "non_diabetic") return mode;
   return getKetosisMode(profile);
 };
 
@@ -150,6 +159,7 @@ export type PairedMeter = { id: string; name: string | null };
  */
 export const usePairDevice = () => {
   const userId = useAuthStore((state) => state.user?.id);
+  const profile = useAuthStore((state) => state.profile);
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -189,6 +199,9 @@ export const usePairDevice = () => {
           bluetooth_id: meter.id,
           connection_status: "connected",
           is_active: true,
+          // Seed the operating mode from the onboarding goal; the user can
+          // change it later in device settings.
+          operating_mode: getKetosisMode(profile),
           paired_at: now,
           last_connected_at: now,
         })
@@ -196,6 +209,52 @@ export const usePairDevice = () => {
         .single();
       if (error) throw error;
       return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["devices"] });
+    },
+  });
+};
+
+/**
+ * Forget the paired meter: mark its row inactive so `useActiveDevice` returns
+ * null (Home reverts to the CTA and BleSync stops auto-reconnecting). The live
+ * BLE link is torn down separately via the store's `disconnect()`.
+ */
+export const useUnpairDevice = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (deviceId: string): Promise<void> => {
+      const { error } = await supabase
+        .from("devices")
+        .update({ is_active: false, connection_status: "disconnected" })
+        .eq("id", deviceId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["devices"] });
+    },
+  });
+};
+
+/**
+ * Change a meter's operating mode (diabetic vs non-diabetic). Drives which
+ * ketone reference ranges/colors the gauge uses via `useKetosisMode`.
+ */
+export const useSetOperatingMode = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (vars: {
+      deviceId: string;
+      mode: KetosisMode;
+    }): Promise<void> => {
+      const { error } = await supabase
+        .from("devices")
+        .update({ operating_mode: vars.mode })
+        .eq("id", vars.deviceId);
+      if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["devices"] });

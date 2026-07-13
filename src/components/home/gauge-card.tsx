@@ -29,10 +29,10 @@ const isDarkColor = (hex: string): boolean => {
  * Hero card: connection status, the reading dial for the most recent
  * measurement (either type), and its timestamp.
  *
- * The dial is theme-blue by default. Non-diabetic users (primary goal
- * "ketogenic diet") get a ketone dial colored by their current ketosis stage,
- * plus a stage badge. Diabetic-mode ketone readings keep the blue dial but
- * still show the DKA-risk stage badge — that warning matters most for them.
+ * The dial is theme-blue by default. In non-diabetic mode a ketone reading gets
+ * a dial colored by its ketosis stage plus a stage badge. Diabetic mode keeps
+ * the plain blue dial with just the value + unit — no stage badge. The mode
+ * comes from the active meter's `operating_mode` (see `useKetosisMode`).
  */
 export const GaugeCard = () => {
   const theme = useTheme<Theme>();
@@ -52,8 +52,12 @@ export const GaugeCard = () => {
   const isKetone = reading?.type === "ketone";
   const scale = isKetone ? KETONE_GAUGE_SCALE : GLUCOSE_GAUGE_SCALE;
 
+  // Only non-diabetic mode gets a stage-colored dial + badge. Diabetic mode
+  // shows a plain blue dial with just the value + unit underneath.
   const stage =
-    isKetone && reading ? findStageForValue(stages, reading.value) : undefined;
+    isKetone && mode === "non_diabetic" && reading
+      ? findStageForValue(stages, reading.value)
+      : undefined;
 
   // Non-diabetic ketone dial takes the stage color; everything else stays blue.
   const gaugeColor =

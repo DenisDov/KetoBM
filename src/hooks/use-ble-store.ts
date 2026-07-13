@@ -48,6 +48,7 @@ interface BLEStore {
   eventsSubscription: Subscription | null;
   disconnectSubscription: Subscription | null;
   isDisconnectExpected: boolean;
+  bluetoothState: State;
 
   initializeBLE: () => Promise<void>;
   scan: () => Promise<void>;
@@ -55,6 +56,7 @@ interface BLEStore {
   connect: (device: Device) => Promise<void>;
   reconnect: (deviceId: string) => Promise<void>;
   disconnect: () => Promise<void>;
+  setBluetooth: (enabled: boolean) => Promise<void>;
   clearError: () => void;
   startMeasurement: (type: MeasurementType) => Promise<void>;
   cancelMeasurement: () => Promise<void>;
@@ -197,6 +199,11 @@ export const useBLEStore = create<BLEStore>((set, get) => {
     await sendCommand(device, "get_last_reading");
   };
 
+  // Persistent adapter-state subscription (separate from initializeBLE's
+  // transient one) so the UI can reflect whether Bluetooth is on. `true` emits
+  // the current state immediately.
+  manager.onStateChange((state) => set({ bluetoothState: state }), true);
+
   return {
     device: null,
     connected: false,
@@ -211,8 +218,23 @@ export const useBLEStore = create<BLEStore>((set, get) => {
     eventsSubscription: null,
     disconnectSubscription: null,
     isDisconnectExpected: false,
+    bluetoothState: State.Unknown,
 
     clearError: () => set({ error: null }),
+
+    // Toggle the OS Bluetooth adapter. Android-only — on iOS these throw and an
+    // app can't change the adapter, so the UI routes iOS users to Settings.
+    setBluetooth: async (enabled) => {
+      try {
+        if (enabled) {
+          await manager.enable();
+        } else {
+          await manager.disable();
+        }
+      } catch (e: any) {
+        set({ error: e.message });
+      }
+    },
 
     // Wait for the adapter to be ready before scanning
     initializeBLE: () =>
