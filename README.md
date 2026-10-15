@@ -1,8 +1,21 @@
-# Overview
+# KetoBM
 
-KetoBM is a React Native companion app for monitoring ketone and glucose levels, built to connect with Bluetooth Low Energy devices and track metabolic data over time. It is built with Expo (SDK 56) and Expo Router for file-based navigation, running on React Native 0.85 with React 19. Data is handled through Supabase (backend and database) and TanStack Query for server state, with Zustand for local state and Expo SQLite for offline storage. Device connectivity uses react-native-ble-plx, charts and custom visuals are rendered with React Native Skia, and the UI is styled with Restyle and animated using Reanimated and Gesture Handler. Forms are managed with React Hook Form, and the codebase is written in TypeScript.
+React Native companion app for monitoring ketone and glucose levels. It connects to Bluetooth Low Energy devices and tracks metabolic data over time.
 
-KetoBM is built by me, with AI used as an assistant for repetitive boilerplate and a few isolated, complex features such as the custom gauge meters in Skia. Architecture, data flow, and BLE integration were designed and written by hand, and I review and integrate everything AI produces.
+<!-- screenshots / gauge GIF here -->
+
+## Tech Stack
+
+- **App:** Expo (SDK 56), Expo Router, React Native 0.85, React 19, TypeScript
+- **Backend:** Supabase (Postgres, Auth, declarative migrations)
+- **State and data:** TanStack Query, Zustand, Expo SQLite (offline storage)
+- **Devices:** react-native-ble-plx
+- **UI:** React Native Skia, Restyle, Reanimated, Gesture Handler
+- **Forms:** React Hook Form
+
+## Development Approach
+
+Built by me, with AI used as an assistant for repetitive boilerplate and a few isolated, complex features such as the custom gauge meters in Skia. Architecture, data flow, and BLE integration were designed and written by hand, and I review and integrate everything AI produces.
 
 # Project Setup
 
