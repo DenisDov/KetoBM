@@ -2,7 +2,16 @@
 
 React Native companion app for monitoring ketone and glucose levels. It connects to Bluetooth Low Energy devices and tracks metabolic data over time.
 
-<!-- screenshots / gauge GIF here -->
+<p align="center">
+  <img src="docs/images/screenshot-0.webp" width="250" alt="0" />
+  <img src="docs/images/screenshot-1.webp" width="250" alt="1" />
+  <img src="docs/images/screenshot-2.webp" width="250" alt="2" />
+</p>
+<p align="center">
+  <img src="docs/images/screenshot-3.webp" width="250" alt="3" />
+  <img src="docs/images/screenshot-4.webp" width="250" alt="4" />
+  <img src="docs/images/screenshot-5.webp" width="250" alt="5" />
+</p>
 
 ## Tech Stack
 
